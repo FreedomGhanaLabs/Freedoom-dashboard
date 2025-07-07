@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
 	import { enhance } from '$app/forms';
-	import logo from '$lib/assets/favicon.png';
+	import logo from '$lib/assets/freelogo2.png';
 	import { Button } from '$lib/components/ui/button';
 	import { Check, Copy } from 'lucide-svelte';
 

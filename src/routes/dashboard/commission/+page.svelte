@@ -31,6 +31,7 @@
         toast.error('Failed to update commission configuration');
       }
       await update();
+      // window.location.reload(); // Reload to reflect changes
     };
   };
 

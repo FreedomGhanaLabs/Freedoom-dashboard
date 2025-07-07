@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import logo from '$lib/assets/favicon.png';
+	import logo from '$lib/assets/freelogo2.png';
 
 	export let data: PageData;
 	const { email } = data;

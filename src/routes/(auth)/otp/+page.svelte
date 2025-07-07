@@ -2,7 +2,7 @@
 	import type { PageData, ActionData } from './$types';
 	import * as InputOTP from '$lib/components/ui/input-otp/index.js';
 
-	import logo from '$lib/assets/favicon.png';
+	import logo from '$lib/assets/freelogo2.png';
 	import type { PageProps } from './$types';
 	import { fade, fly } from 'svelte/transition';
 	import { enhance } from '$app/forms';

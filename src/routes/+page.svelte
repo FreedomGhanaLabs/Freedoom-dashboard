@@ -1,5 +1,5 @@
 <script lang="ts">
-	import logo from '$lib/assets/favicon.png';
+	import logo from '$lib/assets/freelogo2.png';
 	import { Mail, Lock, Eye, EyeOff, AlertTriangle, Info } from 'lucide-svelte';
 	import type { PageProps } from './$types';
 	import { fade, fly } from 'svelte/transition';
