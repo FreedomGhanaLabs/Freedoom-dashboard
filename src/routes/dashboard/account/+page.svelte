@@ -154,5 +154,7 @@
 			<span>Download CSV</span>
 		</button>
 	</div>
-	<TableGroup {headings} invoices={filteredFinanceReport} />
+	<div class="px-8">
+		<TableGroup {headings} invoices={filteredFinanceReport} />
+	</div>
 </section>
