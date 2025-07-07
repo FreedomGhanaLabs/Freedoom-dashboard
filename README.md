@@ -1,7 +1,5 @@
-# Freedom Project [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![SvelteKit](https://img.shields.io/badge/SvelteKit-%23FF3E00.svg?style=for-the-badge&logo=sveltekit&logoColor=white)]()
-=======
-# Freedom Project
-```
+# Freedom Project (Private) [![SvelteKit](https://img.shields.io/badge/SvelteKit-%23FF3E00.svg?style=for-the-badge&logo=sveltekit&logoColor=white)]()
+**PRIVATE REPOSITORY**
 
 This project is a private endeavor aimed at building a robust platform for managing various aspects of a service-oriented business, likely focused on transportation or delivery, given the file structure. It utilizes SvelteKit for the frontend framework and integrates with a backend API located at `https://api-freedom.com`.
 
@@ -13,7 +11,7 @@ This project is a private endeavor aimed at building a robust platform for manag
 
 ## Features
 
-The platform includes functionalities, designed to streamline operations and enhance efficiency:\n
+The platform includes functionalities, designed to streamline operations and enhance efficiency. These are logically organized into distinct routing modules, such as `(auth)` for all authentication-related flows and `dashboard` for the main administrative and operational interfaces:
 
 - **User Authentication:** Handling login, registration, password reset, and Two-Factor Authentication (2FA) setup via OTP.
 - **Admin Panel:** A comprehensive interface for managing users, drivers, rides, deliveries, financial data, support tickets, and system activity. Offers role-based access control for enhanced security.
@@ -24,27 +22,18 @@ The platform includes functionalities, designed to streamline operations and enh
 - **Support System:** Functionality to manage support tickets, including viewing details, assigning agents, updating status, prioritizing requests, and generating support performance reports. Integrates with knowledge base and FAQ resources.
  
 ## Technology Stack
-+This project leverages the following technologies:
- 
-- **Frontend:** SvelteKit
-- **Backend API:** `https://api-freedom.com/api/v2`
-@@ -34,6 +34,16 @@
- 
-You can preview the production build with `npm run preview`.\n
-\n
-+## Roadmap
-+
-+This project is under active development. Planned future enhancements include:
-+
-+- Enhanced mapping and geofencing capabilities.
-+- Integration with third-party services for payments, SMS notifications, and CRM.
-+- Implementation of machine learning models for fraud detection and demand forecasting.
-+- Expansion of the admin panel with more granular controls and customization
-
+This project leverages the following technologies:
 - **Frontend:** SvelteKit
 - **Backend API:** `https://api-freedom.com/api/v2`
 - **UI Components:** Utilizes various UI libraries and custom components for a consistent and user-friendly interface.
 - **Icons:** Lucide Svelte
+
+## Roadmap
+This project is under active development. Planned future enhancements include:
+- Enhanced mapping and geofencing capabilities.
+- Integration with third-party services for payments, SMS notifications, and CRM.
+- Implementation of machine learning models for fraud detection and demand forecasting.
+- Expansion of the admin panel with more granular controls and customization
 
 ## Project Setup
 
@@ -73,6 +62,10 @@ You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
 
-## Private Project Notes
+## 🔒 Private Project Notes
 
-This project is not intended for public distribution or use. All functionalities and data handling are specific to the private requirements of this project. Redistribution or unauthorized access is strictly prohibited.
+**This is a private repository.**
+
+This project is developed exclusively for internal use and is not intended for public distribution, open-source contribution, or external use. All functionalities, data handling, and design decisions are tailored to specific private requirements.
+
+**Strictly Confidential:** Unauthorized access, reproduction, distribution, or use of this codebase or any derived materials is strictly prohibited.
