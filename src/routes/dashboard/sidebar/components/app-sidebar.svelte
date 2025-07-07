@@ -17,7 +17,7 @@
 	import Landmark from 'lucide-svelte/icons/landmark';
 	import SquareTerminal from 'lucide-svelte/icons/square-terminal';
 	import { AppWindow } from 'lucide-svelte';
-	import Logo from '$lib/assets/favicon.png';
+	import Logo from '$lib/assets/freelogo2.png';
 </script>
 
 <script lang="ts">
