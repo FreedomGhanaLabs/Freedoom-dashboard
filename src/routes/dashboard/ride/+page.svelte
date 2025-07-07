@@ -1,19 +1,17 @@
 <script lang="ts">
-	
-	import {  Download,  Plus, Search } from 'lucide-svelte';
+	import { Download, Plus, Search } from 'lucide-svelte';
 	import { type InvoiceRide } from '$lib/rides';
 	import TableGroup from './TableGroup.svelte';
-	import  { downloadCSV } from '$lib/csv';
+	import { downloadCSV } from '$lib/csv';
 	import type { PageData } from './$types';
-	
-    
+
 	const { data } = $props<{ data: PageData }>();
 
-  // now `data.deliveries` is your array
+	// now `data.deliveries` is your array
 	let ride = data.ride;
 
 	function formatToTwoDecimal(value: number): string {
-	return value.toFixed(2);
+		return value.toFixed(2);
 	}
 
 	function flattenRideData(ride: any) {
@@ -23,15 +21,15 @@
 			'estimatedDistance.text': ride.estimatedDistance?.text || '-',
 			'estimatedDuration.text': ride.estimatedDuration?.text || '-',
 			'pickupLocation.address': ride.pickupLocation?.address || '-',
-			'isMultiStop': ride.isMultiStop ? 'Yes' : 'No',
+			isMultiStop: ride.isMultiStop ? 'Yes' : 'No',
 			'stopLocations[0].address': ride.dropoffLocation?.address || '-',
 			'stopLocations[1].address': ride.stopLocations?.[1]?.address || '-',
-			'timeFare': formatToTwoDecimal(Number(ride.timeFare)),
-			'distanceFare': formatToTwoDecimal(Number(ride.distanceFare)),
-			'platformCommission': formatToTwoDecimal(Number(ride.platformCommission)),
-			'driverEarnings': formatToTwoDecimal(Number(ride.driverEarnings)),
-			'totalFare': formatToTwoDecimal(Number(ride.totalFare)),
-			'paymentMethod': ride.paymentMethod || '-',
+			timeFare: formatToTwoDecimal(Number(ride.timeFare)),
+			distanceFare: formatToTwoDecimal(Number(ride.distanceFare)),
+			platformCommission: formatToTwoDecimal(Number(ride.platformCommission)),
+			driverEarnings: formatToTwoDecimal(Number(ride.driverEarnings)),
+			totalFare: formatToTwoDecimal(Number(ride.totalFare)),
+			paymentMethod: ride.paymentMethod || '-'
 		};
 	}
 
@@ -40,38 +38,35 @@
 	let headings: {
 		title: string;
 		className: string;
-		key: string ;
-		}[] = [
+		key: string;
+	}[] = [
 		{ title: 'Recipient Phone', className: 'rounded-s-2xl', key: 'user.phone' },
-		{ title: 'Estimated Distance',  className: '',          key: 'estimatedDistance.text'  },
-		{ title: 'Estimated Duration',    className: '',   	    key: 'estimatedDuration.text'    },
-		{ title: 'Pickup Location',    className: '',  	        key: 'pickupLocation.address'    },
-		{ title: 'Mulit Stop',   className: '',            	key: 'isMultiStop'    },
-		{ title: 'Stop Location',       className: '',          key: 'stopLocations[0].address'    },
-		{ title: 'Time Fare',      className: '',            	key: 'timeFare'    },
-		{ title: 'Ride Fare',        className: '',             key: 'distanceFare'    },
-		{ title: 'Freedom Commison',  className: '',           	key: 'platformCommission'    },
-		{ title: 'Driver Earnings',   className: '',           	key: 'driverEarnings'    },
-		{ title: 'Total Fare', className: '', 					key: 'totalFare' },
-		{ title: 'Payment Method', className: 'rounded-e-2xl', 	key: 'paymentMethod' }
-	]
+		{ title: 'Estimated Distance', className: '', key: 'estimatedDistance.text' },
+		{ title: 'Estimated Duration', className: '', key: 'estimatedDuration.text' },
+		{ title: 'Pickup Location', className: '', key: 'pickupLocation.address' },
+		{ title: 'Mulit Stop', className: '', key: 'isMultiStop' },
+		{ title: 'Stop Location', className: '', key: 'stopLocations[0].address' },
+		{ title: 'Time Fare', className: '', key: 'timeFare' },
+		{ title: 'Ride Fare', className: '', key: 'distanceFare' },
+		{ title: 'Freedom Commison', className: '', key: 'platformCommission' },
+		{ title: 'Driver Earnings', className: '', key: 'driverEarnings' },
+		{ title: 'Total Fare', className: '', key: 'totalFare' },
+		{ title: 'Payment Method', className: 'rounded-e-2xl', key: 'paymentMethod' }
+	];
 
+	let searchTerm = '';
 
-   let searchTerm = '';
-
-
-  let  filteredRiders = searchTerm
-
-    ? formattedRides.filter((d:any) => {
-        const q = searchTerm.toLowerCase();
-        return (
-          d.recipientName?.toLowerCase().includes(q) ||
-          d.recipientPhone?.toLowerCase().includes(q) ||
-          d.packageName?.toLowerCase().includes(q) ||
-          d.packageType?.toLowerCase().includes(q)
-        );
-      })
-    : formattedRides;
+	let filteredRiders = searchTerm
+		? formattedRides.filter((d: any) => {
+				const q = searchTerm.toLowerCase();
+				return (
+					d.recipientName?.toLowerCase().includes(q) ||
+					d.recipientPhone?.toLowerCase().includes(q) ||
+					d.packageName?.toLowerCase().includes(q) ||
+					d.packageType?.toLowerCase().includes(q)
+				);
+			})
+		: formattedRides;
 
 	// --- CSV download logic ---
 	function handleDownload() {
@@ -81,14 +76,13 @@
 </script>
 
 <svelte:head>
-  <title>Ride  - Admin Panel</title>
+	<title>Ride - Admin Panel</title>
 </svelte:head>
 
 <div class="mx-auto">
-	
 	<div class="my-12 w-388 rounded-lg bg-white">
 		<div class="mt-4 flex items-center justify-between px-20 py-6">
-			<h3 class="text-2xl">User Management</h3>
+			<h3 class="text-2xl">Ride Management</h3>
 			<div class="flex items-center space-x-5">
 				<form class="mx-auto max-w-md">
 					<label for="default-search" class="sr-only">Search</label>
@@ -100,7 +94,7 @@
 							type="search"
 							id="default-search"
 							bind:value={searchTerm}
-							class="block w-fit max-w-52 rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-none "
+							class="block w-fit max-w-52 rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-sm text-gray-900 placeholder-gray-400 focus:border-none focus:outline-none"
 							placeholder="Search"
 							required
 						/>
@@ -108,7 +102,7 @@
 				</form>
 				<button
 					onclick={handleDownload}
-					class="flex items-center gap-2 rounded-lg border border-gray-500  px-4 py-3 text-gray-800"
+					class="ml-5 flex items-center gap-2 rounded-lg border border-gray-500 px-4 py-3 text-gray-800"
 				>
 					<!-- You can swap in any icon here -->
 					<Download class="h-5 w-5" />

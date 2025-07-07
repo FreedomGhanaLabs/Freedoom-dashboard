@@ -1,5 +1,4 @@
 <script lang="ts">
-	
 	import type { PageData } from './$types';
 	import { type DeliveryReportType } from '$lib/deliveryStore';
 	import { Download, Search } from 'lucide-svelte';
@@ -68,7 +67,7 @@
 </script>
 
 <svelte:head>
-  <title>Deliveries - Admin Panel</title>
+	<title>Deliveries - Admin Panel</title>
 </svelte:head>
 
 <!-- Finance Report Table with Filtering and Searching -->
@@ -84,7 +83,7 @@
 				placeholder="Search by reference"
 				class="w-64 rounded border p-3 pl-8"
 			/>
-			<Search class="absolute left-2 top-1/2 -translate-y-1/2 transform" size={16} />
+			<Search class="absolute top-1/2 left-2 -translate-y-1/2 transform" size={16} />
 		</div>
 		<button
 			onclick={handleDownload}
@@ -95,5 +94,7 @@
 			<span>Download CSV</span>
 		</button>
 	</div>
-	<TableGroup {headings} invoices={filteredDeliveryReport} />
+	<div class="px-8">
+		<TableGroup {headings} invoices={filteredDeliveryReport} />
+	</div>
 </section>

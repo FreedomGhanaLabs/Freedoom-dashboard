@@ -79,99 +79,101 @@
 	}
 </script>
 
-<Table.Root class="relative mx-auto mt-3 w-368 rounded-3xl p-6">
-	<Table.Caption>
-		<div class="my-5 flex flex-row items-center justify-between">
-			<div class="w-fit rounded-md border border-gray-400 bg-white/70 p-4 text-center">
-				Page 1 of 30
-			</div>
-			<div>
-				<ol
-					class="flex justify-center space-x-2 rounded-lg border border-gray-500 bg-slate-400/30 p-2 px-4 text-xs font-medium"
-				>
-					{#each paginationItems as item}
-						{#if item.type === 'prev'}
-							<li>
-								<a
-									href={item.href}
-									class="inline-flex size-8 items-center justify-center rounded-sm border border-gray-100 bg-white text-gray-900 rtl:rotate-180"
+<div class="px-6">
+	<Table.Root class="relative mx-auto mt-3 w-368 rounded-3xl p-6">
+		<Table.Caption>
+			<div class="my-5 flex flex-row items-center justify-between">
+				<div class="w-fit rounded-md border border-gray-400 bg-white/70 p-4 text-center">
+					Page 1 of 30
+				</div>
+				<div>
+					<ol
+						class="flex justify-center space-x-2 rounded-lg border border-gray-500 bg-slate-400/30 p-2 px-4 text-xs font-medium"
+					>
+						{#each paginationItems as item}
+							{#if item.type === 'prev'}
+								<li>
+									<a
+										href={item.href}
+										class="inline-flex size-8 items-center justify-center rounded-sm border border-gray-100 bg-white text-gray-900 rtl:rotate-180"
+									>
+										<span class="sr-only">{item.label}</span>
+										<ChevronLeft />
+									</a>
+								</li>
+							{:else if item.type === 'next'}
+								<li>
+									<a
+										href={item.href}
+										class="inline-flex size-8 items-center justify-center rounded-sm border border-gray-100 bg-white text-gray-900 rtl:rotate-180"
+									>
+										<span class="sr-only">{item.label}</span>
+										<ChevronRight />
+									</a>
+								</li>
+							{:else}
+								<li
+									class={item.active
+										? 'block size-8 rounded-sm border border-orange-600 bg-white text-center leading-8 text-orange-400'
+										: 'block size-8  rounded-sm border border-gray-100 bg-slate-100 text-center leading-8 text-red-500 '}
 								>
-									<span class="sr-only">{item.label}</span>
-									<ChevronLeft />
-								</a>
-							</li>
-						{:else if item.type === 'next'}
-							<li>
-								<a
-									href={item.href}
-									class="inline-flex size-8 items-center justify-center rounded-sm border border-gray-100 bg-white text-gray-900 rtl:rotate-180"
-								>
-									<span class="sr-only">{item.label}</span>
-									<ChevronRight />
-								</a>
-							</li>
-						{:else}
-							<li
-								class={item.active
-									? 'block size-8 rounded-sm border border-orange-600 bg-white text-center leading-8 text-orange-400'
-									: 'block size-8  rounded-sm border border-gray-100 bg-slate-100 text-center leading-8 text-red-500 '}
-							>
-								{#if !item.active}
-									<a href={item.href}>{item.label}</a>
-								{:else}
-									{item.label}
-								{/if}
-							</li>
-						{/if}
-					{/each}
-				</ol>
+									{#if !item.active}
+										<a href={item.href}>{item.label}</a>
+									{:else}
+										{item.label}
+									{/if}
+								</li>
+							{/if}
+						{/each}
+					</ol>
+				</div>
 			</div>
-		</div>
-	</Table.Caption>
-	<Table.Header class="bg-slate-200/70 py-12">
-		<Table.Row>
-			{#each headings as { className, title }}
-				<Table.Head scope="col" class={[className, ` py-6 text-lg text-black`]}>
-					{title}
-				</Table.Head>
-			{/each}
-		</Table.Row>
-	</Table.Header>
-	<Table.Body class="px-52">
-		{#each invoices as invoice, i (i)}
+		</Table.Caption>
+		<Table.Header class=" bg-slate-200/70 px-10 py-20">
 			<Table.Row>
-				{#each headings as heading, i}
-					{#if page.url.href.includes('ride')}
-						<Table.Cell class="{heading.className} border-b border-dashed border-gray-300 ">
-							<a
-								class="flex items-center space-x-2"
-								href={invoice && '_id' in invoice ? `/dashboard/ride/${invoice._id}` : '#'}
-							>
+				{#each headings as { className, title }}
+					<Table.Head scope="col" class={[className, ` py-6 text-lg text-black`]}>
+						{title}
+					</Table.Head>
+				{/each}
+			</Table.Row>
+		</Table.Header>
+		<Table.Body class="px-52">
+			{#each invoices as invoice, i (i)}
+				<Table.Row>
+					{#each headings as heading, i}
+						{#if page.url.href.includes('ride')}
+							<Table.Cell class="{heading.className} border-b border-dashed border-gray-300 ">
+								<a
+									class="flex items-center space-x-2"
+									href={invoice && '_id' in invoice ? `/dashboard/ride/${invoice._id}` : '#'}
+								>
+									{#if heading.key === 'status' && 'status' in invoice}
+										<!-- <span class={[getStatusStyle(invoice.status), '']}>{invoice.status} </span> -->
+									{:else}
+										{getCellContent(invoice, heading.key || deriveKey(heading.title))}
+									{/if}
+								</a>
+							</Table.Cell>
+						{:else}
+							<Table.Cell class="{heading.className} border-b border-dashed border-gray-300 ">
 								{#if heading.key === 'status' && 'status' in invoice}
-									<!-- <span class={[getStatusStyle(invoice.status), '']}>{invoice.status} </span> -->
+									<!-- <span class={[getStatusStyle(invoice.status), '']}>{invoice.status}</span> -->
+								{:else if heading.key === 'actions'}
+									<div class="flex items-center gap-2 text-[#0BDF00]">
+										{#if 'actions' in invoice}
+											<span>{invoice.actions}</span>
+										{/if}
+										<ArrowUpRight class="h-4 w-4" />
+									</div>
 								{:else}
 									{getCellContent(invoice, heading.key || deriveKey(heading.title))}
 								{/if}
-							</a>
-						</Table.Cell>
-					{:else}
-						<Table.Cell class="{heading.className} border-b border-dashed border-gray-300 ">
-							{#if heading.key === 'status' && 'status' in invoice}
-								<!-- <span class={[getStatusStyle(invoice.status), '']}>{invoice.status}</span> -->
-							{:else if heading.key === 'actions'}
-								<div class="flex items-center gap-2 text-[#0BDF00]">
-									{#if 'actions' in invoice}
-										<span>{invoice.actions}</span>
-									{/if}
-									<ArrowUpRight class="h-4 w-4" />
-								</div>
-							{:else}
-								{getCellContent(invoice, heading.key || deriveKey(heading.title))}
-							{/if}
-						</Table.Cell>
-					{/if}
-				{/each}
-			</Table.Row>
-		{/each}
-	</Table.Body>
-</Table.Root>
+							</Table.Cell>
+						{/if}
+					{/each}
+				</Table.Row>
+			{/each}
+		</Table.Body>
+	</Table.Root>
+</div>

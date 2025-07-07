@@ -1,6 +1,15 @@
 <script lang="ts">
 	import * as Table from '$lib/components/ui/table/index.js';
-	import { Download, Search, Users, FileCheck, Clock, XCircle, CheckCircle, AlertCircle } from 'lucide-svelte';
+	import {
+		Download,
+		Search,
+		Users,
+		FileCheck,
+		Clock,
+		XCircle,
+		CheckCircle,
+		AlertCircle
+	} from 'lucide-svelte';
 	import TableGroup from './TableGroup.svelte';
 	import { cleaner } from './cleaner.js';
 	import { downloadCSV } from '$lib/csv.js';
@@ -126,7 +135,7 @@
 					)}
 					<div class="rounded-lg border border-gray-200 p-4">
 						<div class="mb-3 flex items-center justify-between">
-							<h4 class="font-medium capitalize text-gray-700">
+							<h4 class="font-medium text-gray-700 capitalize">
 								{docType.replace(/([A-Z])/g, ' $1').trim()}
 							</h4>
 							<span class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600">
@@ -203,13 +212,15 @@
 				<!-- Pending Documents Button -->
 				<a
 					href="/dashboard/driver/pending-documents"
-					class="flex items-center gap-2 rounded-lg border border-orange-500 bg-orange-50 px-4 py-3 text-orange-800 transition-colors hover:bg-orange-100"
+					class="ml-5 flex items-center gap-2 rounded-lg border border-orange-500 bg-orange-50 px-4 py-3 text-orange-800 transition-colors hover:bg-orange-100"
 					class:animate-pulse={pendingDocsCount > 0}
 				>
 					<AlertCircle class="h-5 w-5" />
 					<span>Pending Docs</span>
 					{#if pendingDocsCount > 0}
-						<span class="ml-1 flex h-6 w-6 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white">
+						<span
+							class="ml-1 flex h-6 w-6 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white"
+						>
 							{pendingDocsCount}
 						</span>
 					{/if}
@@ -224,7 +235,8 @@
 				</button>
 			</div>
 		</div>
-
-		<TableGroup {headings} invoices={filteredDrivers} />
+		<div class="px-8">
+			<TableGroup {headings} invoices={filteredDrivers} />
+		</div>
 	</div>
 </div>

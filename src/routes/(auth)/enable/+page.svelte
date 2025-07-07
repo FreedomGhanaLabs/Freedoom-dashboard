@@ -2,7 +2,7 @@
 	import type { PageData, ActionData } from './$types';
 	import * as InputOTP from '$lib/components/ui/input-otp/index.js';
 
-	import logo from '$lib/assets/freelogo2.svg';
+	import logo from '$lib/assets/favicon.png';
 	import type { PageProps } from './$types';
 	import { fade, fly } from 'svelte/transition';
 	import { enhance } from '$app/forms';
@@ -54,12 +54,12 @@
 	$inspect(pin);
 </script>
 
-<div class="mx-auto w-full max-w-md p-8 font-poppins">
+<div class="font-poppins mx-auto w-full max-w-md p-8">
 	<div class="text-center">
 		<img alt="Logo" class="mx-auto my-14 size-20" src={logo} />
 	</div>
 	<h2 class="-mt-12 text-center text-[2rem] font-medium">Enter TOTP Code to Activate 2FA</h2>
-   
+
 	<div class="text-center text-[0.8rem] text-gray-500">
 		<p>Please enter the 6-digit code from your authentication app</p>
 	</div>
@@ -99,21 +99,19 @@
 			<p class="text-center text-red-500">{form.error}</p>
 		{/if}
 
-        		<!-- ← add this block -->
+		<!-- ← add this block -->
 		{#if form?.success}
-        <div
-            class="mt-4 flex flex-col items-center space-y-2 rounded-md bg-green-100 p-4 text-green-800"
-        >
-            <p>✅ Enabled successfully!</p>
-            <a href="/" class="underline hover:text-green-900">
-                Go to Login →
-            </a>
-        </div>
-    {/if}
+			<div
+				class="mt-4 flex flex-col items-center space-y-2 rounded-md bg-green-100 p-4 text-green-800"
+			>
+				<p>✅ Enabled successfully!</p>
+				<a href="/" class="underline hover:text-green-900"> Go to Login → </a>
+			</div>
+		{/if}
 
 		<div>
 			<button
-				class="group relative flex w-full justify-center rounded-md border border-transparent bg-[#170614] px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+				class="group relative flex w-full justify-center rounded-md border border-transparent bg-[#170614] px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:outline-none"
 				type="submit"
 			>
 				{#if sending}

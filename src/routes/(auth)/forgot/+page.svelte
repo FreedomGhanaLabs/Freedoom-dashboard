@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { PageData } from './$types';
+	import type { PageData } from './$types';
 
-    import logo from '$lib/assets/freelogo2.svg';
+	import logo from '$lib/assets/favicon.png';
 	import { Mail, Lock, Eye, EyeOff, AlertTriangle, Info } from 'lucide-svelte';
 	import type { PageProps } from './$types';
 	import { fade, fly } from 'svelte/transition';
@@ -9,15 +9,11 @@
 
 	let { form }: PageProps = $props();
 
-
-
 	let email = $state('');
 	let sending = $state(false);
-
-   
 </script>
 
-<div class="mx-auto w-full max-w-md p-8 font-poppins">
+<div class="font-poppins mx-auto w-full max-w-md p-8">
 	<div class="text-center">
 		<img alt="Logo" class="mx-auto my-12 size-20" src={logo} />
 	</div>
@@ -53,20 +49,18 @@
 					<input
 						autocomplete="email"
 						bind:value={email}
-						class="relative  mb-2 mt-2 block w-full rounded-md bg-yellow-50 px-5 py-2 pl-10 text-gray-700 placeholder-gray-500 transition-colors duration-700 focus:z-10 focus:outline-none sm:text-sm"
+						class="relative mt-2 mb-2 block w-full rounded-md bg-yellow-50 px-5 py-2 pl-10 text-gray-700 placeholder-gray-500 transition-colors duration-700 focus:z-10 focus:outline-none sm:text-sm"
 						id="email-address"
 						name="email"
 						placeholder="Enter your email"
 						type="email"
 					/>
 				</div>
-				
 			</section>
-			
 		</div>
 		<div>
 			<button
-				class="group relative flex w-full justify-center rounded-md border border-transparent bg-[#170614] px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+				class="group relative flex w-full justify-center rounded-md border border-transparent bg-[#170614] px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:outline-none"
 				type="submit"
 			>
 				{#if sending}
@@ -76,7 +70,8 @@
 				{/if}
 			</button>
 		</div>
-        <p class="text-gray-700 text-center text-sm -mt-5">
-            <a href="/">Back to Login</a>
+		<p class="-mt-5 text-center text-sm text-gray-700">
+			<a href="/">Back to Login</a>
+		</p>
 	</form>
 </div>
