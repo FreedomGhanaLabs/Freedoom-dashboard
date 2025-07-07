@@ -56,7 +56,7 @@
 </script>
 
 
-<div class="container mx-auto mb-[5rem] w-[70rem] p-6">
+<div class="container mx-auto mb-20 w-280 p-6">
 	<!-- Header Navigation -->
 	<div class="mb-4 flex items-center">
 		<a
@@ -66,7 +66,7 @@
 			})} flex items-center gap-2 text-orange-500 hover:text-orange-700"
 			><ArrowLeft class="size-4" /> Back</a
 		>
-		<div class="ml-[0.5rem] flex space-x-2">
+		<div class="ml-2 flex space-x-2">
 			<button onclick={() => window.history.back()} class="text-gray-500 hover:text-gray-700"
 				><ChevronLeft class="size-4" /></button
 			>
@@ -79,7 +79,7 @@
 	<h1 class="mb-4 text-2xl font-bold">Rider Profile</h1>
 
 	<!-- Profile Header -->
-	<div class="mb-6 h-[12rem] rounded-lg border border-gray-200 bg-white p-6 shadow-md">
+	<div class="mb-6 h-48 rounded-lg border border-gray-200 bg-white p-6 shadow-md">
 		<div class="flex items-center">
 			<div class="ml-4 flex flex-col items-center justify-center text-center">
 				<img src={Driver} alt="Rider Profile" class="size-20 rounded-full" />
@@ -91,7 +91,7 @@
 					{data.ride?.userRating?.rating || 'N/A'}
 				</div>
 			</div>
-			<div class="ml-[2.5rem] space-y-3">
+			<div class="ml-10 space-y-3">
 				<div class="flex space-x-3">
 					<h2 class="text-[1.7rem] text-lg font-normal">
 						{data.ride?.user?.email?.split('@')[0] || 'Rider'}
@@ -103,24 +103,24 @@
 
 				<div class="flex flex-row">
 					<span><Phone class="size-5" /></span>
-					<p class="ml-[0.5rem] text-gray-600">
+					<p class="ml-2 text-gray-600">
 						{data.ride?.user?.phone || 'N/A'}
 					</p>
 				</div>
 				<div class="flex flex-row">
 					<span><Mail /></span>
-					<p class="ml-[0.5rem] text-gray-600">
+					<p class="ml-2 text-gray-600">
 						{data.ride?.user?.email || 'N/A'}
 					</p>
 				</div>
 				<div class="flex flex-row">
 					<span><MapPin /></span>
-					<p class="ml-[0.5rem] text-gray-600">
+					<p class="ml-2 text-gray-600">
 						{data.ride?.pickupLocation?.address || 'N/A'}
 					</p>
 				</div>
 			</div>
-			<!-- <div class="mb-[5.5rem] ml-auto flex space-x-2 text-[1.2rem]">
+			<!-- <div class="mb-22 ml-auto flex space-x-2 text-[1.2rem]">
 				<button class="rounded-lg bg-[#180F00] px-4 py-2 text-white">Edit Profile</button>
 				<button class="rounded-lg border px-4 py-2 text-gray-800 shadow-inner"
 					>Contact Support</button
@@ -212,16 +212,16 @@
 
 	<Tabs.Root value="profile" onValueChange={(v) => (selectedTab = v)}>
 		<Tabs.List
-			class="flex h-[5rem] w-[50rem] items-center space-x-[2rem] rounded-xl border bg-white"
+			class="flex h-20 w-200 items-center space-x-8 rounded-xl border bg-white"
 		>
 			<Tabs.Trigger value="profile">Ride Information</Tabs.Trigger>
 			<Tabs.Trigger value="rewards">Payment Information</Tabs.Trigger>
 		</Tabs.List>
 		<div class="mt-6 space-y-4">
 			<Tabs.Content value="profile">
-				<div class="container mx-[-1.5rem] w-[70rem] p-6">
+				<div class="container -mx-6 w-280 p-6">
 					<!-- Personal Information -->
-					<div class="-mt-8 h-[30rem] w-[50rem] rounded-xl border bg-white text-[1.3rem]">
+					<div class="-mt-8 h-120 w-200 rounded-xl border bg-white text-[1.3rem]">
 						<h3 class="ml-8 mt-5 text-[1.6rem] font-semibold">Ride Information</h3>
 						<div class="mt-3 grid grid-cols-4 gap-10 px-8 text-[0.9rem]">
 							<div class="rounded-xl border border-gray-200 bg-white p-4">
@@ -265,7 +265,7 @@
 						<div class="ml-8 mt-5">
 							<h3 class="mb-10 text-lg font-semibold">Other Information</h3>
 							<div
-								class="flex h-[3.5rem] w-[18rem] flex-col justify-center gap-3 rounded-lg p-2 text-[1rem]"
+								class="flex h-14 w-[18rem] flex-col justify-center gap-3 rounded-lg p-2 text-[1rem]"
 							>
                             
 								<p class="flex space-x-2">
@@ -302,7 +302,7 @@
 			</Tabs.Content>
 
 			<Tabs.Content value="rewards">
-				<div class="max-w-[50rem] rounded-lg bg-white p-6 shadow-md">
+				<div class="max-w-200 rounded-lg bg-white p-6 shadow-md">
 					<h2 class="mb-4 text-xl font-semibold text-gray-800">Fare Summary</h2>
 
 					<div class="grid grid-cols-2 gap-4 text-[1rem] text-gray-700">

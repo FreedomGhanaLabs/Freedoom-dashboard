@@ -72,7 +72,7 @@
 </svelte:head>
 
 <!-- Finance Report Table with Filtering and Searching -->
-<section class="mx-auto my-[3rem] w-[97rem] rounded-lg bg-white">
+<section class="mx-auto my-12 w-388 rounded-lg bg-white">
 	<div class="space mb-4 flex items-center px-12">
 		<h3 class="p-10 text-[2rem]">Delivery Report</h3>
 

@@ -28,11 +28,7 @@
 
 	interface Props {
 		headings: Heading[];
-		invoices: (
-			
-			 InvoiceRide
-			
-		)[];
+		invoices: InvoiceRide[];
 	}
 
 	let { headings, invoices }: Props = $props();
@@ -56,10 +52,8 @@
 	}
 
 	function getCellContent(
-		invoice:
-			
-			| InvoiceRide,
-			
+		invoice: InvoiceRide,
+
 		key: string
 	) {
 		// Check if the key exists in the invoice object
@@ -85,7 +79,7 @@
 	}
 </script>
 
-<Table.Root class="relative mx-auto mt-3 w-[92rem] rounded-3xl">
+<Table.Root class="relative mx-auto mt-3 w-368 rounded-3xl p-6">
 	<Table.Caption>
 		<div class="my-5 flex flex-row items-center justify-between">
 			<div class="w-fit rounded-md border border-gray-400 bg-white/70 p-4 text-center">
@@ -143,7 +137,7 @@
 			{/each}
 		</Table.Row>
 	</Table.Header>
-	<Table.Body>
+	<Table.Body class="px-52">
 		{#each invoices as invoice, i (i)}
 			<Table.Row>
 				{#each headings as heading, i}

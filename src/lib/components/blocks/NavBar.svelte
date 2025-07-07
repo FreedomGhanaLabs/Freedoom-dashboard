@@ -55,7 +55,7 @@
 			<!-- Don't remove the div -->
 		</div>
 		<div>
-			<h3 class="-ml-[5rem] text-2xl font-normal">{activeRoute?.text}</h3>
+			<h3 class="-ml-20 text-2xl font-normal">{activeRoute?.text}</h3>
 		</div>
 
 		<div>
@@ -112,7 +112,7 @@
 							class="block rounded-lg border-2 px-1 py-2 {buttonVariants({
 								variant: 'outline'
 							})}  text-gray-900 {item.radio
-								? '!bg-amber-500 text-white hover:bg-orange-600 hover:text-white'
+								? 'bg-amber-500! text-white hover:bg-orange-600 hover:text-white'
 								: 'bg-white hover:bg-gray-100'}"
 						>
 							<span class="">

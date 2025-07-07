@@ -5,7 +5,7 @@
 </script>
 
 
-<div class="w-[70rem] mx-auto">
+<div class="w-280 mx-auto">
     	<!-- Performance Metrics and Driver Notes -->
 	<div class="grid grid-cols-2 gap-6">
 		<div class="rounded-lg bg-gray-50 p-4 shadow-sm">

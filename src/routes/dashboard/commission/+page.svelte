@@ -68,7 +68,7 @@
     <div class="mb-8">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white rounded-2xl  border border-gray-200 p-8">
         <div>
-          <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <h1 class="text-4xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             Commission Configuration
           </h1>
           <p class="text-gray-600 mt-2">Manage your commission rates and fee structures</p>
@@ -95,7 +95,7 @@
 
     <!-- Main Configuration Form -->
     <div class="bg-white  rounded-3xl border border-gray-200 overflow-hidden">
-      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
+      <div class="bg-linear-to-r from-blue-600 to-indigo-600 px-8 py-6">
         <h2 class="text-2xl font-bold text-white">Configuration Settings</h2>
       </div>
       
@@ -106,9 +106,9 @@
           
           <div class="space-y-12">
             <!-- Default Rates Section -->
-            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-200">
+            <div class="bg-linear-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-200">
               <div class="flex items-center gap-3 mb-6">
-                <div class="w-3 h-8 bg-gradient-to-b from-blue-500 to-indigo-500 rounded-full"></div>
+                <div class="w-3 h-8 bg-linear-to-b from-blue-500 to-indigo-500 rounded-full"></div>
                 <h2 class="text-2xl font-bold text-gray-800">Default Rates</h2>
               </div>
               
@@ -162,9 +162,9 @@
             </div>
 
             <!-- Payment Method Rates Section -->
-            <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-8 border border-emerald-200">
+            <div class="bg-linear-to-br from-emerald-50 to-teal-50 rounded-2xl p-8 border border-emerald-200">
               <div class="flex items-center gap-3 mb-6">
-                <div class="w-3 h-8 bg-gradient-to-b from-emerald-500 to-teal-500 rounded-full"></div>
+                <div class="w-3 h-8 bg-linear-to-b from-emerald-500 to-teal-500 rounded-full"></div>
                 <h2 class="text-2xl font-bold text-gray-800">Payment Method Rates</h2>
               </div>
               
@@ -228,9 +228,9 @@
             </div>
 
             <!-- Service Type Rates Section -->
-            <div class="bg-gradient-to-br from-purple-50 to-violet-50 rounded-2xl p-8 border border-purple-200">
+            <div class="bg-linear-to-br from-purple-50 to-violet-50 rounded-2xl p-8 border border-purple-200">
               <div class="flex items-center gap-3 mb-6">
-                <div class="w-3 h-8 bg-gradient-to-b from-purple-500 to-violet-500 rounded-full"></div>
+                <div class="w-3 h-8 bg-linear-to-b from-purple-500 to-violet-500 rounded-full"></div>
                 <h2 class="text-2xl font-bold text-gray-800">Service Type Rates</h2>
               </div>
               
@@ -294,9 +294,9 @@
             </div>
 
             <!-- Fees Section -->
-            <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-8 border border-amber-200">
+            <div class="bg-linear-to-br from-amber-50 to-orange-50 rounded-2xl p-8 border border-amber-200">
               <div class="flex items-center gap-3 mb-6">
-                <div class="w-3 h-8 bg-gradient-to-b from-amber-500 to-orange-500 rounded-full"></div>
+                <div class="w-3 h-8 bg-linear-to-b from-amber-500 to-orange-500 rounded-full"></div>
                 <h2 class="text-2xl font-bold text-gray-800">Fees</h2>
               </div>
               
@@ -341,9 +341,9 @@
             </div>
 
             <!-- Minimum Threshold Section -->
-            <div class="bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl p-8 border border-rose-200">
+            <div class="bg-linear-to-br from-rose-50 to-pink-50 rounded-2xl p-8 border border-rose-200">
               <div class="flex items-center gap-3 mb-6">
-                <div class="w-3 h-8 bg-gradient-to-b from-rose-500 to-pink-500 rounded-full"></div>
+                <div class="w-3 h-8 bg-linear-to-b from-rose-500 to-pink-500 rounded-full"></div>
                 <h2 class="text-2xl font-bold text-gray-800">Minimum Threshold</h2>
               </div>
               
@@ -375,7 +375,7 @@
               </button>
               <button
                 type="submit"
-                class="px-8 py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
+                class="px-8 py-3 bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
               >
                 Save Changes
               </button>
@@ -387,7 +387,7 @@
 
     <!-- Company Expense Section -->
     <div class="mt-12 bg-white rounded-3xl border border-gray-200 overflow-hidden">
-      <div class="bg-gradient-to-r from-emerald-600 to-teal-600 px-8 py-6">
+      <div class="bg-linear-to-r from-emerald-600 to-teal-600 px-8 py-6">
         <h2 class="text-2xl font-bold text-white">Record a Company Expense</h2>
         <p class="text-emerald-100 mt-1">Track and manage your company expenditures</p>
       </div>
@@ -477,7 +477,7 @@
           <div class="flex justify-end pt-8 border-t border-gray-200">
             <button
               type="submit"
-              class="group px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-3"
+              class="group px-8 py-3 bg-linear-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-3"
             >
               <svg class="w-5 h-5 transition-transform group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>

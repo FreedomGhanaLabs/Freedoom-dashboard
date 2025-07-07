@@ -112,11 +112,11 @@
 	$: quietHoursEnabled = driver.notificationPreferences?.quietHours?.enabled || false;
 </script>
 
-<div class="container mx-auto mb-[5rem] w-[70rem] p-6">
+<div class="container mx-auto mb-20 w-280 p-6">
 	<!-- Header Navigation -->
 	<!-- <div class="mb-4 flex items-center">
 		<button class="text-orange-500 hover:text-orange-700">&larr; Back</button>
-		<div class="ml-[0.5rem] flex space-x-2">
+		<div class="ml-2 flex space-x-2">
 			<button class="text-gray-500 hover:text-gray-700">&lt;</button>
 			<button class="text-gray-500 hover:text-gray-700">&gt;</button>
 		</div>
@@ -169,7 +169,7 @@
 </section>
 
 	<!-- Profile Header -->
-	<div class="mb-6 w-[70rem] rounded-lg border border-gray-200 bg-white p-2 shadow-md">
+	<div class="mb-6 w-280 rounded-lg border border-gray-200 bg-white p-2 shadow-md">
 		<div class="flex items-center justify-between">
 			<!-- driver profile pic and others -->
 			<div class="flex rounded-xl p-6">
@@ -191,7 +191,7 @@
 				</div>
 
 				<!-- driver email and other details -->
-				<div class="ml-[1.5rem] space-y-3">
+				<div class="ml-6 space-y-3">
 					<div class="flex space-x-3">
 						<h2 class="text-[1.7rem] text-lg font-normal">
 							{driver.firstName}
@@ -205,15 +205,15 @@
 
 					<div class="flex flex-row">
 						<span><Phone class="size-5" /></span>
-						<p class="ml-[0.5rem] text-gray-600">{phone}</p>
+						<p class="ml-2 text-gray-600">{phone}</p>
 					</div>
 					<div class="flex flex-row">
 						<span><Mail /></span>
-						<p class="ml-[0.5rem] text-gray-600">{email}</p>
+						<p class="ml-2 text-gray-600">{email}</p>
 					</div>
 					<div class="flex flex-row">
 						<span><MapPin /></span>
-						<p class="ml-[0.5rem] text-gray-600">
+						<p class="ml-2 text-gray-600">
 							{address.city || 'N/A'}, {address.state || ''}, {address.country || ''}
 						</p>
 					</div>
@@ -242,7 +242,7 @@
 			</div>
 
 			<!-- Grid with stats -->
-			<div class="grid w-[30rem] grid-cols-2 gap-4 p-2 text-black">
+			<div class="grid w-120 grid-cols-2 gap-4 p-2 text-black">
 				<div class="rounded-lg bg-white p-3">
 					<p class="flex items-center text-center text-sm">
 						<span class="mr-2 rounded-md bg-[#F59E0B12]/10 p-1 text-orange-500"><Bike /></span>
@@ -388,7 +388,7 @@
 
 	<Tabs.Root value="onlineHistory">
 		<Tabs.List
-			class="flex h-[5rem] w-[67rem] items-center space-x-[1rem] rounded-xl border bg-white"
+			class="flex h-20 w-268 items-center space-x-4 rounded-xl border bg-white"
 		>
 			<Tabs.Trigger value="onlineHistory">Online History</Tabs.Trigger>
 			<Tabs.Trigger value="Devices">Devices</Tabs.Trigger>

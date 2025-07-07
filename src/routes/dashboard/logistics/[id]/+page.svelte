@@ -91,7 +91,7 @@
 	<title>Delivery #{delivery._id.slice(-8)} - Dashboard</title>
 </svelte:head>
 
-<div class="min-h-screen bg-white mb-[4rem] w-[75vw] rounded-2xl mx-auto p-6">
+<div class="min-h-screen bg-white mb-16 w-[75vw] rounded-2xl mx-auto p-6">
 	<div class="max-w-7xl mx-auto">
 		<!-- Header -->
 		<div class="mb-8">
@@ -191,7 +191,7 @@
 						</div>
 						<div class="space-y-4">
 							<div class="flex items-start gap-4 p-4 bg-green-50 rounded-lg">
-								<div class="w-3 h-3 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
+								<div class="w-3 h-3 bg-green-600 rounded-full mt-2 shrink-0"></div>
 								<div class="flex-1">
 									<label class="text-sm font-medium text-green-700">Pickup Location</label>
 									<p class="text-gray-900 font-medium">{delivery.pickupLocation.address}</p>
@@ -201,7 +201,7 @@
 								</div>
 							</div>
 							<div class="flex items-start gap-4 p-4 bg-red-50 rounded-lg">
-								<div class="w-3 h-3 bg-red-600 rounded-full mt-2 flex-shrink-0"></div>
+								<div class="w-3 h-3 bg-red-600 rounded-full mt-2 shrink-0"></div>
 								<div class="flex-1">
 									<label class="text-sm font-medium text-red-700">Dropoff Location</label>
 									<p class="text-gray-900 font-medium">{delivery.dropoffLocation.address}</p>
@@ -224,7 +224,7 @@
 						<div class="space-y-4">
 							{#each timeline as item, index}
 								<div class="flex items-center gap-4">
-									<div class="flex-shrink-0">
+									<div class="shrink-0">
 										<div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
 											<svelte:component this={item.icon} class="w-5 h-5 text-blue-600" />
 										</div>

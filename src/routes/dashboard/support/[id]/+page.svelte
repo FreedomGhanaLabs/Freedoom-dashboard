@@ -254,7 +254,7 @@
   </div>
 
    <!-- Ticket Details -->
-    <div class=" bg-white p-4 space-y-3 flex flex-col max-w-3xl shadow-lg max-h-[30rem]  rounded-2xl gap-6 mb-8">
+    <div class=" bg-white p-4 space-y-3 flex flex-col max-w-3xl shadow-lg max-h-120  rounded-2xl gap-6 mb-8">
       <div>
         <h2 class="text-lg font-normal text-gray-400 mb-2">Creator</h2>
         <div class="space-y-2">

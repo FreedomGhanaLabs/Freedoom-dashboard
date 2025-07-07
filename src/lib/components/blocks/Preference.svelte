@@ -4,7 +4,7 @@
 
 
 <!-- Preferences List -->
-<div class="bg-gray-50 p-4 w-[50rem] rounded-lg shadow-sm border border-gray-200">
+<div class="bg-gray-50 p-4 w-200 rounded-lg shadow-sm border border-gray-200">
 
     <!-- Preferences Header -->
 <h1 class="text-2xl font-bold mb-4">Preferences</h1>

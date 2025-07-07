@@ -63,7 +63,7 @@
   <title>Transaction Details - {transaction.transaction?.reference || 'Unknown'}</title>
 </svelte:head>
 
-<div class="mt-8 flex justify-left ml-[10rem] mb-4">
+<div class="mt-8 flex justify-left ml-40 mb-4">
       <button 
         on:click={() => window.history.back()}
         class=""
@@ -72,7 +72,7 @@
         Back to Transactions
       </button>
     </div>
-<div class="min-h-screen w-[70vw] rounded-2xl bg-white mx-auto bg-gradient-to-br p-4 sm:p-6 lg:p-8">
+<div class="min-h-screen w-[70vw] rounded-2xl bg-white mx-auto bg-linear-to-br p-4 sm:p-6 lg:p-8">
   <div class="max-w-6xl mx-auto">
     <!-- Header -->
     <div class="mb-8">
@@ -95,7 +95,7 @@
       <div class="lg:col-span-2 space-y-6">
         <!-- Transaction Overview -->
         <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-          <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
+          <div class="bg-linear-to-r from-blue-600 to-purple-600 p-6 text-white">
             <div class="flex items-center justify-between">
               <div>
                 <h2 class="text-2xl font-bold mb-2">
@@ -146,7 +146,7 @@
         <!-- Ride Details -->
         {#if transaction.ride}
           <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-            <div class="bg-gradient-to-r from-green-500 to-teal-500 p-4 text-white">
+            <div class="bg-linear-to-r from-green-500 to-teal-500 p-4 text-white">
               <h3 class="text-xl font-bold flex items-center">
                 <span class="mr-2">🚗</span>
                 Ride Details
@@ -156,7 +156,7 @@
               <div class="space-y-4">
                 <!-- Pickup Location -->
                 <div class="flex items-start space-x-3">
-                  <div class="w-3 h-3 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <div class="w-3 h-3 bg-green-500 rounded-full mt-2 shrink-0"></div>
                   <div class="flex-1">
                     <p class="text-sm text-gray-500 mb-1">Pickup Location</p>
                     <p class="text-gray-900 font-medium">
@@ -170,7 +170,7 @@
                 
                 <!-- Dropoff Location -->
                 <div class="flex items-start space-x-3">
-                  <div class="w-3 h-3 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <div class="w-3 h-3 bg-red-500 rounded-full mt-2 shrink-0"></div>
                   <div class="flex-1">
                     <p class="text-sm text-gray-500 mb-1">Dropoff Location</p>
                     <p class="text-gray-900 font-medium">
@@ -188,7 +188,7 @@
       <div class="space-y-6">
         <!-- User Information -->
         <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-          <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-4 text-white">
+          <div class="bg-linear-to-r from-purple-500 to-pink-500 p-4 text-white">
             <h3 class="text-lg font-bold flex items-center">
               <span class="mr-2">👤</span>
               User Information
@@ -213,7 +213,7 @@
 
         <!-- Delivery Status -->
         <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-          <div class="bg-gradient-to-r from-indigo-500 to-blue-500 p-4 text-white">
+          <div class="bg-linear-to-r from-indigo-500 to-blue-500 p-4 text-white">
             <h3 class="text-lg font-bold flex items-center">
               <span class="mr-2">📦</span>
               Delivery Status
@@ -233,7 +233,7 @@
 
           <!-- Transaction Summary -->
         <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-          <div class="bg-gradient-to-r from-orange-500 to-red-500 p-4 text-white">
+          <div class="bg-linear-to-r from-orange-500 to-red-500 p-4 text-white">
             <h3 class="text-lg font-bold flex items-center">
               <span class="mr-2">📊</span>
               Summary

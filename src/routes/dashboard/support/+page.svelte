@@ -121,8 +121,8 @@
 </svelte:head>
 
 <div class="mx-auto">
-	<div class="my-[3rem] w-[97rem] rounded-lg bg-white">
-		<section class="mt-[1rem] items-center justify-between px-[3rem] py-6">
+	<div class="my-12 w-388 rounded-lg bg-white">
+		<section class="mt-4 items-center justify-between px-12 py-6">
 			<div class="flex items-center gap-4">
 				<h1 class="text-3xl font-bold">Support Center</h1>
 			</div>
@@ -130,7 +130,7 @@
 			<!-- Stats Dashboard -->
 			<div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 				<!-- Total Tickets -->
-				<div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
+				<div class="bg-linear-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
 					<div class="flex items-center justify-between">
 						<div>
 							<p class="text-blue-600 text-sm font-medium uppercase tracking-wide">Total Tickets</p>
@@ -143,7 +143,7 @@
 				</div>
 
 				<!-- Resolution Rate -->
-				<div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
+				<div class="bg-linear-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
 					<div class="flex items-center justify-between">
 						<div>
 							<p class="text-green-600 text-sm font-medium uppercase tracking-wide">Resolution Rate</p>
@@ -156,7 +156,7 @@
 				</div>
 
 				<!-- Average Resolution Time -->
-				<div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-6 border border-amber-200">
+				<div class="bg-linear-to-br from-amber-50 to-amber-100 rounded-xl p-6 border border-amber-200">
 					<div class="flex items-center justify-between">
 						<div>
 							<p class="text-amber-600 text-sm font-medium uppercase tracking-wide">Avg Resolution</p>
@@ -169,7 +169,7 @@
 				</div>
 
 				<!-- Satisfaction Rating -->
-				<div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+				<div class="bg-linear-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
 					<div class="flex items-center justify-between">
 						<div>
 							<p class="text-purple-600 text-sm font-medium uppercase tracking-wide">Satisfaction</p>
@@ -308,7 +308,7 @@
 				</button>
 			</div>
 		</section>
-		<h2 class="mb-6 text-2xl ml-[3rem] font-bold">Support Tickets{activeCategory !== 'All Tickets' ? ` - ${activeCategory}` : ''}</h2>
+		<h2 class="mb-6 text-2xl ml-12 font-bold">Support Tickets{activeCategory !== 'All Tickets' ? ` - ${activeCategory}` : ''}</h2>
 		<TableGroup {headings} invoices={filteredRiders} />
 	</div>
 </div>

@@ -22,7 +22,7 @@ import type { PageProps } from './$types';
   
   <div class="mx-auto max-w-md p-8 font-poppins">
     <div class="text-center">
-      <img src={logo} alt="Logo" class="mx-auto my-14 size-[5rem]" />
+      <img src={logo} alt="Logo" class="mx-auto my-14 size-20" />
     </div>
   
     {#if form?.secret}
@@ -31,7 +31,7 @@ import type { PageProps } from './$types';
         Scan this QR code with your authenticator
       </h2>
       <div class="flex justify-center mb-6">
-          <img src={form?.qrCode} alt="QR Code" class="mx-auto my-6 size-[15rem]" />
+          <img src={form?.qrCode} alt="QR Code" class="mx-auto my-6 size-60" />
       </div>
       <h3>Can't scan QR code?</h3>
       <span class="flex justify-center items-center">

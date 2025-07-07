@@ -2,7 +2,7 @@
 </script>
 
     <!-- Motorcycle Information and Vehicle Photos -->
-    <div class="w-[50rem] mt-[3rem] ">
+    <div class="w-200 mt-12 ">
         <div class="grid grid-cols-2 gap-6">
             <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
                 <h3 class="text-lg font-semibold mb-4 flex justify-between items-center">
@@ -25,8 +25,8 @@
 
                 <!-- Image Upload Box 1 -->
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-gray-200 h-[8rem] w-full rounded-lg flex items-center justify-center text-gray-500 text-sm">120 x 120</div>
-                    <div class="bg-gray-200 h-[8rem] w-full rounded-lg flex items-center justify-center text-gray-500 text-sm">120 x 120</div>
+                    <div class="bg-gray-200 h-32 w-full rounded-lg flex items-center justify-center text-gray-500 text-sm">120 x 120</div>
+                    <div class="bg-gray-200 h-32 w-full rounded-lg flex items-center justify-center text-gray-500 text-sm">120 x 120</div>
                 </div>
 
 

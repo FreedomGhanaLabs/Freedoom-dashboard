@@ -65,7 +65,7 @@
 
 <div>
 	<!-- Stats Dashboard -->
-	<div class="mx-auto w-[97rem] p-[5rem]">
+	<div class="mx-auto w-388 p-20">
 		<!-- Document Type Breakdown -->
 		<div class="rounded-xl bg-white p-6 shadow-lg">
 			<h3 class="mb-6 text-xl font-semibold text-gray-800">Document Verification Status</h3>
@@ -73,7 +73,7 @@
 			<!-- Overview Cards -->
 			<div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
 				<!-- Total Drivers -->
-				<div class="rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 p-6 text-white">
+				<div class="rounded-xl bg-linear-to-r from-blue-500 to-blue-600 p-6 text-white">
 					<div class="flex items-center justify-between">
 						<div>
 							<p class="text-blue-100">Total Drivers</p>
@@ -84,7 +84,7 @@
 				</div>
 
 				<!-- Approved Documents -->
-				<div class="rounded-xl bg-gradient-to-r from-green-500 to-green-600 p-6 text-white">
+				<div class="rounded-xl bg-linear-to-r from-green-500 to-green-600 p-6 text-white">
 					<div class="flex items-center justify-between">
 						<div>
 							<p class="text-green-100">Approved</p>
@@ -95,7 +95,7 @@
 				</div>
 
 				<!-- Pending Documents -->
-				<div class="rounded-xl bg-gradient-to-r from-yellow-500 to-yellow-600 p-6 text-white">
+				<div class="rounded-xl bg-linear-to-r from-yellow-500 to-yellow-600 p-6 text-white">
 					<div class="flex items-center justify-between">
 						<div>
 							<p class="text-yellow-100">Pending</p>
@@ -106,7 +106,7 @@
 				</div>
 
 				<!-- Incomplete Documents -->
-				<div class="rounded-xl bg-gradient-to-r from-red-500 to-red-600 p-6 text-white">
+				<div class="rounded-xl bg-linear-to-r from-red-500 to-red-600 p-6 text-white">
 					<div class="flex items-center justify-between">
 						<div>
 							<p class="text-red-100">Incomplete</p>
@@ -142,7 +142,7 @@
 							</div>
 							<div class="h-2 w-full rounded-full bg-gray-200">
 								<div
-									class="h-2 rounded-full bg-gradient-to-r from-green-400 to-green-500"
+									class="h-2 rounded-full bg-linear-to-r from-green-400 to-green-500"
 									style="width: {approvalRate}%"
 								></div>
 							</div>
@@ -176,8 +176,8 @@
 	</div>
 
 	<!-- Existing Table Section -->
-	<div class="mx-auto mb-[3rem] w-[97rem] rounded-lg bg-white">
-		<div class="mt-[1rem] flex flex-row items-center justify-between px-[5rem] py-6">
+	<div class="mx-auto mb-12 w-388 rounded-lg bg-white">
+		<div class="mt-4 flex flex-row items-center justify-between px-20 py-6">
 			<h3 class="text-2xl">Driver Management</h3>
 			<div class="flex flex-row items-center justify-between space-x-5">
 				<form class="mx-auto max-w-md">
@@ -193,7 +193,7 @@
 							type="search"
 							id="default-search"
 							bind:value={searchTerm}
-							class="block w-fit max-w-[13rem] rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500"
+							class="block w-fit max-w-52 rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500"
 							placeholder="Search"
 							required
 						/>

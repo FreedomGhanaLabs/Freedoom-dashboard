@@ -97,7 +97,7 @@
   
  
 
-<section class="mx-auto my-[3rem] w-[97rem] rounded-lg bg-white">
+<section class="mx-auto my-12 w-388 rounded-lg bg-white">
 	
 	<div class="flex items-center space px-12 mb-4">
 	<h3 class="text-[2rem] p-10 font-semibold">Transaction Report</h3>

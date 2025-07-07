@@ -26,9 +26,9 @@
 
 <div class="mx-auto w-full max-w-md p-8 font-poppins">
 	<div class="text-center">
-		<img alt="Logo" class="mx-auto my-14 size-[5rem]" src={logo} />
+		<img alt="Logo" class="mx-auto my-14 size-20" src={logo} />
 	</div>
-	<h2 class="mt-[-3rem] text-center text-[2rem] font-[500]">Reset Password</h2>
+	<h2 class="-mt-12 text-center text-[2rem] font-medium">Reset Password</h2>
 	<div class="text-center text-[0.8rem] text-gray-500">
 		<p>Enter your new password</p>
 		<p>and confirm it</p>
@@ -49,7 +49,7 @@
 	>
 		<div class="rounded-md">
 			<section>
-				<label class="text-[.9rem] font-[600]" for="email-address">New Password</label>
+				<label class="text-[.9rem] font-semibold" for="email-address">New Password</label>
 				<div class="relative flex items-center">
 					<span
 						class="absolute left-2 z-20 flex size-6 items-center rounded-md bg-[#F59E0B] p-[0.35rem] text-yellow-400"
@@ -65,7 +65,7 @@
 					bind:value={password}
 					placeholder="Enter your new password"
 					type={showPassword ? 'text' : 'password'}
-					class="relative mb-2 mt-[0.5rem] block w-full rounded-md bg-yellow-50 px-5 py-2 pl-10 text-gray-700 placeholder-gray-500 transition-colors duration-700 focus:z-10 focus:outline-none sm:text-sm"
+					class="relative mb-2 mt-2 block w-full rounded-md bg-yellow-50 px-5 py-2 pl-10 text-gray-700 placeholder-gray-500 transition-colors duration-700 focus:z-10 focus:outline-none sm:text-sm"
 					required
 					/>
 					<button
@@ -84,7 +84,7 @@
 			</section>
 			
             <section>
-				<label class="text-[.9rem] font-[600]" for="email-address"> Confirm Password </label>
+				<label class="text-[.9rem] font-semibold" for="email-address"> Confirm Password </label>
 				<div class="relative flex items-center">
 					<span
 						class="absolute left-2 z-20 flex size-6 items-center rounded-md bg-[#F59E0B] p-[0.35rem] text-yellow-400"
@@ -98,7 +98,7 @@
 					type={showPassword ? 'text' : 'password'}
 					bind:value={confirmPassword}
 					placeholder="Re-enter your new password"
-					class="relative mb-2 mt-[0.5rem] block w-full rounded-md bg-yellow-50 px-5 py-2 pl-10 text-gray-700 placeholder-gray-500 transition-colors duration-700 focus:z-10 focus:outline-none sm:text-sm"
+					class="relative mb-2 mt-2 block w-full rounded-md bg-yellow-50 px-5 py-2 pl-10 text-gray-700 placeholder-gray-500 transition-colors duration-700 focus:z-10 focus:outline-none sm:text-sm"
 					required
 					/>
 					<button

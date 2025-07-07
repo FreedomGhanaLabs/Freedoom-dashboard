@@ -91,7 +91,7 @@
   }
 </script>
 
-<Table.Root class="relative mx-auto mt-3 w-[92rem] rounded-3xl">
+<Table.Root class="relative mx-auto mt-3 w-368 rounded-3xl">
 	<Table.Caption>
 		<div class="my-5 flex flex-row items-center justify-between">
 			<div class="w-fit rounded-md border border-gray-400 bg-white/70 p-4 text-center">

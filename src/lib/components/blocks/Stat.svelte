@@ -36,7 +36,7 @@
 	}
 </script>
 
-<Card.Root class="relative min-h-[10rem] w-[21rem] p-1">
+<Card.Root class="relative min-h-40 w-84 p-1">
 	<Card.Header>
 		<div class="flex flex-row items-center">
 			<div class="rounded-lg bg-slate-200 p-2">
@@ -44,8 +44,8 @@
 				<svelte:component this={icon1} />
 			</div>
 			<span>
-				<Card.Title class="ml-[1rem] text-base font-normal text-black">{Title}</Card.Title>
-				<Card.Description class="ml-[1rem] text-sm font-normal text-black"
+				<Card.Title class="ml-4 text-base font-normal text-black">{Title}</Card.Title>
+				<Card.Description class="ml-4 text-sm font-normal text-black"
 					>{Description}</Card.Description
 				>
 			</span>

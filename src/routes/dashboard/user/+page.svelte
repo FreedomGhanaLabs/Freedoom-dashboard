@@ -43,8 +43,8 @@
 </svelte:head>
   
   <div class="mx-auto">
-	<div class="my-[3rem] w-[97rem] rounded-lg bg-white">
-		<div class="mt-[1rem] flex flex-row items-center justify-between px-[5rem] py-6">
+	<div class="my-12 w-388 rounded-lg bg-white">
+		<div class="mt-4 flex flex-row items-center justify-between px-20 py-6">
 			<h3 class="text-2xl">User Management</h3>
 			<div class="flex flex-row items-center justify-between space-x-5">
 				<form class="mx-auto max-w-md">

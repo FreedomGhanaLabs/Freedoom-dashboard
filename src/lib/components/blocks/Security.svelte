@@ -5,7 +5,7 @@
 </script>
 
 <!-- Security Options -->
-<div class="bg-white p-6 rounded-lg shadow-sm border w-[50rem] border-gray-200">
+<div class="bg-white p-6 rounded-lg shadow-sm border w-200 border-gray-200">
     <!-- Security Settings Header -->
     <h1 class="text-2xl font-normal ml-8 mb-4">Security Settings</h1>
 

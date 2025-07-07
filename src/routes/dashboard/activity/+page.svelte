@@ -63,8 +63,8 @@
 
 <div class="mx-auto">
 
-	<div class="my-[3rem] w-[97rem] rounded-lg bg-white">
-		<div class="mt-[1rem] flex items-center justify-between px-[5rem] py-6">
+	<div class="my-12 w-388 rounded-lg bg-white">
+		<div class="mt-4 flex items-center justify-between px-20 py-6">
 			<h3 class="text-2xl">Activity Logs</h3>
 			<div class="flex items-center space-x-5">
 				<form class="mx-auto max-w-md">
@@ -77,7 +77,7 @@
 							type="search"
 							id="default-search"
 							bind:value={searchTerm}
-							class="block w-fit max-w-[13rem] rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-none "
+							class="block w-fit max-w-52 rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-none "
 							placeholder="Search"
 							required
 						/>

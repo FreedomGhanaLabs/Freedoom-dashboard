@@ -10,9 +10,9 @@
 
 <div class="mx-auto w-full max-w-xl p-8 font-poppins">
 	<div class="text-center">
-		<img alt="Logo" class="mx-auto my-12 size-[5rem]" src={logo} />
+		<img alt="Logo" class="mx-auto my-12 size-20" src={logo} />
 	</div>
-	<h2 class="mt-[-3rem] text-center text-[2rem] font-[500]">Forgot Password</h2>
+	<h2 class="-mt-12 text-center text-[2rem] font-medium">Forgot Password</h2>
 	<div class="text-center text-[1.5rem] text-gray-500">
 		<h1>Check Your Email</h1>
 	</div>

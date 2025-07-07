@@ -57,7 +57,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Total Earnings -->
         <div class="group relative overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-          <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute inset-0 bg-linear-to-br from-emerald-500/5 to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div class="relative p-6">
             <div class="flex items-center justify-between mb-4">
               <div class="p-3 bg-emerald-100 rounded-xl">
@@ -80,7 +80,7 @@
 
         <!-- Total Expenses -->
         <div class="group relative overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-          <div class="absolute inset-0 bg-gradient-to-br from-red-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute inset-0 bg-linear-to-br from-red-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div class="relative p-6">
             <div class="flex items-center justify-between mb-4">
               <div class="p-3 bg-red-100 rounded-xl">
@@ -103,7 +103,7 @@
 
         <!-- Net Profit -->
         <div class="group relative overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-          <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute inset-0 bg-linear-to-br from-blue-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div class="relative p-6">
             <div class="flex items-center justify-between mb-4">
               <div class="p-3 {financials.netProfit >= 0 ? 'bg-emerald-100' : 'bg-red-100'} rounded-xl">
@@ -126,7 +126,7 @@
 
         <!-- Transactions -->
         <div class="group relative overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-          <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute inset-0 bg-linear-to-br from-purple-500/5 to-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div class="relative p-6">
             <div class="flex items-center justify-between mb-4">
               <div class="p-3 bg-purple-100 rounded-xl">
@@ -225,28 +225,28 @@
           </div>
           <div class="p-6">
             <div class="grid grid-cols-2 gap-4">
-              <div class="p-4 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl border border-emerald-100">
+              <div class="p-4 bg-linear-to-br from-emerald-50 to-teal-50 rounded-xl border border-emerald-100">
                 <div class="text-2xl font-bold text-emerald-700 mb-1">
                   {financials.metrics.totalDays}
                 </div>
                 <div class="text-sm text-emerald-600 font-medium">Active Days</div>
               </div>
               
-              <div class="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+              <div class="p-4 bg-linear-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
                 <div class="text-2xl font-bold text-blue-700 mb-1">
                   {financials.metrics.totalTransactions}
                 </div>
                 <div class="text-sm text-blue-600 font-medium">Transactions</div>
               </div>
               
-              <div class="p-4 bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl border border-purple-100">
+              <div class="p-4 bg-linear-to-br from-purple-50 to-violet-50 rounded-xl border border-purple-100">
                 <div class="text-2xl font-bold text-purple-700 mb-1">
                   {financials.metrics.totalExpenseEntries}
                 </div>
                 <div class="text-sm text-purple-600 font-medium">Expense Entries</div>
               </div>
               
-              <div class="p-4 bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl border border-amber-100">
+              <div class="p-4 bg-linear-to-br from-amber-50 to-orange-50 rounded-xl border border-amber-100">
                 <div class="text-2xl font-bold text-amber-700 mb-1">
                   {Math.round((financials.metrics.totalTransactions / financials.metrics.totalDays) * 10) / 10}
                 </div>

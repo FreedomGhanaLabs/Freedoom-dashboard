@@ -56,9 +56,9 @@
 
 <div class="mx-auto w-full max-w-md p-8 font-poppins">
 	<div class="text-center">
-		<img alt="Logo" class="mx-auto my-14 size-[5rem]" src={logo} />
+		<img alt="Logo" class="mx-auto my-14 size-20" src={logo} />
 	</div>
-	<h2 class="mt-[-3rem] text-center text-[2rem] font-[500]">Enter TOTP Code to Activate 2FA</h2>
+	<h2 class="-mt-12 text-center text-[2rem] font-medium">Enter TOTP Code to Activate 2FA</h2>
    
 	<div class="text-center text-[0.8rem] text-gray-500">
 		<p>Please enter the 6-digit code from your authentication app</p>

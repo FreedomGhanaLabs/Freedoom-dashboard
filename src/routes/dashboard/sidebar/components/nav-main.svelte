@@ -57,7 +57,7 @@
 								<a href={'/dashboard/' + mainItem.url} {...props}>
 									<Sidebar.MenuButton
 										{...props}
-										class="mt-[1rem] {matchedRoute?.href === mainItem.url
+										class="mt-4 {matchedRoute?.href === mainItem.url
 											? 'border-2 border-amber-400 bg-amber-300/20 text-amber-500 hover:bg-amber-400'
 											: ''} "
 									>

@@ -4,7 +4,7 @@
 </script>
 
     <!-- Recent Activity List -->
-    <div class="mt-6 w-[50rem] p-6 bg-white border rounded-xl space-y-3">
+    <div class="mt-6 w-200 p-6 bg-white border rounded-xl space-y-3">
         <div class="space-y-4">
             <!-- Ride Completed -->
             <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between">

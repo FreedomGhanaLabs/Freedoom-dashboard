@@ -37,10 +37,10 @@
 	<AppSidebar />
 	<Sidebar.Inset class="bg-gray-200/40">
 		<header
-			class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12"
+			class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
 		>
 			<div class="flex items-center gap-2 px-4">
-				<Sidebar.Trigger class="absolute top-[-4rem] -ml-1" />
+				<Sidebar.Trigger class="absolute -top-16 -ml-1" />
 			</div>
 		</header>
 		<!-- <section

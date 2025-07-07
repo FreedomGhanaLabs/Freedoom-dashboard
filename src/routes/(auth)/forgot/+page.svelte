@@ -19,9 +19,9 @@
 
 <div class="mx-auto w-full max-w-md p-8 font-poppins">
 	<div class="text-center">
-		<img alt="Logo" class="mx-auto my-12 size-[5rem]" src={logo} />
+		<img alt="Logo" class="mx-auto my-12 size-20" src={logo} />
 	</div>
-	<h2 class="mt-[-3rem] text-center text-[2rem] font-[500]">Forgot Password</h2>
+	<h2 class="-mt-12 text-center text-[2rem] font-medium">Forgot Password</h2>
 	<div class="text-center text-[0.8rem] text-gray-500">
 		<p>Enter your email address and we'll send you</p>
 		<p>a link to reset you password</p>
@@ -42,7 +42,7 @@
 	>
 		<div class="rounded-md">
 			<section>
-				<label class="text-[.9rem] font-[600]" for="email-address"> Email address </label>
+				<label class="text-[.9rem] font-semibold" for="email-address"> Email address </label>
 				<div class="relative flex items-center">
 					<span
 						class="absolute left-2 z-20 flex size-6 items-center rounded-md bg-[#F59E0B] p-[0.35rem] text-yellow-400"
@@ -53,7 +53,7 @@
 					<input
 						autocomplete="email"
 						bind:value={email}
-						class="relative  mb-2 mt-[0.5rem] block w-full rounded-md bg-yellow-50 px-5 py-2 pl-10 text-gray-700 placeholder-gray-500 transition-colors duration-700 focus:z-10 focus:outline-none sm:text-sm"
+						class="relative  mb-2 mt-2 block w-full rounded-md bg-yellow-50 px-5 py-2 pl-10 text-gray-700 placeholder-gray-500 transition-colors duration-700 focus:z-10 focus:outline-none sm:text-sm"
 						id="email-address"
 						name="email"
 						placeholder="Enter your email"
