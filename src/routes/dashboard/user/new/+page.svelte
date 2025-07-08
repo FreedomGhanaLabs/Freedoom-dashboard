@@ -1,8 +1,7 @@
 <script lang="ts">
-    import { userStore } from '$lib/userStore';
+    
     import { goto } from '$app/navigation';
     import { ChevronLeft } from 'lucide-svelte';
-    import type { User } from '$lib/userStore';
   
     let name = '';
     let email = '';
@@ -57,20 +56,9 @@
           };
       
       // Create new user
-      const newUser: User = {
-        id,
-        name,
-        email,
-        phone,
-        address,
-        paymentMethod,
-        paymentDetails,
-        savedCards: [savedCard],
-        transactions: [] // New user starts with no transactions
-      };
+    
       
-      userStore.add(newUser);
-      goto(`/dashboard/users/${id}`);
+    
     }
   </script>
   

@@ -1,5 +1,10 @@
+<!--
+@component
+- This component is critical to the dashboard's structure and navigation.
+- Unauthorized or incorrect modifications may break the dashboard, disrupt user access, or cause major navigation failures.
+- All changes are monitored. Proceed with extreme caution—violations may result in immediate rollback or restricted access.
+-->
 <script lang="ts" module>
-	import AudioWaveform from 'lucide-svelte/icons/audio-waveform';
 	import BookOpen from 'lucide-svelte/icons/book-open';
 	import Bot from 'lucide-svelte/icons/bot';
 	import Book from 'lucide-svelte/icons/contact';
