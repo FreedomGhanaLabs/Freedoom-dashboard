@@ -13,7 +13,6 @@
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { page } from '$app/state';
-	
 
 	const routeItems = [
 		{ text: 'Operations', href: 'account' },
@@ -34,14 +33,28 @@
 		{ text: 'Profile', href: 'profile' }
 	];
 
-	function handleLogout() {
-		localStorage.removeItem('admin_token');
+	async function handleLogout() {
+		try {
+			const response = await fetch('https://api-freedom.com/api/v2/admin/auth/logout', {
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('admin_token')}`
+				}
+			});
 
-		// Use replace() to prevent back-button access to protected pages
-		window.location.replace('/'); // This replaces the current history entry
+			if (!response.ok) {
+				console.error('❌ Logout API failed');
+			}
 
-		// Optional: You could also clear session storage if you store anything there
-		sessionStorage.clear();
+			// Clear client-side storage regardless
+			localStorage.removeItem('admin_token');
+			sessionStorage.clear();
+
+			// Redirect to login or landing page
+			window.location.replace('/');
+		} catch (err) {
+			console.error('❌ Error during logout:', err);
+		}
 	}
 
 	let currentRoute = $derived(page.url.pathname.split('/')[2]);
@@ -66,7 +79,7 @@
 		<Sheet.Root>
 			<Sheet.Trigger
 				class={buttonVariants({ variant: 'outline' }) +
-					'inline-flex h-10 w-10 items-center justify-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 md:hidden'}
+					'inline-flex h-10 w-10 items-center justify-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 focus:outline-none md:hidden dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600'}
 				aria-controls="navbar-solid-bg"
 				aria-expanded="false"
 			>
@@ -103,23 +116,33 @@
 		<!-- Desktop -->
 		<div class="hidden w-full md:block md:w-auto" id="navbar-solid-bg">
 			<ul
-				class="mt-4 flex flex-col rounded-lg font-medium dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-transparent md:dark:bg-transparent rtl:space-x-reverse"
+				class="mt-4 flex flex-col rounded-lg font-medium md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-transparent rtl:space-x-reverse dark:border-gray-700 dark:bg-gray-800 md:dark:bg-transparent"
 			>
 				{#each navItems as item}
 					<li class="">
-						<a
-							href={item.href}
-							class="block rounded-lg border-2 px-1 py-2 {buttonVariants({
-								variant: 'outline'
-							})}  text-gray-900 {item.radio
-								? 'bg-amber-500! text-white hover:bg-orange-600 hover:text-white'
-								: 'bg-white hover:bg-gray-100'}"
-						>
-							<span class="">
-								<item.icon size={16} />
-							</span>
-							{item.text}
-						</a>
+						{#if item.text === 'Logout'}
+							<button
+								on:click={item.action}
+								class="flex w-full items-center space-x-2 rounded-lg border-2 px-1 py-2 text-gray-900 hover:bg-gray-100 {buttonVariants(
+									{ variant: 'outline' }
+								)}"
+							>
+								<span><item.icon size={16} /></span>
+								<span>{item.text}</span>
+							</button>
+						{:else}
+							<a
+								href={item.href}
+								class="block rounded-lg border-2 px-1 py-2 {buttonVariants({
+									variant: 'outline'
+								})}  text-gray-900 {item.radio
+									? 'bg-amber-500! text-white hover:bg-orange-600 hover:text-white'
+									: 'bg-white hover:bg-gray-100'}"
+							>
+								<span><item.icon size={16} /></span>
+								{item.text}
+							</a>
+						{/if}
 					</li>
 				{/each}
 			</ul>

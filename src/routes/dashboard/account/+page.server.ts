@@ -25,7 +25,7 @@ export const load: PageServerLoad = async ({ cookies, fetch }) => {
   const payload = await res.json();
   const operations: any[] = payload.data ?? [];
 
-  console.log('✅ [server] get operations payload:', payload);
+  // console.log('✅ [server] get operations payload:', payload);
 
   return { operations };
 };
