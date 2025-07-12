@@ -18,6 +18,7 @@
 	import GalleryVerticalEnd from 'lucide-svelte/icons/gallery-vertical-end';
 	import Map from 'lucide-svelte/icons/map';
 	import Settings2 from 'lucide-svelte/icons/settings-2';
+	import File from 'lucide-svelte/icons/file-user';
 	import HandCoins from 'lucide-svelte/icons/hand-coins';
 	import Landmark from 'lucide-svelte/icons/landmark';
 	import SquareTerminal from 'lucide-svelte/icons/square-terminal';
@@ -115,6 +116,26 @@
 				title: 'User Management',
 				url: 'user',
 				icon: Book,
+				isActive: false,
+				items: [
+					{
+						title: 'Genesis',
+						url: '#'
+					},
+					{
+						title: 'Explorer',
+						url: '#'
+					},
+					{
+						title: 'Quantum',
+						url: '#'
+					}
+				]
+			},
+			{
+				title: 'Applications',
+				url: 'application',
+				icon: File,
 				isActive: false,
 				items: [
 					{
@@ -307,23 +328,7 @@
 				items: []
 			}
 		]
-		// projects: [
-		// 	{
-		// 		name: 'Design Engineering',
-		// 		url: '#',
-		// 		icon: Frame
-		// 	},
-		// 	{
-		// 		name: 'Sales & Marketing',
-		// 		url: '#',
-		// 		icon: ChartPie
-		// 	},
-		// 	{
-		// 		name: 'Travel',
-		// 		url: '#',
-		// 		icon: Map
-		// 	}
-		// ]
+		
 	};
 
 	let active: boolean = false;
@@ -331,11 +336,9 @@
 	onMount(() => {
 		const currentPath = page.url.pathname.toLowerCase();
 		data.navMain.forEach((item) => {
-			// Extract the first word of the title, convert to lowercase, and check if currentPath includes it
 			const firstWord = item.title.split(' ')[0].toLowerCase();
 			item.isActive = currentPath.includes(firstWord);
-		});
-		// Update overall active state
+		});		
 		active = data.navMain.some((item) => item.isActive);
 	});
 
@@ -352,7 +355,7 @@
 	</Sidebar.Header>
 	<Sidebar.Content class="-mt-6">
 		<NavMain items={data.navMain} />
-		<!-- <NavProjects projects={data.projects} /> -->
+	
 	</Sidebar.Content>
 	<Sidebar.Rail />
 </Sidebar.Root>

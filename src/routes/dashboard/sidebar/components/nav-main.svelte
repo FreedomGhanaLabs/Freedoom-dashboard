@@ -11,8 +11,7 @@
 		items: {
 			title: string;
 			url: string;
-			// this should be `Component` after lucide-svelte updates types
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			
 			icon?: any;
 			isActive?: boolean;
 			items?: {
@@ -29,7 +28,8 @@
 		{ text: 'Driver Management', href: 'driver' },
 		{ text: 'Reports & Analytics', href: 'report' },
 		{ text: 'Transactions', href: 'transaction' },
-		{ text: 'Finacials', href: 'finacials' },		
+		{ text: 'Finacials', href: 'finacials' },
+		{ text: 'Application', href: 'application' },		
 		{ text: 'Debt Management', href: 'debt' },
 		{ text: 'Commissions', href: 'commission' },
 		{ text: 'User Management', href: 'user' },
@@ -41,12 +41,12 @@
 
 	let currentRoute = $derived(page.url.pathname.split('/')[2]);
 
-	// Find the matching route and extract its text
+	
 	const matchedRoute = $derived(routeItems.find((item) => item.href === currentRoute));
 </script>
 
 <Sidebar.Group>
-	<!-- <Sidebar.GroupLabel class='bg-[#F59E0B] pl-[30px]' style="background-color: rgba(245, 158, 11, 0.07);">Dashboard Overview</Sidebar.GroupLabel> -->
+
 	<Sidebar.Menu>
 		{#each items as mainItem (mainItem.title)}
 			<Collapsible.Root open={mainItem.isActive} class="group/collapsible">
@@ -75,23 +75,7 @@
 								</a>
 							{/snippet}
 						</Collapsible.Trigger>
-						<!-- <Collapsible.Content>
-							{#if mainItem.items}
-								<Sidebar.MenuSub>
-									{#each mainItem.items as subItem (subItem.title)}
-										<Sidebar.MenuSubItem>
-											<Sidebar.MenuSubButton>
-												{#snippet child({ props })}
-													<a href={subItem.url} {...props}>
-														<span>{subItem.title}</span>
-													</a>
-												{/snippet}
-											</Sidebar.MenuSubButton>
-										</Sidebar.MenuSubItem>
-									{/each}
-								</Sidebar.MenuSub>
-							{/if}
-						</Collapsible.Content> -->
+						
 					</Sidebar.MenuItem>
 				{/snippet}
 			</Collapsible.Root>
