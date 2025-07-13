@@ -1,4 +1,4 @@
-// src/routes/dashboard/user/bulk-update/+page.server.ts
+
 import { redirect, error, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 
@@ -8,7 +8,6 @@ export const load: PageServerLoad = async ({ cookies, fetch }) => {
 		throw redirect(303, '/login');
 	}
 
-	// Fetch applications for selection
 	const applicationRes = await fetch('https://api-freedom.com/api/v2/riders/admin/applications', {
 		method: 'GET',
 		headers: {
@@ -41,7 +40,6 @@ export const actions: Actions = {
 		const status = formData.get('status') as string;
 		const reviewNotes = formData.get('reviewNotes') as string;
 
-		// Validate required fields
 		if (!applicationIds.length) {
 			return fail(400, {
 				error: 'Please select at least one application'

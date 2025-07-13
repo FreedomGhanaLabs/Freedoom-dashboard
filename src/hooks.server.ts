@@ -15,5 +15,10 @@ export const handle: Handle = async ({ event, resolve }) => {
   }
 
   const response = await resolve(event);
+
+  if (event.locals.user.isAuthenticated) {
+    response.headers.set('Cache-Control', 'no-store');
+  }
+
   return response;
 };

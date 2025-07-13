@@ -7,7 +7,6 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
         throw redirect(303, '/login');
     }
 
-    // Fetch pending document verifications
     const pendingDocsRes = await fetch('https://api-freedom.com/api/v2/driver/document/pending-verifications', {
         method: 'GET',
         headers: {
@@ -44,7 +43,7 @@ export const actions: Actions = {
         const documentId = data.get('documentId');
         const documentType = data.get('documentType');
         const driverId = data.get('driverId');
-        const comments = data.get('comments'); // Optional comments
+        const comments = data.get('comments'); 
 
         if (!documentId || !documentType || !driverId) {
             return fail(400, { error: 'Missing required fields' });
@@ -57,7 +56,6 @@ export const actions: Actions = {
                 status: 'approved'
             };
 
-            // Add comments if provided
             if (comments && comments.toString().trim()) {
                 requestBody.comments = comments.toString().trim();
             }
@@ -103,7 +101,7 @@ export const actions: Actions = {
         const documentId = data.get('documentId');
         const documentType = data.get('documentType');
         const driverId = data.get('driverId');
-        const comments = data.get('comments'); // Optional comments
+        const comments = data.get('comments'); 
 
         if (!documentId || !documentType || !driverId) {
             return fail(400, { error: 'Missing required fields' });
@@ -116,7 +114,6 @@ export const actions: Actions = {
                 status: 'rejected'
             };
 
-            // Add comments if provided
             if (comments && comments.toString().trim()) {
                 requestBody.comments = comments.toString().trim();
             }

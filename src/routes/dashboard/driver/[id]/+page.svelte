@@ -25,10 +25,9 @@
 	let showDeleteDialog = false;
 	
 
-	// Extract driver data safely
+	
 	const driver = data?.driver || {};
 
-	// Format date function
 	function formatDate(dateString: string | number | Date) {
 		try {
 			const date = new Date(dateString);
@@ -45,7 +44,6 @@
 		}
 	}
 
-	// Format last active time
 	function formatLastActive(dateString: string | number | Date) {
 		try {
 			const date = new Date(dateString);
@@ -63,7 +61,6 @@
 		}
 	}
 
-	// Get status color
 	function getStatusColor(status: any) {
 		switch (status) {
 			case 'available':
@@ -77,7 +74,6 @@
 		}
 	}
 
-	// Safe accessors with defaults
 	$: firstName = driver.firstName || 'N/A';
 	$: surname = driver.surname || '';
 	$: otherName = driver.otherName || '';
@@ -113,20 +109,11 @@
 </script>
 
 <div class="container mx-auto mb-20 w-280 p-6">
-	<!-- Header Navigation -->
-	<!-- <div class="mb-4 flex items-center">
-		<button class="text-orange-500 hover:text-orange-700">&larr; Back</button>
-		<div class="ml-2 flex space-x-2">
-			<button class="text-gray-500 hover:text-gray-700">&lt;</button>
-			<button class="text-gray-500 hover:text-gray-700">&gt;</button>
-		</div>
-	</div> -->
-
-	<!-- suspend and edit button -->
+	
 	<section class="mb-4 flex flex-row justify-between">
 	<h1 class="mb-4 text-2xl font-bold">Driver Profile</h1>
 	<div class="-ml-5 flex flex-row justify-end space-x-2">
-		<!-- Delete Button and Dialog -->
+		
 		<button
 			on:click={() => (showDeleteDialog = true)}
 			class="btn btn-danger rounded-lg border border-red-700 bg-red-700 px-4 py-2 text-[1.2rem] text-white"
@@ -134,7 +121,6 @@
 			Delete Driver
 		</button>
 
-		<!-- Delete Confirmation Dialog -->
 		{#if showDeleteDialog}
 			<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
 				<div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
@@ -168,10 +154,8 @@
 	</div>
 </section>
 
-	<!-- Profile Header -->
 	<div class="mb-6 w-280 rounded-lg border border-gray-200 bg-white p-2 shadow-md">
 		<div class="flex items-center justify-between">
-			<!-- driver profile pic and others -->
 			<div class="flex rounded-xl p-6">
 				<div class="ml-4 flex flex-col items-center justify-center text-center">
 					<img src={Driver} alt="{firstName} {surname}" class="size-20 rounded-full" />
@@ -190,7 +174,6 @@
 					<p class="mt-1 text-sm text-gray-500">({numOfReviews} reviews)</p>
 				</div>
 
-				<!-- driver email and other details -->
 				<div class="ml-6 space-y-3">
 					<div class="flex space-x-3">
 						<h2 class="text-[1.7rem] text-lg font-normal">
@@ -241,7 +224,6 @@
 				</div>
 			</div>
 
-			<!-- Grid with stats -->
 			<div class="grid w-120 grid-cols-2 gap-4 p-2 text-black">
 				<div class="rounded-lg bg-white p-3">
 					<p class="flex items-center text-center text-sm">
@@ -281,7 +263,6 @@
 		</div>
 	</div>
 
-	<!-- Vehicle Information Card -->
 	<div class="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-md">
 		<h3 class="mb-4 flex items-center text-lg font-semibold">
 			<Bike class="mr-2 text-orange-500" />
@@ -323,9 +304,7 @@
 		</div>
 	</div>
 
-	<!-- Additional Information Cards -->
 	<div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-		<!-- Account Security -->
 		<div class="rounded-lg border border-gray-200 bg-white p-6 shadow-md">
 			<h3 class="mb-4 flex items-center text-lg font-semibold">
 				<Shield class="mr-2 text-orange-500" />
@@ -359,7 +338,6 @@
 			</div>
 		</div>
 
-		<!-- Account Timeline -->
 		<div class="rounded-lg border border-gray-200 bg-white p-6 shadow-md">
 			<h3 class="mb-4 flex items-center text-lg font-semibold">
 				<Calendar class="mr-2 text-orange-500" />
@@ -438,7 +416,6 @@
 			</Tabs.Content>
 
 			<Tabs.Content value="Devices">
-				<!-- Known Devices Section -->
 				<div class="rounded-lg bg-white p-6 shadow-md">
 					<h3 class="mb-4 text-lg font-semibold text-gray-800">Known Devices</h3>
 					<div class="overflow-x-auto">
@@ -486,7 +463,6 @@
 						Notification Settings
 					</h3>
 					<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-						<!-- Notification Preferences -->
 						<div>
 							<h4 class="mb-3 text-sm font-semibold text-gray-600">Preferences</h4>
 							<div class="space-y-2">
@@ -625,7 +601,6 @@
 								</div>
 							</div>
 						</div>
-						<!-- Notification Statistics -->
 						<div>
 							<h4 class="mb-3 text-sm font-semibold text-gray-600">Statistics</h4>
 							<div class="space-y-3">

@@ -1,4 +1,4 @@
-<!-- src/routes/dashboard/logistics/[id]/+page.svelte -->
+
 <script lang="ts">
 	import { page } from '$app/state';
 	import { formatDistanceToNow } from 'date-fns';
@@ -27,7 +27,6 @@
 	$: delivery = data.delivery;
 	$: transaction = data.transaction;
 
-	// Status badge styling
 	function getStatusBadge(status: string) {
 		switch (status) {
 			case 'completed':
@@ -56,7 +55,6 @@
 		}
 	}
 
-	// Timeline events
 	$: timeline = [
 		{ event: 'Requested', time: delivery.requestedAt, icon: Clock },
 		{ event: 'Accepted', time: delivery.acceptedAt, icon: CheckCircle },
@@ -93,7 +91,6 @@
 
 <div class="min-h-screen bg-white mb-16 w-[75vw] rounded-2xl mx-auto p-6">
 	<div class="max-w-7xl mx-auto">
-		<!-- Header -->
 		<div class="mb-8">
 			<div class="flex items-center justify-between">
 				<div>
@@ -120,9 +117,7 @@
 		</div>
 
 		<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-			<!-- Main Content -->
 			<div class="lg:col-span-2 space-y-6">
-				<!-- Package Information -->
 				<div class="bg-white rounded-xl shadow-sm border border-gray-200">
 					<div class="p-6">
 						<div class="flex items-center gap-3 mb-4">
@@ -182,7 +177,6 @@
 					</div>
 				</div>
 
-				<!-- Location Information -->
 				<div class="bg-white rounded-xl shadow-sm border border-gray-200">
 					<div class="p-6">
 						<div class="flex items-center gap-3 mb-4">
@@ -214,7 +208,6 @@
 					</div>
 				</div>
 
-				<!-- Timeline -->
 				<div class="bg-white rounded-xl shadow-sm border border-gray-200">
 					<div class="p-6">
 						<div class="flex items-center gap-3 mb-4">
@@ -246,9 +239,7 @@
 				</div>
 			</div>
 
-			<!-- Sidebar -->
 			<div class="space-y-6">
-				<!-- Customer Information -->
 				<div class="bg-white rounded-xl shadow-sm border border-gray-200">
 					<div class="p-6">
 						<div class="flex items-center gap-3 mb-4">
@@ -268,7 +259,6 @@
 					</div>
 				</div>
 
-				<!-- Driver Information -->
 				<div class="bg-white rounded-xl shadow-sm border border-gray-200">
 					<div class="p-6">
 						<div class="flex items-center gap-3 mb-4">
@@ -304,7 +294,6 @@
 					</div>
 				</div>
 
-				<!-- Pricing Breakdown -->
 				<div class="bg-white rounded-xl shadow-sm border border-gray-200">
 					<div class="p-6">
 						<div class="flex items-center gap-3 mb-4">
@@ -354,7 +343,6 @@
 					</div>
 				</div>
 			
-				<!-- Weather & Conditions -->
 				{#if delivery.weatherConditions}
 					<div class="bg-white rounded-xl shadow-sm border border-gray-200">
 						<div class="p-6">

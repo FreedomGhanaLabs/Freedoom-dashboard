@@ -13,7 +13,6 @@
 	let reviewNotes = $state('');
 	let isSubmitting = $state(false);
 
-	// Filter applications based on search and status
 	let filteredApplications = $derived(
 		data.applications.filter((app: any) => {
 			const matchesSearch = !searchQuery || 
@@ -28,12 +27,10 @@
 		})
 	);
 
-	// Status options for bulk update
 	const statusOptions = [
 			{ value: 'interview-scheduled', label: 'Interview Scheduled', icon: Calendar, color: 'text-blue-600' }
 	];
 
-	// Filter options
 	const filterOptions = [
 		{ value: 'all', label: 'All Applications' },
 		{ value: 'pending', label: 'Pending' },
@@ -83,7 +80,6 @@
 
 <div class="min-h-screen bg-white w-[75vw] mx-auto rounded-3xl">
 	<div class="mx-auto max-w-7xl px-4 py-8">
-		<!-- Header -->
 		<div class="mb-8">
 			<button 
 				onclick={goBack}
@@ -107,7 +103,6 @@
 			</div>
 		</div>
 
-		<!-- Success/Error Messages -->
 		{#if form?.success}
 			<div class="mb-6 rounded-lg bg-green-50 border border-green-200 p-4">
 				<div class="flex items-center">
@@ -126,10 +121,8 @@
 			</div>
 		{/if}
 
-		<!-- Filters and Search -->
 		<div class="mb-6 bg-white rounded-lg p-6 shadow-sm border border-gray-200">
 			<div class="flex flex-col md:flex-row gap-4">
-				<!-- Search -->
 				<div class="relative flex-1">
 					<input
 						type="text"
@@ -140,7 +133,6 @@
 					<Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
 				</div>
 
-				<!-- Status Filter -->
 				<div class="relative">
 					<select
 						bind:value={statusFilter}
@@ -153,7 +145,6 @@
 					<Filter class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
 				</div>
 
-				<!-- Select All Toggle -->
 				<button
 					onclick={toggleSelectAll}
 					class="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
@@ -164,11 +155,10 @@
 			</div>
 		</div>
 
-		<!-- Applications Grid -->
 		<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
 			{#each filteredApplications as application}
 				<div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-					<!-- Selection Header -->
+					
 					<div class="p-4 border-b border-gray-100">
 						<div class="flex items-center justify-between">
 							<label class="flex items-center cursor-pointer">
@@ -193,7 +183,6 @@
 						</div>
 					</div>
 
-					<!-- Application Details -->
 					<div class="p-4">
 						<div class="space-y-3">
 							<div class="flex items-center gap-3">
@@ -230,7 +219,6 @@
 			{/each}
 		</div>
 
-		<!-- Bulk Update Form -->
 		{#if selectedApplications.length > 0}
 			<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
 				<h3 class="text-lg font-semibold text-gray-900 mb-4">
@@ -257,7 +245,6 @@
 					}}
 				>
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-						<!-- Status Selection -->
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-2">
 								New Status *
@@ -275,7 +262,6 @@
 							</select>
 						</div>
 
-						<!-- Review Notes -->
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-2">
 								Review Notes

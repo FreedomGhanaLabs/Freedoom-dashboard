@@ -1,9 +1,9 @@
-// src/routes/[your‐folder]/+page.server.ts
+
 import { redirect, fail } from '@sveltejs/kit';
 
 export interface AdminFromAPI {
-	id: string; // mapped from _id
-	name: string; // combined firstName + ' ' + surname
+	id: string; 
+	name: string; 
 	firstName: string;
 	surname: string;
 	email: string;

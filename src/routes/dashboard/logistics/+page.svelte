@@ -22,7 +22,6 @@
 		platformCommission: formatToTwoDecimal(Number(d.platformCommission))
 	}));
 
-	// Headings for the table
 	let headings: {
 		title: string;
 		className: string;
@@ -41,8 +40,6 @@
 		{ title: 'Driver Earnings', className: '', key: 'driverEarnings' },
 		{ title: 'Payment Method', className: 'rounded-e-2xl', key: 'paymentMethod' }
 	];
-
-	// Reactive state for filtering and searching
 	let startDate = $state('');
 	let endDate = $state('');
 	let searchQuery = '';
@@ -59,9 +56,7 @@
 			})
 		: formattedDeliveries;
 
-	// --- CSV download logic ---
 	function handleDownload() {
-		// `$filteredRides` is the unwrapped array here
 		downloadCSV(headings, formattedDeliveries, 'Deliveries.csv');
 	}
 </script>
@@ -70,12 +65,10 @@
 	<title>Deliveries - Admin Panel</title>
 </svelte:head>
 
-<!-- Finance Report Table with Filtering and Searching -->
 <section class="mx-auto my-12 w-388 rounded-lg bg-white">
 	<div class="space mb-4 flex items-center px-12">
 		<h3 class="p-10 text-[2rem]">Delivery Report</h3>
 
-		<!-- Search Input -->
 		<div class="relative ml-auto">
 			<input
 				type="text"
@@ -89,7 +82,6 @@
 			onclick={handleDownload}
 			class="ml-5 flex items-center gap-2 rounded-lg border border-gray-500 px-4 py-3 text-gray-800"
 		>
-			<!-- You can swap in any icon here -->
 			<Download class="h-5 w-5" />
 			<span>Download CSV</span>
 		</button>

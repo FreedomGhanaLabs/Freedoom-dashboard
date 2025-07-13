@@ -1,4 +1,4 @@
-<!-- src/routes/admin/pending-documents/+page.svelte -->
+
 <script lang="ts">
   import Clock from 'lucide-svelte/icons/clock';
   
@@ -20,7 +20,6 @@
   let rejectComments = '';
   let approveComments = '';
   
-  // Document type mapping for better display
   const docTypeLabels = {
     driverLicense: 'Driver License',
     ghanaCard: 'Ghana Card',
@@ -37,11 +36,9 @@
     addressProof: 'bg-red-100 text-red-800'
   };
 
-  // Get documents from the data prop
   $: pendingDocuments = data.pendingDocumentVerifications || [];
   $: pendingCount = pendingDocuments.length;
 
-  // Filter documents based on search and document type
   $: filteredDocuments = pendingDocuments.filter((/** @type {{ driverName: string; driverEmail: string; documentType: string; }} */ doc: { driverName: string; driverEmail: string; documentType: string; }) => {
     const matchesSearch = doc.driverName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          doc.driverEmail.toLowerCase().includes(searchTerm.toLowerCase());
@@ -49,7 +46,6 @@
     return matchesSearch && matchesType;
   });
 
-  // Get unique document types for filter
   $: documentTypes = [...new Set(pendingDocuments.map((doc: { documentType: keyof typeof docTypeLabels }) => doc.documentType))] as (keyof typeof docTypeLabels)[];
 
   /**
@@ -102,7 +98,6 @@
 
 <div class="min-h-screen w-[70vw] mx-auto bg-white rounded-3xl p-6">
   <div class="max-w-7xl mx-auto">
-    <!-- Header -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
       <div class="flex items-center justify-between">
         <div>
@@ -118,7 +113,6 @@
       </div>
     </div>
 
-    <!-- Filters -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
       <div class="flex flex-col sm:flex-row gap-4">
         <div class="flex-1">
@@ -149,12 +143,10 @@
       </div>
     </div>
 
-    <!-- Documents Grid -->
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {#each filteredDocuments as document, index}
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
           <div class="p-6">
-            <!-- Document Type Badge -->
             <div class="flex items-center justify-between mb-4">
               <span class="px-3 py-1 rounded-2xl text-[0.9rem] font-medium {docTypeColors[document.documentType as keyof typeof docTypeColors]}">
                 {docTypeLabels[document.documentType as keyof typeof docTypeLabels]}
@@ -162,7 +154,6 @@
              <FileText class='text-gray-400' />
             </div>
 
-            <!-- Driver Info -->
             <div class="space-y-3 mb-6">
               <div class="flex items-center space-x-3">
                 <User class='size-5 text-gray-400' />
@@ -182,7 +173,6 @@
               </div>
             </div>
 
-            <!-- Actions -->
             <div class="flex space-x-2">
               <button
                 on:click={() => handleViewDocument(document)}
@@ -218,7 +208,6 @@
       {/each}
     </div>
 
-    <!-- Empty State -->
     {#if filteredDocuments.length === 0}
       <div class="text-center py-12">
         <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

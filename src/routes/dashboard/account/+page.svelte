@@ -87,55 +87,11 @@
 	<title>Operations - Admin Panel</title>
 </svelte:head>
 
-<section class="mx-auto my-3 flex flex-col space-x-6 lg:flex-row">
-	<!-- Line Chart -->
-	<!-- <div class="w-248 space-y-10 rounded-2xl bg-white p-8">
-		<span class="flex flex-row items-center justify-between">
-			<h3 class="text-2xl font-semibold">Cashflow</h3>
-			<h3>Date</h3>
-		</span>
-		<div class="h-80 w-232 rounded border p-4">
-			<AreaChart data={dateSeriesData} x="date" y="value" {renderContext} {debug}>
-				<svelte:fragment slot="marks">
-					<LinearGradient class="from-amber-200/50 to-orange-400/10" vertical let:gradient>
-						<Area line={{ class: 'stroke-orange-500' }} fill={gradient} />
-					</LinearGradient>
-				</svelte:fragment>
-			</AreaChart>
-		</div>
-	</div> -->
 
-	<!-- Pie Chart -->
-	<!-- <div class="h-112 w-132 rounded-2xl bg-white">
-		<h2 class="mt-8 ml-[2.4rem] text-[1.5rem] font-medium">Account Breakdown</h2>
-		<div class="-mt-4 ml-12 size-104 overflow-auto pr-24">
-			<Chart data={values} x="value" c="date" cRange={keyColors} let:tooltip>
-				<Svg center>
-					<Pie {tooltip} />
-				</Svg>
-				<Tooltip.Root let:data>
-					<Tooltip.Header>{format(data.date, 'eee, MMMM do')}</Tooltip.Header>
-					<Tooltip.List>
-						<Tooltip.Item label="value" value={data.value} format="integer" valueAlign="right" />
-						<Tooltip.Item
-							label="percent"
-							value={data.value / dataSum}
-							format="percent"
-							valueAlign="right"
-						/>
-					</Tooltip.List>
-				</Tooltip.Root>
-			</Chart>
-		</div>
-	</div> -->
-</section>
-
-<!-- Finance Report Table with Filtering and Searching -->
 <section class="mx-auto my-12 w-388 rounded-lg bg-white">
 	<div class="space mb-4 flex items-center px-12">
 		<h3 class="p-10 text-[2rem] font-semibold">Operations Report</h3>
 
-		<!-- Search Input -->
 		<div class="relative mr-5 ml-auto">
 			<input
 				type="text"
@@ -149,7 +105,6 @@
 			onclick={handleDownload}
 			class="flex items-center gap-2 rounded-lg border border-gray-500 px-4 py-3 text-gray-800"
 		>
-			<!-- You can swap in any icon here -->
 			<Download class="h-5 w-5" />
 			<span>Download CSV</span>
 		</button>

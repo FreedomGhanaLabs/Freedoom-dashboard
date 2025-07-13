@@ -1,4 +1,4 @@
-// src/routes/dashboard/user/+page.server.ts
+
 import { redirect, error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -16,17 +16,13 @@ export const load: PageServerLoad = async ({ cookies, fetch }) => {
     }
   });
 
-  //  Handle errors:
   if (!res.ok) {
     throw error(res.status, `Failed to load users (${res.status})`);
   }
 
-
-  //  Pull out JSON
   const payload = await res.json();
   const financials: any[] = payload.data ?? [];
 
-  // console.log('financials data:', financials);
   
   return { financials };
 };

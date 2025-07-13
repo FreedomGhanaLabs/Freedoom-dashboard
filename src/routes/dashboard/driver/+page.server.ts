@@ -8,11 +8,9 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 		throw redirect(303, '/login');
 	}
 
-	// Get page and limit from query params for pagination
 	const page = Number(url.searchParams.get('page') ?? '1');
 	const limit = Number(url.searchParams.get('limit') ?? '10');
 
-	// Fetch drivers with pagination
 	const apiUrl = new URL('https://api-freedom.com/api/v2/driver/drivers');
 	apiUrl.searchParams.set('page', String(page));
 	apiUrl.searchParams.set('limit', String(limit));
@@ -32,7 +30,6 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	const totalDrivers = driversPayload.count ?? 0;
 	const drivers: Driver[] = driversPayload.data ?? [];
 
-	// Fetch document verification stats
 	const statsRes = await fetch(
 		'https://api-freedom.com/api/v2/driver/document/verification-stats',
 		{
@@ -51,7 +48,6 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	const statsPayload = await statsRes.json();
 	const verificationStats = statsPayload.data ?? {};
 
-	// Fetch pending name update requests
 	const pendingNameRes = await fetch('https://api-freedom.com/api/v2/driver/pending-name-updates', {
 		method: 'GET',
 		headers: {
@@ -70,7 +66,6 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	const pendingNamePayload = await pendingNameRes.json();
 	const pendingNameUpdates = pendingNamePayload.data ?? [];
 
-	// Fetch pending document verifications
 	const pendingDocsRes = await fetch('https://api-freedom.com/api/v2/driver/document/pending-verifications', {
 		method: 'GET',
 		headers: {
@@ -89,7 +84,6 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	const pendingDocsPayload = await pendingDocsRes.json();
 	const pendingDocumentVerifications = pendingDocsPayload.data ?? [];
 
-	console.log('pendingDocsPayload', pendingDocsPayload);
 
 	return {
 		drivers,
@@ -102,7 +96,6 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	};
 };
 
-// Search action
 export const actions: Actions = {
 	search: async ({ request, cookies, fetch }) => {
 		const token = cookies.get('admin_token');

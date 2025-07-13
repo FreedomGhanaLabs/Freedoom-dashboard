@@ -20,7 +20,7 @@
         window.history.back();
     }
 
-    // array for transaction details
+   
     const timeline = [
         { icon: BookA, label: 'Ride type', getValue: (t: FinanceReportType) => t.type },
         { icon: Timer, label: 'Ride Ordered', getValue: (t: FinanceReportType) => t.time },

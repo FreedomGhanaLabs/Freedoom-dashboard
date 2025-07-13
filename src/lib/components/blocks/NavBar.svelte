@@ -52,6 +52,7 @@
 
 			// Redirect to login or landing page
 			window.location.replace('/');
+			window.history.pushState(null, '', '/');
 		} catch (err) {
 			console.error('❌ Error during logout:', err);
 		}

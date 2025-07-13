@@ -1,4 +1,4 @@
-// src/routes/dashboard/user/+page.server.ts
+
 import { redirect, error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -22,8 +22,7 @@ export const load: PageServerLoad = async ({ cookies, fetch }) => {
 
   
   const json = await res.json();
-  const profileObj = json.data; // <-- a single object
+  const profileObj = json.data; 
 
-  console.log('Profile data:', profileObj);
   return { profile: profileObj };
 };

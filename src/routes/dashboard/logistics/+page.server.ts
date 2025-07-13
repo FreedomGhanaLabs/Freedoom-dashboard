@@ -16,15 +16,12 @@ export const load: PageServerLoad = async ({ cookies, fetch }) => {
 		}
 	});
 
-	//  Handle errors:
 	if (!res.ok) {
 		throw error(res.status, `Failed to load users (${res.status})`);
 	}
 
-	//  Pull out JSON
 	const payload = await res.json();
 	const deliveries: any[] = payload.data ?? [];
 
-	// console.log('Deliveries data:', deliveries);
 	return { deliveries };
 };

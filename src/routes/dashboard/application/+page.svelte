@@ -14,13 +14,11 @@
 	
 	const stats = data.stats;
 	
-	// Helper function to get count by id
 	function getCountById(array: any[], id: string): number {
 		const item = array.find(item => item._id === id);
 		return item ? item.count : 0;
 	}
 	
-	// Helper function to calculate percentage
 	function getPercentage(value: number, total: number): number {
 		return total > 0 ? (value / total) * 100 : 0;
 	}
@@ -71,9 +69,7 @@
 			})
 		: formattedApplication;
 
-	// --- CSV download logic ---
 	function handleDownload() {
-		// `$filteredRides` is the unwrapped array here
 		downloadCSV(headings, formattedApplication, 'Application.csv');
 	}
 </script>
@@ -82,11 +78,8 @@
 	<title>Deliveries - Admin Panel</title>
 </svelte:head>
 
-<!-- Stats Dashboard Section -->
 <section class="mx-auto my-8 w-388">
-	<!-- Key Metrics Cards -->
 	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-		<!-- Total Applications -->
 		<div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
 			<div class="flex items-center justify-between">
 				<div>
@@ -99,7 +92,6 @@
 			</div>
 		</div>
 
-		<!-- Recent Applications -->
 		<div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
 			<div class="flex items-center justify-between">
 				<div>
@@ -112,7 +104,6 @@
 			</div>
 		</div>
 
-		<!-- Approved Applications -->
 		<div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
 			<div class="flex items-center justify-between">
 				<div>
@@ -125,7 +116,6 @@
 			</div>
 		</div>
 
-		<!-- Pending Applications -->
 		<div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
 			<div class="flex items-center justify-between">
 				<div>
@@ -139,9 +129,7 @@
 		</div>
 	</div>
 
-	<!-- Detailed Stats Grid -->
 	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-		<!-- Application Status Breakdown -->
 		<div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
 			<h3 class="text-lg font-semibold text-gray-900 mb-4">Application Status</h3>
 			<div class="space-y-4">
@@ -156,7 +144,6 @@
 							<span class="text-xs text-gray-500 ml-1">({formatToTwoDecimal(getPercentage(status.count, stats.totalApplications || 1))}%)</span>
 						</div>
 					</div>
-					<!-- Progress bar -->
 					<div class="w-full bg-gray-200 rounded-full h-2">
 						<div 
 							class="h-2 rounded-full {status._id === 'approved' ? 'bg-green-500' : status._id === 'pending' ? 'bg-yellow-500' : 'bg-blue-500'}"
@@ -167,7 +154,6 @@
 			</div>
 		</div>
 
-		<!-- Working Model Distribution -->
 		<div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
 			<h3 class="text-lg font-semibold text-gray-900 mb-4">Working Model Distribution</h3>
 			<div class="space-y-4">
@@ -188,7 +174,6 @@
 							<span class="text-xs text-gray-500 ml-1">({formatToTwoDecimal(getPercentage(model.count, stats.totalApplications || 1))}%)</span>
 						</div>
 					</div>
-					<!-- Progress bar -->
 					<div class="w-full bg-gray-200 rounded-full h-2">
 						<div 
 							class="h-2 rounded-full {model._id === 'in-house' ? 'bg-purple-500' : 'bg-indigo-500'}"
@@ -200,7 +185,6 @@
 		</div>
 	</div>
 
-	<!-- Top Cities Section -->
 	<div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-8">
 		<h3 class="text-lg font-semibold text-gray-900 mb-4">Top Cities</h3>
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -222,12 +206,10 @@
 	</div>
 </section>
 
-<!-- Finance Report Table with Filtering and Searching -->
 <section class="mx-auto my-12 w-388 rounded-lg bg-white">
 	<div class="space mb-4 flex items-center px-12">
 		<h3 class="p-10 text-[2rem]">Application Report</h3>
 
-		<!-- Search Input -->
 		<div class="relative ml-auto">
 			<input
 				type="text"
@@ -241,7 +223,6 @@
 			href="/dashboard/application/bulk"
 			class="ml-5 flex items-center gap-2 bg-green-600 rounded-lg border border-green-700 px-4 py-3 text-white"
 		>
-			<!-- You can swap in any icon here -->
 			<MailPlus class="h-5 w-5" />
 			<span>Send Bulk Interview</span>
 		</a>
@@ -249,7 +230,6 @@
 			onclick={handleDownload}
 			class="ml-5 flex items-center gap-2 rounded-lg border border-gray-500 px-4 py-3 text-gray-800"
 		>
-			<!-- You can swap in any icon here -->
 			<Download class="h-5 w-5" />
 			<span>Download CSV</span>
 		</button>

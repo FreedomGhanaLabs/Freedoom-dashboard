@@ -54,17 +54,14 @@
 		})()
 	);
 
-	// --- CSV download logic ---
 	function handleDownload() {
 		downloadCSV(headings, drivers, 'Rides.csv');
 	}
 
-	// Calculate percentages for progress bars
 	function getProgressPercentage(approved: number, total: number): number {
 		return total > 0 ? Math.round((approved / total) * 100) : 0;
 	}
 
-	// Get pending documents count
 	const pendingDocsCount = pendingDocumentVerifications?.length || 0;
 </script>
 
@@ -73,15 +70,11 @@
 </svelte:head>
 
 <div>
-	<!-- Stats Dashboard -->
 	<div class="mx-auto w-388 p-20">
-		<!-- Document Type Breakdown -->
 		<div class="rounded-xl bg-white p-6 shadow-lg">
 			<h3 class="mb-6 text-xl font-semibold text-gray-800">Document Verification Status</h3>
 
-			<!-- Overview Cards -->
 			<div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-4">
-				<!-- Total Drivers -->
 				<div class="rounded-xl bg-linear-to-r from-blue-500 to-blue-600 p-6 text-white">
 					<div class="flex items-center justify-between">
 						<div>
@@ -92,7 +85,6 @@
 					</div>
 				</div>
 
-				<!-- Approved Documents -->
 				<div class="rounded-xl bg-linear-to-r from-green-500 to-green-600 p-6 text-white">
 					<div class="flex items-center justify-between">
 						<div>
@@ -103,7 +95,6 @@
 					</div>
 				</div>
 
-				<!-- Pending Documents -->
 				<div class="rounded-xl bg-linear-to-r from-yellow-500 to-yellow-600 p-6 text-white">
 					<div class="flex items-center justify-between">
 						<div>
@@ -114,7 +105,6 @@
 					</div>
 				</div>
 
-				<!-- Incomplete Documents -->
 				<div class="rounded-xl bg-linear-to-r from-red-500 to-red-600 p-6 text-white">
 					<div class="flex items-center justify-between">
 						<div>
@@ -143,7 +133,6 @@
 							</span>
 						</div>
 
-						<!-- Progress Bar -->
 						<div class="mb-3">
 							<div class="mb-1 flex justify-between text-sm">
 								<span class="text-gray-600">Approval Rate</span>
@@ -157,7 +146,6 @@
 							</div>
 						</div>
 
-						<!-- Status Breakdown -->
 						<div class="grid grid-cols-3 gap-2 text-xs">
 							<div class="text-center">
 								<div class="font-medium text-green-600">
@@ -184,7 +172,6 @@
 		</div>
 	</div>
 
-	<!-- Existing Table Section -->
 	<div class="mx-auto mb-12 w-388 rounded-lg bg-white">
 		<div class="mt-4 flex flex-row items-center justify-between px-20 py-6">
 			<h3 class="text-2xl">Driver Management</h3>
@@ -209,7 +196,6 @@
 					</div>
 				</form>
 
-				<!-- Pending Documents Button -->
 				<a
 					href="/dashboard/driver/pending-documents"
 					class="ml-5 flex items-center gap-2 rounded-lg border border-orange-500 bg-orange-50 px-4 py-3 text-orange-800 transition-colors hover:bg-orange-100"

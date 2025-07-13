@@ -31,7 +31,6 @@
         toast.error('Failed to update commission configuration');
       }
       await update();
-      // window.location.reload(); // Reload to reflect changes
     };
   };
 
@@ -62,10 +61,8 @@
   <title>Commissions - Admin Panel</title>
 </svelte:head>
 
-<!-- Commission Configuration Section -->
 <div class="min-h-screen  py-8">
   <div class="mx-auto max-w-6xl px-6">
-    <!-- Header -->
     <div class="mb-8">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white rounded-2xl  border border-gray-200 p-8">
         <div>
@@ -94,7 +91,6 @@
       </div>
     </div>
 
-    <!-- Main Configuration Form -->
     <div class="bg-white  rounded-3xl border border-gray-200 overflow-hidden">
       <div class="bg-linear-to-r from-blue-600 to-indigo-600 px-8 py-6">
         <h2 class="text-2xl font-bold text-white">Configuration Settings</h2>
@@ -106,7 +102,6 @@
           <input type="hidden" name="commissionData" value={JSON.stringify(formData)} />
           
           <div class="space-y-12">
-            <!-- Default Rates Section -->
             <div class="bg-linear-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-200">
               <div class="flex items-center gap-3 mb-6">
                 <div class="w-3 h-8 bg-linear-to-b from-blue-500 to-indigo-500 rounded-full"></div>
@@ -162,7 +157,6 @@
               </div>
             </div>
 
-            <!-- Payment Method Rates Section -->
             <div class="bg-linear-to-br from-emerald-50 to-teal-50 rounded-2xl p-8 border border-emerald-200">
               <div class="flex items-center gap-3 mb-6">
                 <div class="w-3 h-8 bg-linear-to-b from-emerald-500 to-teal-500 rounded-full"></div>
@@ -228,7 +222,6 @@
               </div>
             </div>
 
-            <!-- Service Type Rates Section -->
             <div class="bg-linear-to-br from-purple-50 to-violet-50 rounded-2xl p-8 border border-purple-200">
               <div class="flex items-center gap-3 mb-6">
                 <div class="w-3 h-8 bg-linear-to-b from-purple-500 to-violet-500 rounded-full"></div>
@@ -294,7 +287,6 @@
               </div>
             </div>
 
-            <!-- Fees Section -->
             <div class="bg-linear-to-br from-amber-50 to-orange-50 rounded-2xl p-8 border border-amber-200">
               <div class="flex items-center gap-3 mb-6">
                 <div class="w-3 h-8 bg-linear-to-b from-amber-500 to-orange-500 rounded-full"></div>
@@ -341,7 +333,6 @@
               </div>
             </div>
 
-            <!-- Minimum Threshold Section -->
             <div class="bg-linear-to-br from-rose-50 to-pink-50 rounded-2xl p-8 border border-rose-200">
               <div class="flex items-center gap-3 mb-6">
                 <div class="w-3 h-8 bg-linear-to-b from-rose-500 to-pink-500 rounded-full"></div>
@@ -386,7 +377,6 @@
       </div>
     </div>
 
-    <!-- Company Expense Section -->
     <div class="mt-12 bg-white rounded-3xl border border-gray-200 overflow-hidden">
       <div class="bg-linear-to-r from-emerald-600 to-teal-600 px-8 py-6">
         <h2 class="text-2xl font-bold text-white">Record a Company Expense</h2>
@@ -398,7 +388,7 @@
           <input type="hidden" name="formType" value="expense" />
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Amount -->
+        
             <div class="space-y-3">
               <label class="block text-sm font-semibold text-gray-700 uppercase tracking-wide">Amount (GHS)</label>
               <input
@@ -412,7 +402,6 @@
               />
             </div>
 
-            <!-- Category -->
             <div class="space-y-3">
               <label class="block text-sm font-semibold text-gray-700 uppercase tracking-wide">Category</label>
               <select
@@ -432,7 +421,6 @@
             </div>
           </div>
 
-          <!-- Description -->
           <div class="space-y-3">
             <label class="block text-sm font-semibold text-gray-700 uppercase tracking-wide">Description</label>
             <textarea
@@ -446,7 +434,6 @@
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Reference -->
             <div class="space-y-3">
               <label class="block text-sm font-semibold text-gray-700 uppercase tracking-wide">Reference</label>
               <input
@@ -459,7 +446,7 @@
               />
             </div>
 
-            <!-- Currency -->
+        
             <div class="space-y-3">
               <label class="block text-sm font-semibold text-gray-700 uppercase tracking-wide">Currency</label>
               <select
@@ -474,7 +461,6 @@
             </div>
           </div>
 
-          <!-- Submit Button -->
           <div class="flex justify-end pt-8 border-t border-gray-200">
             <button
               type="submit"

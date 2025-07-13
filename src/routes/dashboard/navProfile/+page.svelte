@@ -7,40 +7,26 @@
   // Because load() returned `{ profile: <object> }`, TS knows `data.profile` is that object.
   export let data: PageData;
 
-  // Destructure the server‐fetched profile object:
+  
   const fetched = data.profile;
-  // fetched looks like:
-  // {
-  //   _id: "68185b254b3e6c8ee8aa82da",
-  //   firstName: "Franklin",
-  //   surname: "Paul",
-  //   email: "emp.ceazar@gmail.com",
-  //   role: "super",
-  //   totpEnabled: true,
-  //   status: "active",
-  //   active: true,
-  //   …possibly other fields
-  // }
-
-  // As soon as the page mounts, override the store with these values:
+ 
   onMount(() => {
     profile.set({
       firstName: fetched.firstName,
       surname: fetched.surname,
       email: fetched.email,
-      image: '',        // or put a real URL if you have one
-      phone: '',        // fill in if the API also returns a phone field
+      image: '',        
+      phone: '',        
       role: fetched.role,
-      about: ''         // if your API returns an “about” field, use it; otherwise leave blank
+      about: ''         
     });
   });
 
-  // Track dialog/edit state
   let showDialog = false;
   let editedProfile = { name: '', email: '', role: '', about: '' };
 
   function handleEdit() {
-    // Prefill the edit form from the store’s current value
+  
     editedProfile = { 
       name: `${$profile.firstName} ${$profile.surname}`.trim(),
       email: $profile.email,
@@ -51,7 +37,7 @@
   }
 
   function saveProfile() {
-    // Split name into firstName and surname
+  
     const [firstName = '', ...surnameParts] = editedProfile.name.trim().split(' ');
     const surname = surnameParts.join(' ');
     profile.set({

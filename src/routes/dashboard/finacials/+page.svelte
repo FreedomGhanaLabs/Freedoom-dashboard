@@ -1,4 +1,4 @@
-<!-- src/routes/dashboard/user/+page.svelte -->
+
 <script lang="ts">
   import type { PageData } from './$types';
   import type { FinancialData } from '$lib/finance';
@@ -9,7 +9,6 @@
 
   $: financials = data.financials as unknown as FinancialData;
   
-  // Calculate additional metrics
   $: burnRate = financials?.metrics ? Math.abs(financials.metrics.averageDailyExpenses) : 0;
   $: revenueGrowth = financials?.monthlyTrends?.length > 1 ? 
     ((financials.monthlyTrends[financials.monthlyTrends.length - 1]?.earnings || 0) - 
@@ -29,7 +28,6 @@
 
 <div class="min-h-screen bg-white w-[70vw] rounded-2xl mx-auto p-4 sm:p-6 lg:p-8">
   <div class="max-w-7xl mx-auto">
-    <!-- Header Section -->
     <div class="mb-8">
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -53,9 +51,7 @@
     </div>
 
     {#if financials}
-      <!-- Key Metrics Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <!-- Total Earnings -->
         <div class="group relative overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
           <div class="absolute inset-0 bg-linear-to-br from-emerald-500/5 to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div class="relative p-6">
@@ -78,7 +74,6 @@
           </div>
         </div>
 
-        <!-- Total Expenses -->
         <div class="group relative overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
           <div class="absolute inset-0 bg-linear-to-br from-red-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div class="relative p-6">
@@ -101,7 +96,6 @@
           </div>
         </div>
 
-        <!-- Net Profit -->
         <div class="group relative overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
           <div class="absolute inset-0 bg-linear-to-br from-blue-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div class="relative p-6">
@@ -124,7 +118,6 @@
           </div>
         </div>
 
-        <!-- Transactions -->
         <div class="group relative overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
           <div class="absolute inset-0 bg-linear-to-br from-purple-500/5 to-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div class="relative p-6">
@@ -148,16 +141,13 @@
         </div>
       </div>
 
-      <!-- Detailed Analytics Section -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <!-- Financial Health Card -->
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <div class="p-6 border-b border-slate-100">
             <h2 class="text-xl font-bold text-slate-900 mb-2">Financial Health</h2>
             <p class="text-slate-600 text-sm">Key performance indicators for your business</p>
           </div>
           <div class="p-6 space-y-6">
-            <!-- Burn Rate -->
             <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
               <div class="flex items-center gap-3">
                 <div class="p-2 bg-orange-100 rounded-lg">
@@ -175,7 +165,6 @@
               </div>
             </div>
 
-            <!-- Revenue per Transaction -->
             <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
               <div class="flex items-center gap-3">
                 <div class="p-2 bg-blue-100 rounded-lg">
@@ -195,7 +184,6 @@
               </div>
             </div>
 
-            <!-- Expense Ratio -->
             <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
               <div class="flex items-center gap-3">
                 <div class="p-2 bg-violet-100 rounded-lg">
@@ -217,7 +205,6 @@
           </div>
         </div>
 
-        <!-- Quick Stats -->
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <div class="p-6 border-b border-slate-100">
             <h2 class="text-xl font-bold text-slate-900 mb-2">Period Summary</h2>
@@ -254,7 +241,6 @@
               </div>
             </div>
 
-            <!-- Performance Indicator -->
             <div class="mt-6 p-4 {getBackgroundColor(financials.netProfit)} rounded-xl border">
               <div class="flex items-center gap-3">
                 <div class="p-2 {financials.netProfit >= 0 ? 'bg-emerald-200' : 'bg-red-200'} rounded-lg">
@@ -282,7 +268,6 @@
         </div>
       </div>
 
-      <!-- Empty State for Monthly Trends -->
       {#if financials.monthlyTrends.length === 0}
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 text-center">
           <div class="p-4 bg-slate-100 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
@@ -298,7 +283,6 @@
       {/if}
 
     {:else}
-      <!-- Loading State -->
       <div class="flex items-center justify-center py-20">
         <div class="text-center">
           <div class="w-16 h-16 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
