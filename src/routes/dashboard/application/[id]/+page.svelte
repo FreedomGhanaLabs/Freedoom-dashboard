@@ -434,21 +434,23 @@
 								</button>
 							</form>
 
-							<form method="POST" action="?/reject">
-								<input type="hidden" name="reviewNotes" value="Candidate does not meet criteria" />
-
+							<form
+								method="POST"
+								action="?/delete"
+								on:submit={() => confirm('Are you sure you want to delete this application?')}
+							>
 								<button
 									type="submit"
 									class="flex w-full items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-white transition-colors hover:bg-red-700"
 								>
 									<XCircle class="h-4 w-4" />
-									Reject Application
+									Delete Application
 								</button>
 							</form>
 						{/if}
 						<form method="POST" action="?/scheduleInterview" class="space-y-4">
 							<div class="space-y-2">
-								<label for="interviewDate" class="block text-md font-medium text-gray-700">
+								<label for="interviewDate" class="text-md block font-medium text-gray-700">
 									Interview Date & Time
 								</label>
 								<input
@@ -461,7 +463,7 @@
 							</div>
 
 							<div>
-								<label for="interviewNotes" class="block text-md font-medium text-gray-700"
+								<label for="interviewNotes" class="text-md block font-medium text-gray-700"
 									>Interview Notes</label
 								>
 								<textarea
@@ -469,7 +471,7 @@
 									id="interviewNotes"
 									rows="3"
 									required
-									class="mt-3 w-full rounded-md p-3 border border-gray-300 shadow-sm resize-none focus:outline-none"
+									class="mt-3 w-full resize-none rounded-md border border-gray-300 p-3 shadow-sm focus:outline-none"
 								></textarea>
 							</div>
 
