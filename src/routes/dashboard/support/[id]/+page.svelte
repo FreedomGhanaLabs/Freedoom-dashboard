@@ -12,7 +12,6 @@
   let isSending = false;
   let errorMessage = '';
 
-  // Define the expected shape of the ActionResult data
   type ActionData = { success: boolean; ticket?: SupportTicket; message?: string };
 
   const handleMessageSubmit: SubmitFunction = () => {
@@ -121,7 +120,6 @@
       </div>
     </div>
 
-    <!-- Success/Error Message -->
     {#if errorMessage}
       <div class="mb-4 p-3 rounded-lg
         {errorMessage.includes('successfully') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
@@ -129,7 +127,6 @@
       </div>
     {/if}
 
-    <!-- Transaction Details -->
     {#if data.ticket.transactionDetails}
       <div class="mb-8">
         <h2 class="text-lg font-semibold text-gray-700 mb-2">Transaction Details</h2>
@@ -141,13 +138,11 @@
       </div>
     {/if}
 
-    <!-- Description -->
     <div class="mb-8">
       <h2 class="text-lg font-semibold text-gray-700 mb-2">Description</h2>
       <p class="text-gray-600">{data.ticket.description}</p>
     </div>
 
-    <!-- Attachments -->
     {#if data.ticket.attachments.length > 0}
       <div class="mb-8">
         <h2 class="text-lg font-semibold text-gray-700 mb-2">Attachments</h2>
@@ -161,7 +156,6 @@
       </div>
     {/if}
 
-    <!-- Messages -->
     <div class="mb-8">
       <h2 class="text-lg font-semibold text-gray-700 mb-2">Messages</h2>
       <div class="space-y-4 max-h-96 overflow-y-auto p-4 bg-gray-50 rounded-lg">
@@ -188,8 +182,7 @@
       </div>
     </div>
 
-    <!-- Close Ticket Form -->
-    {#if data.ticket.permissions.canClose && data.ticket.status !== 'closed'}
+    <!-- {#if data.ticket.permissions.canClose && data.ticket.status !== 'closed'}
       <form action="?/close" method="POST" use:enhance={handleCloseSubmit} class="mt-6">
         <div class="relative">
           <textarea
@@ -219,9 +212,7 @@
           </button>
         </div>
       </form>
-    {/if}
-
-    <!-- Reply Form -->
+    {/if} -->
     <form action="?/resolve" method="POST" use:enhance={handleMessageSubmit} class="mt-6">
       <div class="relative">
         <textarea
@@ -253,7 +244,6 @@
     </form>
   </div>
 
-   <!-- Ticket Details -->
     <div class=" bg-white p-4 space-y-3 flex flex-col max-w-3xl shadow-lg max-h-120  rounded-2xl gap-6 mb-8">
       <div>
         <h2 class="text-lg font-normal text-gray-400 mb-2">Creator</h2>

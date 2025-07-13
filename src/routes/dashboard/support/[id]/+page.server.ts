@@ -21,12 +21,10 @@ export const load: PageServerLoad = async ({ params, cookies, fetch }) => {
   }
   if (!res.ok) {
     const body = await res.text();
-    // console.error(`❌ getSupportById failed (${res.status}):`, body);
     throw error(res.status, `Failed to load ticket (${res.status})`);
   }
 
   const payload = await res.json();
-  // console.log('✅ [server] get Support By Id payload:', payload);
 
   const ticket: SupportTicket = {
     ...payload.data.ticket,
@@ -89,7 +87,7 @@ export const actions: Actions = {
 
     const newMessage: Message = {
       sender: 'admin',
-      senderId: 'current_admin_id', // Replace with actual admin ID from auth context
+      senderId: 'current_admin_id', 
       message: resolution,
       attachments: [],
       createdAt: new Date().toISOString(),
@@ -130,7 +128,6 @@ export const actions: Actions = {
 
     if (!ticketResponse.ok) {
       const body = await ticketResponse.text();
-      // console.error(`❌ getTicket failed (${ticketResponse.status}):`, body);
       throw error(ticketResponse.status, `Failed to fetch ticket data (${ticketResponse.status})`);
     }
 

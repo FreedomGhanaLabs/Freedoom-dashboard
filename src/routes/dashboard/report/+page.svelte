@@ -1,4 +1,4 @@
-<!-- src/routes/dashboard/user/+page.svelte -->
+
 <script lang="ts">
   import type { PageData } from './$types';
   
@@ -6,14 +6,13 @@
   
   $: analytics = data.analytics as Record<string, any>;
   
-  // Helper functions
+  
   function formatCurrency(amount: number, currency: string = 'GHS'): string {
     const formatted = new Intl.NumberFormat('en-GH', {
       style: 'currency',
       currency: currency || 'GHS'
     }).format(amount);
     
-    // Add space between currency symbol and amount
     return formatted.replace(/^([^\d]+)/, '$1 ');
   }
   
@@ -60,9 +59,8 @@
     </div>
 
     {#if analytics}
-      <!-- Key Metrics Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <!-- Total Users -->
+       
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div class="flex items-center justify-between">
             <div>
@@ -77,7 +75,6 @@
           </div>
         </div>
 
-        <!-- Total Drivers -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div class="flex items-center justify-between">
             <div>
@@ -92,7 +89,6 @@
           </div>
         </div>
 
-        <!-- Total Rides -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div class="flex items-center justify-between">
             <div>
@@ -155,7 +151,6 @@
           </div>
         </div>
 
-        <!-- Ride Performance -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 class="text-lg font-semibold text-gray-900 mb-4">Ride Performance</h3>
           <div class="space-y-4">
@@ -202,7 +197,6 @@
           </div>
         </div>
 
-        <!-- New Drivers -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Driver Onboarding</h3>
           <div class="space-y-3">
@@ -219,7 +213,6 @@
         </div>
       </div>
 
-      <!-- Top Drivers -->
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Performing Drivers</h3>
         <div class="overflow-x-auto scrollbar-thin scrollbar-track-slate-100 scrollbar-thumb-slate-300 hover:scrollbar-thumb-slate-400 scrollbar-track-rounded-sm scrollbar-thumb-rounded-sm">
@@ -267,7 +260,6 @@
         </div>
       </div>
 
-      <!-- Popular Routes -->
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Popular Routes</h3>
         <div class="overflow-x-auto scrollbar-thin scrollbar-track-slate-100 scrollbar-thumb-slate-300 hover:scrollbar-thumb-slate-400 scrollbar-track-rounded-sm scrollbar-thumb-rounded-sm">
@@ -307,8 +299,7 @@
         </div>
       </div>
 
-      
-      <!-- Recent Financial Activity -->
+
       {#if recentFinancialData.length > 0}
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Financial Activity</h3>
@@ -352,7 +343,6 @@
 
 
     {:else}
-      <!-- Loading State -->
       <div class="flex items-center justify-center h-64">
         <div class="text-center">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>

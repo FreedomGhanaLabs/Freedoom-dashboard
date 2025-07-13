@@ -15,7 +15,6 @@
     goto('/dashboard/user');
   }
 
-  // Get status icon and color for transactions
   function getStatusIcon(status: string) {
     switch (status) {
       case 'successful':
@@ -52,7 +51,6 @@
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- User Info -->
       <section class="border rounded-lg p-6 space-y-4">
         <h2 class="text-xl font-semibold">User Information</h2>
         <div class="flex items-center gap-4">
@@ -69,7 +67,6 @@
         </div>
       </section>
 
-      <!-- Transaction Stats -->
       <section class="border rounded-lg p-6 space-y-4">
         <h2 class="text-xl font-semibold flex items-center gap-2">
           <TrendingUp class="h-5 w-5" />
@@ -96,11 +93,9 @@
       </section>
     </div>
 
-    <!-- Payment Details -->
     <section class="border rounded-lg p-6 space-y-4">
       <h2 class="text-xl font-semibold">Payment Details</h2>
       
-      <!-- Default Card -->
       {#if user.paymentDetails?.defaultCard}
         <div>
           <p class="text-sm font-medium text-gray-500 mb-2">Default Payment Method</p>
@@ -117,7 +112,7 @@
         </div>
       {/if}
 
-      <!-- Mobile Money Provider -->
+      
       {#if user.paymentDetails?.mobileMoneyProvider}
         <div>
           <p class="text-sm font-medium text-gray-500 mb-2">Mobile Money Provider</p>
@@ -127,7 +122,6 @@
         </div>
       {/if}
 
-      <!-- Saved Cards -->
       <div>
         <h3 class="font-medium mb-3">Saved Payment Methods</h3>
         {#if user.paymentDetails?.savedCards && user.paymentDetails.savedCards.length > 0}
@@ -160,7 +154,6 @@
       </div>
     </section>
 
-    <!-- Recent Transactions -->
     <section class="border rounded-lg p-6">
       <h2 class="text-xl font-semibold mb-4">Recent Transactions</h2>
       {#if user.transactions && user.transactions.length > 0}

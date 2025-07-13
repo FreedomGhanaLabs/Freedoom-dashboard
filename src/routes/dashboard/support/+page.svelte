@@ -9,21 +9,17 @@
 
 	const { data } = $props<{ data: PageData & { support: SupportTicket[], stats: any } }>();
 
-	// Extract tickets and stats from the payload
 	let supportTickets: SupportTicket[] = data.support ?? [];
 	let ticketStats = data.stats?.data ?? {};
 
-	// Derive unique categories from the payload and explicitly type as string[]
 	let visibleCategories: string[] = ['All Tickets', ...new Set(supportTickets.map((ticket) => ticket.category))];
 
-	// Use $state for reactive variables
 	let activeCategory = $state('All Tickets');
 	let showAllCategories = $state(false);
 
-	// Format ticket data for the table to match Ticket interface
 	function formatTicketData(ticket: SupportTicket): Ticket {
 		return {
-			_id: ticket._id || '#0000', // Ensure _id is always present
+			_id: ticket._id || '#0000', 
 			subject: ticket.subject || '-',
 			subcategory:ticket.subcategory || '-',
 			priority: ticket.priority || '-',
@@ -31,43 +27,38 @@
 			serviceType: ticket.serviceType || 'N/A',
 			customer: ticket.creator?.name || 'Unknown User',
 			email: ticket.creator?.email || 'N/A',
-			phone: 'N/A', // Not provided in payload, using default
+			phone: 'N/A', 
 			date: new Date(ticket.createdAt).toLocaleDateString() || '-',
 			status: ticket.status || '-',
 			category: ticket.category || '-',
-			description: ticket.subject || 'No detailed description available', // Use subject as fallback
-			messages: [] // No messages in payload, using empty array
+			description: ticket.subject || 'No detailed description available', 
+			messages: [] 
 		};
 	}
 
 	let formattedTickets: Ticket[] = supportTickets.map(formatTicketData);
 
-	// Filter tickets based on active category using $derived
 	let filteredRiders = $derived<Ticket[]>(
 		activeCategory === 'All Tickets'
 			? formattedTickets
 			: formattedTickets.filter((ticket) => ticket.category === activeCategory)
 	);
 
-	// Get categories to display using $derived
 	let displayCategories = $derived(
 		showAllCategories ? visibleCategories : visibleCategories.slice(0, 4)
 	);
 
-	// Function to handle category change with debugging
 	const changeCategory = (category: string) => {
 		console.log('Category button clicked:', category);
 		activeCategory = category;
-		console.log('activeCategory updated to:', activeCategory); // Debug log to confirm state change
+		console.log('activeCategory updated to:', activeCategory); 
 	};
 
-	// Toggle showing all categories with debugging
 	const toggleAllCategories = () => {
 		console.log('Toggle button clicked, showAllCategories:', !showAllCategories);
 		showAllCategories = !showAllCategories;
 	};
 
-	// Helper functions for stats
 	const formatResolutionTime = (hours: string) => {
 		const h = parseFloat(hours);
 		if (h < 24) return `${Math.round(h)}h`;
@@ -93,12 +84,10 @@
 		}
 	};
 
-	// Calculate resolution rate
 	const resolutionRate = ticketStats.totalTickets > 0 
 		? Math.round((ticketStats.byStatus?.resolved || 0) / ticketStats.totalTickets * 100) 
 		: 0;
 
-	// Table headings
 	const headings = [	
 		{ title: 'Creator', className: '', key: 'userType' },
 		{ title: 'Creator Name', className: '', key: 'customer' },
@@ -127,9 +116,8 @@
 				<h1 class="text-3xl font-bold">Support Center</h1>
 			</div>
 
-			<!-- Stats Dashboard -->
 			<div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-				<!-- Total Tickets -->
+				
 				<div class="bg-linear-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
 					<div class="flex items-center justify-between">
 						<div>
@@ -142,7 +130,6 @@
 					</div>
 				</div>
 
-				<!-- Resolution Rate -->
 				<div class="bg-linear-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
 					<div class="flex items-center justify-between">
 						<div>
@@ -155,7 +142,6 @@
 					</div>
 				</div>
 
-				<!-- Average Resolution Time -->
 				<div class="bg-linear-to-br from-amber-50 to-amber-100 rounded-xl p-6 border border-amber-200">
 					<div class="flex items-center justify-between">
 						<div>
@@ -168,7 +154,6 @@
 					</div>
 				</div>
 
-				<!-- Satisfaction Rating -->
 				<div class="bg-linear-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
 					<div class="flex items-center justify-between">
 						<div>
@@ -193,9 +178,7 @@
 				</div>
 			</div>
 
-			<!-- Status and Priority Breakdown -->
 			<div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-				<!-- Status Breakdown -->
 				<div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
 					<h3 class="text-lg font-semibold text-gray-900 mb-4">Status Breakdown</h3>
 					<div class="space-y-3">
@@ -218,7 +201,6 @@
 					</div>
 				</div>
 
-				<!-- Priority Breakdown -->
 				<div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
 					<h3 class="text-lg font-semibold text-gray-900 mb-4">Priority Breakdown</h3>
 					<div class="space-y-3">
@@ -242,9 +224,7 @@
 				</div>
 			</div>
 
-			<!-- Category and Service Type Breakdown -->
 			<div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-				<!-- Category Breakdown -->
 				<div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
 					<h3 class="text-lg font-semibold text-gray-900 mb-4">Category Breakdown</h3>
 					<div class="space-y-3">
@@ -267,7 +247,6 @@
 					</div>
 				</div>
 
-				<!-- Service Type Breakdown -->
 				<div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
 					<h3 class="text-lg font-semibold text-gray-900 mb-4">Service Type Breakdown</h3>
 					<div class="space-y-3">

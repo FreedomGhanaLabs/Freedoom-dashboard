@@ -7,7 +7,6 @@
 
 	const { data } = $props<{ data: PageData }>();
 
-	// now `data.deliveries` is your array
 	let ride = data.ride;
 
 	function formatToTwoDecimal(value: number): string {
@@ -68,9 +67,7 @@
 			})
 		: formattedRides;
 
-	// --- CSV download logic ---
 	function handleDownload() {
-		// `$filteredRides` is the unwrapped array here
 		downloadCSV(headings, formattedRides, 'Rides.csv');
 	}
 </script>
@@ -104,7 +101,6 @@
 					onclick={handleDownload}
 					class="ml-5 flex items-center gap-2 rounded-lg border border-gray-500 px-4 py-3 text-gray-800"
 				>
-					<!-- You can swap in any icon here -->
 					<Download class="h-5 w-5" />
 					<span>Download CSV</span>
 				</button>

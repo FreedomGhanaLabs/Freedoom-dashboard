@@ -7,7 +7,6 @@
   
   $: transaction = data.transaction;
   
-  // Format currency
   function formatCurrency(amount: number, currency: string) {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -16,7 +15,6 @@
     }).format(amount);
   }
   
-  // Format date
   function formatDate(dateString: string) {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -27,12 +25,10 @@
     });
   }
   
-  // Get relative time
   function getRelativeTime(dateString: string) {
     return formatDistance(new Date(dateString), new Date(), { addSuffix: true });
   }
   
-  // Get status color
   function getStatusColor(status: string) {
     switch (status.toLowerCase()) {
       case 'successful': return 'bg-green-100 text-green-800 border-green-200';
@@ -42,7 +38,6 @@
     }
   }
   
-  // Get payment method icon
   function getPaymentIcon(method: string) {
     switch (method.toLowerCase()) {
       case 'cash': return '💵';
@@ -53,7 +48,6 @@
     }
   }
   
-  // Truncate address for display
   function truncateAddress(address: string, maxLength: number = 50) {
     return address.length > maxLength ? address.substring(0, maxLength) + '...' : address;
   }
@@ -74,7 +68,6 @@
     </div>
 <div class="min-h-screen w-[70vw] rounded-2xl bg-white mx-auto bg-linear-to-br p-4 sm:p-6 lg:p-8">
   <div class="max-w-6xl mx-auto">
-    <!-- Header -->
     <div class="mb-8">
       <div class="flex items-center justify-between">
         <div>
@@ -91,9 +84,7 @@
     </div>
 
     <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Main Transaction Card -->
       <div class="lg:col-span-2 space-y-6">
-        <!-- Transaction Overview -->
         <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
           <div class="bg-linear-to-r from-blue-600 to-purple-600 p-6 text-white">
             <div class="flex items-center justify-between">
@@ -143,7 +134,6 @@
           </div>
         </div>
 
-        <!-- Ride Details -->
         {#if transaction.ride}
           <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
             <div class="bg-linear-to-r from-green-500 to-teal-500 p-4 text-white">
@@ -154,7 +144,6 @@
             </div>
             <div class="p-6">
               <div class="space-y-4">
-                <!-- Pickup Location -->
                 <div class="flex items-start space-x-3">
                   <div class="w-3 h-3 bg-green-500 rounded-full mt-2 shrink-0"></div>
                   <div class="flex-1">
@@ -165,10 +154,8 @@
                   </div>
                 </div>
                 
-                <!-- Route Line -->
                 <div class="ml-1.5 w-0.5 h-8 bg-gray-300"></div>
                 
-                <!-- Dropoff Location -->
                 <div class="flex items-start space-x-3">
                   <div class="w-3 h-3 bg-red-500 rounded-full mt-2 shrink-0"></div>
                   <div class="flex-1">
@@ -184,9 +171,7 @@
         {/if}
       </div>
 
-      <!-- Sidebar -->
       <div class="space-y-6">
-        <!-- User Information -->
         <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
           <div class="bg-linear-to-r from-purple-500 to-pink-500 p-4 text-white">
             <h3 class="text-lg font-bold flex items-center">
@@ -211,7 +196,6 @@
         </div>
 
 
-        <!-- Delivery Status -->
         <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
           <div class="bg-linear-to-r from-indigo-500 to-blue-500 p-4 text-white">
             <h3 class="text-lg font-bold flex items-center">
@@ -231,7 +215,6 @@
           </div>
         </div>
 
-          <!-- Transaction Summary -->
         <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
           <div class="bg-linear-to-r from-orange-500 to-red-500 p-4 text-white">
             <h3 class="text-lg font-bold flex items-center">

@@ -4,11 +4,9 @@
 
 	import { goto } from '$app/navigation';
 
-	//  the users from the server load
 	export let data: { users: any[] };
 	let users = data.users;
 
-	// table column definitions — make the `key` match your API props
 	const headings = [
 		{ title: 'ID', className: 'rounded-s-2xl', key: '_id' },
 		{ title: 'First Name', key: 'firstName' },
@@ -18,7 +16,6 @@
 		{ title: 'Payment Method', className: 'rounded-e-2xl', key: 'paymentMethod' }
 	];
 
-	// ③ search/filter
 	let searchQuery = '';
 	$: filteredUsers = searchQuery
 		? users.filter(
@@ -30,7 +27,6 @@
 			)
 		: users;
 
-	// ④ row click
 	function handleRowClick(user: any) {
 		goto(`/dashboard/user/${user._id}`);
 	}

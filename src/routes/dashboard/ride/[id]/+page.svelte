@@ -29,7 +29,6 @@
 
 	let selectedTab = $state('profile');
 
-	// Helper function to format rating stars
 	function getStarRating(rating: number) {
 		return '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
 	}
@@ -57,7 +56,6 @@
 
 
 <div class="container mx-auto mb-20 w-280 p-6">
-	<!-- Header Navigation -->
 	<div class="mb-4 flex items-center">
 		<a
 			href="/dashboard/ride"
@@ -78,7 +76,6 @@
 
 	<h1 class="mb-4 text-2xl font-bold">Rider Profile</h1>
 
-	<!-- Profile Header -->
 	<div class="mb-6 h-48 rounded-lg border border-gray-200 bg-white p-6 shadow-md">
 		<div class="flex items-center">
 			<div class="ml-4 flex flex-col items-center justify-center text-center">
@@ -129,7 +126,6 @@
 		</div>
 	</div>
 
-	<!-- Ride Summary Card -->
 	{#if data.ride}
 		<div class="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-md">
 			<h3 class="mb-4 text-lg font-semibold">Recent Ride Details</h3>
@@ -181,7 +177,6 @@
 		</div>
 	{/if}
 
-	<!-- Driver Information Card -->
 	{#if data.ride?.driver}
 		<div class="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-md">
 			<h3 class="mb-4 text-lg font-semibold">Driver Information</h3>
@@ -220,7 +215,6 @@
 		<div class="mt-6 space-y-4">
 			<Tabs.Content value="profile">
 				<div class="container -mx-6 w-280 p-6">
-					<!-- Personal Information -->
 					<div class="-mt-8 h-120 w-200 rounded-xl border bg-white text-[1.3rem]">
 						<h3 class="ml-8 mt-5 text-[1.6rem] font-semibold">Ride Information</h3>
 						<div class="mt-3 grid grid-cols-4 gap-10 px-8 text-[0.9rem]">
@@ -261,7 +255,6 @@
 							</div>
 						</div>
 
-						<!-- Preferred Locations -->
 						<div class="ml-8 mt-5">
 							<h3 class="mb-10 text-lg font-semibold">Other Information</h3>
 							<div
@@ -285,7 +278,6 @@
 						<div class="mt-4 px-4">
 							<hr class="my-4" />
 
-							<!-- Additional Metadata -->
 							<div class="mt-4 grid grid-cols-2 gap-4 px-10 text-[1rem]">
 								<div>
 									<span class="block text-gray-500">Multi-Stop?</span>
@@ -306,7 +298,6 @@
 					<h2 class="mb-4 text-xl font-semibold text-gray-800">Fare Summary</h2>
 
 					<div class="grid grid-cols-2 gap-4 text-[1rem] text-gray-700">
-						<!-- Fare Breakdown -->
 						<div>
 							<h3 class="mb-2 font-semibold text-gray-900">Breakdown</h3>
 							<ul class="space-y-4">
@@ -348,7 +339,6 @@
 							</ul>
 						</div>
 
-						<!-- Totals -->
 						<div class="text-[1rem]">
 							<h3 class="mb-2 font-semibold text-gray-900">Total & Earnings</h3>
 							<ul class="space-y-4">
@@ -380,7 +370,6 @@
 
 					<hr class="my-4" />
 
-					<!-- Meta Info -->
 					<div class="grid grid-cols-3 gap-4 text-sm">
 						<div>
 							<span class="block text-gray-500">Demand Level</span>
