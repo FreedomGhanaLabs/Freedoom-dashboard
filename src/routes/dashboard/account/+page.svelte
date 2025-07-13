@@ -79,7 +79,7 @@
 
 	// --- CSV download logic ---
 	function handleDownload() {
-		downloadCSV(headings, formattedRides, 'Rides.csv');
+		downloadCSV(headings, formattedRides, 'Operations.csv');
 	}
 </script>
 

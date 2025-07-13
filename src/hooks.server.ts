@@ -1,4 +1,5 @@
 import { redirect, type Handle } from '@sveltejs/kit';
+import type { Cookies } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
   const admin_token = event.cookies.get('admin_token');
@@ -10,7 +11,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   // Protect dashboard routes
   if (event.url.pathname.startsWith('/dashboard')) {
     if (!event.locals.user.isAuthenticated) {
-      throw redirect(302, '/'); // Redirect to login page
+      throw redirect(302, '/'); 
     }
   }
 
@@ -18,7 +19,27 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   if (event.locals.user.isAuthenticated) {
     response.headers.set('Cache-Control', 'no-store');
+    response.headers.set('Vary', 'Cookie');
   }
 
   return response;
+};
+
+
+
+export const load = async ({
+  cookies,
+  setHeaders
+}: {
+  cookies: Cookies;
+  setHeaders: (headers: Record<string, string>) => void;
+}) => {
+  const token = cookies.get('admin_token');
+  if (!token) throw redirect(303, '/login');
+
+  setHeaders({
+    'Cache-Control': 'no-store'
+  });
+
+  return {};
 };

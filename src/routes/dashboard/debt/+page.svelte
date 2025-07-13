@@ -43,7 +43,7 @@
 		: debt;
 
 	function handleDownload() {
-		downloadCSV(headings, filteredDebt, 'Activity.csv');
+		downloadCSV(headings, filteredDebt, 'Debt.csv');
 	}
 </script>
 

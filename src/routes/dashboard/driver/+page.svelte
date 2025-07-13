@@ -55,7 +55,7 @@
 	);
 
 	function handleDownload() {
-		downloadCSV(headings, drivers, 'Rides.csv');
+		downloadCSV(headings, drivers, 'Driver.csv');
 	}
 
 	function getProgressPercentage(approved: number, total: number): number {

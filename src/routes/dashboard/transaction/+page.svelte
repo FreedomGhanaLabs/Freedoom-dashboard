@@ -20,7 +20,6 @@
 
 		const date = new Date(isoDateString);
 
-		// Format: 08 Jun 2025, 10:00 AM
 		return date.toLocaleString('en-US', {
 			day: '2-digit',
 			month: 'numeric',
@@ -77,9 +76,8 @@
 			})
 		: formattedRides;
 
-	// --- CSV download logic ---
 	function handleDownload() {
-		downloadCSV(headings, formattedRides, 'Rides.csv');
+		downloadCSV(headings, formattedRides, 'Transactions.csv');
 	}
 </script>
 
@@ -91,7 +89,6 @@
 	<div class="space mb-4 flex items-center px-12">
 		<h3 class="p-10 text-[2rem] font-semibold">Transaction Report</h3>
 
-		<!-- Search Input -->
 		<div class="relative mr-5 ml-auto">
 			<input
 				type="text"
@@ -105,7 +102,7 @@
 			onclick={handleDownload}
 			class="flex items-center gap-2 rounded-lg border border-gray-500 px-4 py-3 text-gray-800"
 		>
-			<!-- You can swap in any icon here -->
+			
 			<Download class="h-5 w-5" />
 			<span>Download CSV</span>
 		</button>

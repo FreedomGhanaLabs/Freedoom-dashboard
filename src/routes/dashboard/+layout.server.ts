@@ -1,12 +1,14 @@
+// src/routes/dashboard/+layout.server.ts
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
-export const load: LayoutServerLoad = async ({ locals }) => {
-  if (!locals.user || !locals.user.isAuthenticated) {
-    throw redirect(302, '/');
-  }
+export const load: LayoutServerLoad = async ({ cookies }) => {
+	const token = cookies.get('admin_token');
 
-  // If authenticated, return data that might be needed by the layout or its children
-  // For now, an empty object is fine.
-  return {};
+	if (!token) {
+		throw redirect(303, '/');
+	}
+
+
+	return {};
 };

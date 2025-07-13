@@ -1,12 +1,13 @@
 <script>
 	import { Bell, Settings, RotateCw, LogOut, Radio, Menu, X } from 'lucide-svelte';
 	const navItems = [
-		{ text: 'Notification', href: '#', icon: Bell },
-		{ text: 'Settings', href: 'navSettings', icon: Settings },
-		// { text: 'Refresh', href: '#', icon: RotateCw },
-		{ text: 'Profile', href: 'navProfile', icon: Radio, radio: true },
-		{ text: 'Logout', href: '/', icon: LogOut, action: handleLogout }
-	];
+	{ text: 'Notification', href: '#', icon: Bell },
+	{ text: 'Settings', href: 'navSettings', icon: Settings },
+	{ text: 'Profile', href: 'navProfile', icon: Radio, radio: true },
+	{ text: 'Logout', href: '/', icon: LogOut, action: handleLogout } 
+];
+
+
 	let show = $state(false);
 	import logo from '$lib/assets/Logo-02.png';
 	import * as Sheet from '$lib/components/ui/sheet/index.js';
@@ -33,30 +34,29 @@
 		{ text: 'Profile', href: 'profile' }
 	];
 
+	
+
 	async function handleLogout() {
-		try {
-			const response = await fetch('https://api-freedom.com/api/v2/admin/auth/logout', {
-				method: 'GET',
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem('admin_token')}`
-				}
-			});
+	try {
+		const response = await fetch('/auth/logout', {
+			method: 'GET'
+		});
 
-			if (!response.ok) {
-				console.error('❌ Logout API failed');
-			}
-
-			// Clear client-side storage regardless
-			localStorage.removeItem('admin_token');
-			sessionStorage.clear();
-
-			// Redirect to login or landing page
-			window.location.replace('/');
-			window.history.pushState(null, '', '/');
-		} catch (err) {
-			console.error('❌ Error during logout:', err);
+		if (!response.ok) {
+			console.error('❌ Server-side logout failed');
 		}
+
+		// Optional: clear client-side storage
+		localStorage.removeItem('admin_token');
+		sessionStorage.clear();
+
+		// Redirect will already be handled by server, but fallback:
+		window.location.href = '/';
+	} catch (err) {
+		console.error('❌ Error during logout:', err);
 	}
+}
+
 
 	let currentRoute = $derived(page.url.pathname.split('/')[2]);
 
