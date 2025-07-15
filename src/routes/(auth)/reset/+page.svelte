@@ -35,7 +35,7 @@
 		use:enhance={() => {
 			sending = true;
 			return ({ update }) => {
-				// Set invalidateAll to false if you don't want to reload page data when submitting
+
 				update({ invalidateAll: true }).finally(async () => {
 					password = '';
 					sending = false;

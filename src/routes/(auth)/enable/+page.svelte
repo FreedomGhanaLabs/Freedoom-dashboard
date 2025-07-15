@@ -11,25 +11,25 @@
 	let { form }: PageProps = $props();
 	let sending = $state(false);
 
-	// OTP input handling
+
 	let otpDigits = $state(['', '', '', '', '', '']);
 
 	function handleInput(index: number, event: Event) {
 		const input = event.target as HTMLInputElement;
 		const value = input.value;
 
-		// Only allow numbers
+	
 		if (value && !/^\d+$/.test(value)) {
 			otpDigits[index] = '';
 			return;
 		}
 
-		// Take only the last character if multiple were pasted
+	
 		if (value.length > 1) {
 			otpDigits[index] = value[value.length - 1];
 		}
 
-		// Move to next input if value is entered
+
 		if (value && index < 5) {
 			const nextInput = document.getElementById(`otp-${index + 1}`);
 			if (nextInput) {
@@ -39,7 +39,7 @@
 	}
 
 	function handleKeyDown(index: number, event: KeyboardEvent) {
-		// Handle backspace
+	
 		if (event.key === 'Backspace') {
 			if (!otpDigits[index] && index > 0) {
 				const prevInput = document.getElementById(`otp-${index - 1}`);
@@ -58,7 +58,7 @@
 	<div class="text-center">
 		<img alt="Logo" class="mx-auto my-14 size-20" src={logo} />
 	</div>
-	<h2 class="-mt-12 text-center text-[2rem] font-medium">Enter TOTP Code to Activate 2FA</h2>
+	<h2 class="-mt-12 text-center text-[2rem] font-medium">Enter Authenication Code to Activate 2FA</h2>
 
 	<div class="text-center text-[0.8rem] text-gray-500">
 		<p>Please enter the 6-digit code from your authentication app</p>
@@ -99,7 +99,7 @@
 			<p class="text-center text-red-500">{form.error}</p>
 		{/if}
 
-		<!-- ← add this block -->
+	
 		{#if form?.success}
 			<div
 				class="mt-4 flex flex-col items-center space-y-2 rounded-md bg-green-100 p-4 text-green-800"

@@ -1,33 +1,29 @@
-// src/routes/dashboard/user/+page.server.ts
+// +page.server.ts
 import { redirect, error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ cookies, fetch }) => {
-  const token = cookies.get('admin_token');
-  if (!token) {
-    throw redirect(303, '/login');
-  }
+export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
+	const token = cookies.get('admin_token');
+	if (!token) throw redirect(303, '/login');
 
-  const res = await fetch('https://api-freedom.com/api/v2/admins/operations', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  });
+	// ✅ use the query parameter here
+	const page = Number(url.searchParams.get('page') ?? '1');
 
-  //  Handle errors:
-  if (!res.ok) {
-    throw error(res.status, `Failed to load users (${res.status})`);
-  }
-  
+	const res = await fetch(`https://api-freedom.com/api/v2/admins/operations?page=${page}`, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${token}`
+		}
+	});
 
-  const payload = await res.json();
-  const operations: any[] = payload.data ?? [];
+	if (!res.ok) throw error(res.status, 'Failed to load operations');
 
-  // console.log('✅ [server] get operations payload:', payload);
+	const payload = await res.json();
 
-  return { operations };
+	return {
+		operations: payload.data ?? [],
+		currentPage: payload.currentPage ?? page,
+		totalPages: payload.totalPages ?? 1
+	};
 };
-
-

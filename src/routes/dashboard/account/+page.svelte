@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { Chart, Pie, Svg, Tooltip, AreaChart, Area } from 'layerchart';
-	import { format } from 'date-fns';
+	
 	import { sum } from 'd3-array';
 	import { dateSeriesData, invoices, keyColors, values } from '$lib/data';
-	import { LinearGradient } from 'layerchart';
+	import { goto } from '$app/navigation';
 	import { Download, Search } from 'lucide-svelte';
 	import TableGroup from './TableGroup.svelte';
 	import { downloadCSV } from '$lib/csv';
@@ -15,6 +14,14 @@
 
 	const { data } = $props<{ data: PageData }>();
 	let operations = data.operations;
+	let currentPage = data.currentPage;
+	let totalPages = data.totalPages;
+
+	function goToPage(page: number) {
+		const url = new URL(window.location.href);
+		url.searchParams.set('page', page.toString());
+		window.location.href = `?page=${page}`;
+	}
 
 	function formatToTwoDecimal(value: number): string {
 		return value.toFixed(2);
@@ -87,7 +94,6 @@
 	<title>Operations - Admin Panel</title>
 </svelte:head>
 
-
 <section class="mx-auto my-12 w-388 rounded-lg bg-white">
 	<div class="space mb-4 flex items-center px-12">
 		<h3 class="p-10 text-[2rem] font-semibold">Operations Report</h3>
@@ -112,4 +118,42 @@
 	<div class="px-8">
 		<TableGroup {headings} invoices={filteredFinanceReport} />
 	</div>
+
+	<!-- Pagination container -->
+<div class="my-10 flex items-center justify-between px-[5rem]">
+	<!-- Page text -->
+	<p class="text-sm text-gray-600 rounded-md border border-gray-300 bg-white px-2 py-3 shadow-sm">
+		Page {currentPage} of {totalPages}
+	</p>
+
+	<!-- Pagination UI -->
+	<nav class="inline-flex items-center space-x-1 rounded-md border border-gray-300 bg-white px-2 py-3 shadow-sm">
+		<button
+			onclick={() => goToPage(currentPage - 1)}
+			class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+			disabled={currentPage === 1}
+		>
+			← Prev
+		</button>
+
+		{#each Array(totalPages).fill(0).slice(0, 6).map((_, i) => i + currentPage - 2).filter(p => p >= 1 && p <= totalPages) as page}
+			<button
+				class="px-3 py-1 text-sm font-medium hover:bg-gray-100 rounded-md {page === currentPage ? 'bg-black text-white' : 'text-gray-700'}"
+				onclick={() => goToPage(page)}
+			>
+				{page}
+			</button>
+		{/each}
+
+		<button
+			onclick={() => goToPage(currentPage + 1)}
+			class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+			disabled={currentPage === totalPages}
+		>
+			Next →
+		</button>
+	</nav>
+</div>
+
+
 </section>

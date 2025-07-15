@@ -22,8 +22,8 @@
 	</div>
 
 	{#if form?.secret}
-		<!-- After form POST succeeds, form.secret contains the secret string -->
-		<h2 class="mb-4 text-center text-2xl font-medium">Scan this QR code with your authenticator</h2>
+	
+		<h2 class="mb-4 text-center text-2xl font-medium">Scan this QR code with any authenticator App</h2>
 		<div class="mb-6 flex justify-center">
 			<img src={form?.qrCode} alt="QR Code" class="mx-auto my-6 size-60" />
 		</div>
@@ -39,7 +39,7 @@
 			After scanning click <a class="underline" href="/enable">here</a> to validate.
 		</p>
 	{:else}
-		<!-- Before POST or if no secret, show the form -->
+	
 		<h2 class="mb-4 text-center text-2xl font-medium">Activate TOTP for your account</h2>
 		<p class="mb-6 text-center text-gray-500">
 			Click the button below to generate your secret key.
