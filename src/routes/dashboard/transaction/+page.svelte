@@ -10,6 +10,14 @@
 	export let data: PageData;
 
 	let transactions = data.transactions ?? [];
+	let currentPage = data.currentPage;
+	let totalPages = data.totalPages;
+
+	function goToPage(page: number) {
+		const url = new URL(window.location.href);
+		url.searchParams.set('page', page.toString());
+		window.location.href = `?page=${page}`;
+	}
 
 	function formatToTwoDecimal(value: number): string {
 		return value.toFixed(2);
@@ -110,4 +118,36 @@
 	<div class="px-8">
 		<TableGroup {headings} invoices={filteredFinanceReport} />
 	</div>
+	<div class="my-10 flex items-center justify-between px-[5rem]">
+	<p class="text-sm text-gray-600 rounded-md border border-gray-300 bg-white px-2 py-3 shadow-sm">
+		Page {currentPage} of {totalPages}
+	</p>
+
+	<nav class="inline-flex items-center space-x-1 rounded-md border border-gray-300 bg-white px-2 py-3 shadow-sm">
+		<button
+			onclick={() => goToPage(currentPage - 1)}
+			class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+			disabled={currentPage === 1}
+		>
+			← Prev
+		</button>
+
+		{#each Array(totalPages).fill(0).slice(0, 6).map((_, i) => i + currentPage - 2).filter(p => p >= 1 && p <= totalPages) as page}
+			<button
+				class="px-3 py-1 text-sm font-medium hover:bg-gray-100 rounded-md {page === currentPage ? 'bg-orange-500 text-white' : 'text-gray-700'}"
+				onclick={() => goToPage(page)}
+			>
+				{page}
+			</button>
+		{/each}
+
+		<button
+			onclick={() => goToPage(currentPage + 1)}
+			class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+			disabled={currentPage === totalPages}
+		>
+			Next →
+		</button>
+	</nav>
+</div>
 </section>

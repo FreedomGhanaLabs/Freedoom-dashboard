@@ -8,7 +8,6 @@
 	type TableType = 'rides' | 'drivers' | 'account' | 'report';
 	type Status = 'Active' | 'Pending' | 'Inactive';
 
-	// Helper function to get status styles
 	function getStatusStyle(status: Status | string) {
 		const styles = {
 			Active: 'bg-green-200 text-[#0BDF00]',
@@ -21,7 +20,6 @@
 		return `rounded px-2 py-1 ${styles[status as Status] || ''}`;
 	}
 
-	// Updated heading type with an optional "key"
 	interface Heading {
 		title: string;
 		className?: string;
@@ -39,7 +37,6 @@
 
 	let { headings, invoices }: Props = $props();
 
-	// Add pagination items array
 	const paginationItems = [
 		{ type: 'prev', label: 'Prev Page', href: '#' },
 		{ type: 'page', label: '1', href: '#' },
@@ -49,11 +46,9 @@
 		{ type: 'next', label: 'Next Page', href: '#' }
 	];
 
-	// Helper: Derive a key from heading title if not explicitly provided
 	function deriveKey(title: string): string {
 		const key = title.replace(/\s+/g, '');
 		const lowerKey = key.charAt(0).toLowerCase() + key.slice(1);
-		// Special case: "Rides Completed" should map to "rideCompleted"
 		return lowerKey === 'ridesCompleted' ? 'rideCompleted' : lowerKey;
 	}
 
@@ -62,12 +57,10 @@
 			
 		key: string
 	) {
-		// Check if the key exists in the invoice object
 		if (key in invoice) {
 			return invoice[key as keyof typeof invoice];
 		}
 
-		// Special cases for differently named properties
 		const keyMap: Record<string, string> = {
 			pickupLocation: 'pickup',
 			dropOffLocation: 'dropoff',
@@ -75,7 +68,6 @@
 			accountId: 'id'
 		};
 
-		// Try mapped key if original key doesn't exist
 		const mappedKey = keyMap[key];
 		if (mappedKey && mappedKey in invoice) {
 			return invoice[mappedKey as keyof typeof invoice];

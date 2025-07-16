@@ -1,14 +1,18 @@
-// src/routes/dashboard/user/+page.server.ts
+
 import { redirect, error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ cookies, fetch }) => {
+export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	const token = cookies.get('admin_token');
 	if (!token) {
-		throw redirect(303, '/login');
+		throw redirect(303, '/');
 	}
 
-	const res = await fetch('https://api-freedom.com/api/v2/admins/deliveries', {
+	
+	const page = Number(url.searchParams.get('page') ?? '1');
+
+
+	const res = await fetch(`https://api-freedom.com/api/v2/admins/deliveries?page=${page}`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -17,11 +21,18 @@ export const load: PageServerLoad = async ({ cookies, fetch }) => {
 	});
 
 	if (!res.ok) {
-		throw error(res.status, `Failed to load users (${res.status})`);
+		throw error(res.status, `Failed to load deliveries (${res.status})`);
 	}
 
 	const payload = await res.json();
+	console.log('ℹ️ [server] API Response Payload:', payload);
+
 	const deliveries: any[] = payload.data ?? [];
 
-	return { deliveries };
+
+	return {
+		deliveries,
+		currentPage: payload.currentPage ?? 1,
+		totalPages: payload.totalPages ?? 1,
+	};
 };

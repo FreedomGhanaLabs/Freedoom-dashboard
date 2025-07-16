@@ -2,13 +2,15 @@
 import { redirect, error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ cookies, fetch }) => {
+export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
   const token = cookies.get('admin_token');
   if (!token) {
-    throw redirect(303, '/login');
+    throw redirect(303, '/');
   }
 
-  const res = await fetch('https://api-freedom.com/api/v2/driver/debt/issues', {
+  const page = Number(url.searchParams.get('page') ?? '1');
+
+  const res = await fetch(`https://api-freedom.com/api/v2/driver/debt/issues?page=${page}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -22,8 +24,12 @@ export const load: PageServerLoad = async ({ cookies, fetch }) => {
   
 
   const payload = await res.json();
-  const debt: any[] = payload.data ?? [];
 
 
-  return { debt };
+ 
+	return {
+		debt: payload.data ?? [],
+		currentPage: payload.currentPage ?? page,
+		totalPages: payload.totalPages ?? 1
+	};
 };

@@ -1,4 +1,4 @@
-// src/routes/dashboard/user/[id]/+page.server.ts
+
 import { redirect, error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import type { User } from '$lib/userStore';
@@ -21,7 +21,6 @@ export const load: PageServerLoad<{ user: User }> = async ({
     }
   });
 
-  // if you aren’t authenticated or authorized, you’ll get a non-200 here
   if (res.status === 404) {
     throw redirect(302, '/dashboard/user');
   }
@@ -32,10 +31,8 @@ export const load: PageServerLoad<{ user: User }> = async ({
   }
 
   const payload = await res.json();
-  // console.log('✅ [server] getUserById payload:', payload);
 
   const raw: any = payload.data ?? payload.user ?? {};
-  // normalize `_id` → `id`
   const user: User = {
     ...raw,
     id: raw._id ?? raw.id

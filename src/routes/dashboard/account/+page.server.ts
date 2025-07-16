@@ -4,7 +4,7 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	const token = cookies.get('admin_token');
-	if (!token) throw redirect(303, '/login');
+	if (!token) throw redirect(303, '/');
 
 	// ✅ use the query parameter here
 	const page = Number(url.searchParams.get('page') ?? '1');
@@ -20,6 +20,8 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	if (!res.ok) throw error(res.status, 'Failed to load operations');
 
 	const payload = await res.json();
+
+	
 
 	return {
 		operations: payload.data ?? [],

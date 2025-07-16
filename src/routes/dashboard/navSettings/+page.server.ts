@@ -22,7 +22,7 @@ export interface PageData {
 export const load = async ({ cookies, fetch }): Promise<PageData> => {
 	const token = cookies.get('admin_token');
 	if (!token) {
-		throw redirect(303, '/login');
+		throw redirect(303, '/');
 	}
 
 	try {

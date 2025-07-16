@@ -4,7 +4,7 @@ import type { PageServerLoad, Actions } from './$types';
 export const load: PageServerLoad = async ({ cookies, fetch }) => {
   const token = cookies.get('admin_token');
   if (!token) {
-    throw redirect(303, '/login');
+    throw redirect(303, '/');
   }
 
   const headers = {
@@ -34,9 +34,8 @@ export const load: PageServerLoad = async ({ cookies, fetch }) => {
   const ratesPayload = await ratesRes.json();
 
   const commission = configPayload.data ?? {};
-  // console.log('Commission config:', commission);
+  
   const rates = ratesPayload.data ?? {};
-  // console.log('Commission rates:', rates);
 
   return {
     commission,
@@ -118,7 +117,7 @@ export const actions: Actions = {
           throw error(400, 'All expense fields are required');
         }
 
-        // Prepare the payload
+
         const payload = {
           amount,
           category,
@@ -127,10 +126,10 @@ export const actions: Actions = {
           currency
         };
 
-        // Log the payload for debugging
+      
         console.log('Sending expense payload to API:', JSON.stringify(payload, null, 2));
 
-        // Send the request to the API
+     
         const response = await fetch('https://api-freedom.com/api/v2/admin/commission/expenses', {
           method: 'POST',
           headers: {
@@ -140,12 +139,10 @@ export const actions: Actions = {
           body: JSON.stringify(payload)
         });
 
-        // Log the full response
         const responseText = await response.text();
         console.log('API response status:', response.status);
         console.log('API response body:', responseText);
 
-        // Check if the response indicates an error
         if (!response.ok) {
           let err;
           try {
@@ -157,10 +154,8 @@ export const actions: Actions = {
           throw error(response.status, err.msg || 'Failed to record expense');
         }
 
-        // Parse the successful response
         const result = JSON.parse(responseText);
 
-        // Validate the response data
         if (!result.data || !result.data._id) {
           console.error('Expense response missing data or _id:', result);
           throw error(500, 'Expense data is missing _id');

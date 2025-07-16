@@ -1,4 +1,4 @@
-// src/routes/dashboard/logistics/+page.server.ts
+
 import { redirect, error, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 
@@ -70,9 +70,6 @@ export const actions: Actions = {
 		}
 
 		console.log(`Driver ID ${id} deleted successfully`);
-		// console.log(response);
-
-		// Optionally redirect to another page after deletion
-		throw redirect(303, '/dashboard/driver'); // Change this path if needed
+		throw redirect(303, '/dashboard/driver'); 
 	}
 };

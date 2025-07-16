@@ -1,4 +1,4 @@
-// src/routes/dashboard/logistics/+page.server.ts
+
 import { redirect, error } from '@sveltejs/kit';
 
 export const load = async ({ params, cookies, fetch }) => {
@@ -17,7 +17,7 @@ export const load = async ({ params, cookies, fetch }) => {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${token}` // ✅ Add token back
+			'Authorization': `Bearer ${token}` 
 		}
 	});
 
@@ -25,7 +25,7 @@ export const load = async ({ params, cookies, fetch }) => {
 
 	if (!response.ok) {
 		console.error(`Fetch failed with status: ${response.status}`);
-		throw error(response.status, 'Failed to fetch delivery details'); // Better error
+		throw error(response.status, 'Failed to fetch delivery details'); 
 	}
 
 	const result = await response.json();
@@ -35,7 +35,6 @@ export const load = async ({ params, cookies, fetch }) => {
 		throw error(404, 'Delivery not found');
 	}
 
-	// console.log('Fetched ride data:', result.data);
 
 	return {
 		id,

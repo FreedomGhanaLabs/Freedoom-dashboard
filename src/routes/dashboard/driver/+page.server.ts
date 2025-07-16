@@ -5,15 +5,13 @@ import type { Driver } from '$lib/rides';
 export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	const token = cookies.get('admin_token');
 	if (!token) {
-		throw redirect(303, '/login');
+		throw redirect(303, '/');
 	}
 
 	const page = Number(url.searchParams.get('page') ?? '1');
-	const limit = Number(url.searchParams.get('limit') ?? '10');
 
 	const apiUrl = new URL('https://api-freedom.com/api/v2/driver/drivers');
-	apiUrl.searchParams.set('page', String(page));
-	apiUrl.searchParams.set('limit', String(limit));
+	
 	const driversRes = await fetch(apiUrl.toString(), {
 		method: 'GET',
 		headers: {
@@ -26,9 +24,8 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 		throw error(driversRes.status, `Failed to load users (${driversRes.status})`);
 	}
 
-	const driversPayload = await driversRes.json();
-	const totalDrivers = driversPayload.count ?? 0;
-	const drivers: Driver[] = driversPayload.data ?? [];
+	const payload = await driversRes.json();
+	
 
 	const statsRes = await fetch(
 		'https://api-freedom.com/api/v2/driver/document/verification-stats',
@@ -85,11 +82,13 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	const pendingDocumentVerifications = pendingDocsPayload.data ?? [];
 
 
+		
+	
+
 	return {
-		drivers,
-		totalDrivers,
-		page,
-		limit,
+		drivers: payload.data ?? [],
+		currentPage: payload.currentPage ?? page,
+		totalPages: payload.totalPages ?? 1,		
 		verificationStats,
 		pendingNameUpdates,
 		pendingDocumentVerifications

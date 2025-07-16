@@ -121,12 +121,10 @@
 
 	<!-- Pagination container -->
 <div class="my-10 flex items-center justify-between px-[5rem]">
-	<!-- Page text -->
 	<p class="text-sm text-gray-600 rounded-md border border-gray-300 bg-white px-2 py-3 shadow-sm">
 		Page {currentPage} of {totalPages}
 	</p>
 
-	<!-- Pagination UI -->
 	<nav class="inline-flex items-center space-x-1 rounded-md border border-gray-300 bg-white px-2 py-3 shadow-sm">
 		<button
 			onclick={() => goToPage(currentPage - 1)}
@@ -138,7 +136,7 @@
 
 		{#each Array(totalPages).fill(0).slice(0, 6).map((_, i) => i + currentPage - 2).filter(p => p >= 1 && p <= totalPages) as page}
 			<button
-				class="px-3 py-1 text-sm font-medium hover:bg-gray-100 rounded-md {page === currentPage ? 'bg-black text-white' : 'text-gray-700'}"
+				class="px-3 py-1 text-sm font-medium hover:bg-gray-100 rounded-md {page === currentPage ? 'bg-orange-500 text-white' : 'text-gray-700'}"
 				onclick={() => goToPage(page)}
 			>
 				{page}
