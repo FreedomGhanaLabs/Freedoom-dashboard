@@ -35,7 +35,7 @@ export const load = async ({ params, cookies, fetch }) => {
 		throw error(404, 'Delivery not found');
 	}
 
-	console.log('Fetched delivery data:', result.data);
+	
 
 	return {
 		id,

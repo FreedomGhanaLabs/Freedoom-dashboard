@@ -29,6 +29,7 @@
 		{ text: 'Reports & Analytics', href: 'report' },
 		{ text: 'Transactions', href: 'transaction' },
 		{ text: 'Finacials', href: 'finacials' },
+		{ text: 'Drivers Registration', href: 'registration' },
 		{ text: 'Application', href: 'application' },		
 		{ text: 'Debt Management', href: 'debt' },
 		{ text: 'Commissions', href: 'commission' },

@@ -22,6 +22,8 @@
 		{ text: 'Reports & Analytics', href: 'report' },
 		{ text: 'Debt Management', href: 'debt' },
 		{ text: 'Transactions', href: 'transaction' },
+		{ text: 'Drivers Registration', href: 'registration' },
+		{ text: 'Application', href: 'application' },
 		{ text: 'Finacials', href: 'finacials' },
 		{ text: 'System Alerts', href: 'system' },
 		{ text: 'Logistics', href: 'logistics' },

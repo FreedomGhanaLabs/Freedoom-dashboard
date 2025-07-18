@@ -24,7 +24,7 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	}
 
 	const applicationPayload = await applicationRes.json();
-	console.log('✅ Applications loaded:', applicationPayload);
+	
 
 	const application = applicationPayload.data ?? [];
 	const pagination = applicationPayload.pagination ?? { current: 1, pages: 1, total: 0 };

@@ -12,18 +12,15 @@
 	import Activity from 'lucide-svelte/icons/activity';
 	import Credit from 'lucide-svelte/icons/credit-card';
 	import Coins from 'lucide-svelte/icons/coins';
-	import ChartPie from 'lucide-svelte/icons/chart-pie';
-	import Command from 'lucide-svelte/icons/command';
-	import Frame from 'lucide-svelte/icons/frame';
-	import GalleryVerticalEnd from 'lucide-svelte/icons/gallery-vertical-end';
-	import Map from 'lucide-svelte/icons/map';
 	import Settings2 from 'lucide-svelte/icons/settings-2';
 	import File from 'lucide-svelte/icons/file-user';
 	import HandCoins from 'lucide-svelte/icons/hand-coins';
 	import Landmark from 'lucide-svelte/icons/landmark';
+	import Add from 'lucide-svelte/icons/user-round-pen';
 	import SquareTerminal from 'lucide-svelte/icons/square-terminal';
 	import { AppWindow } from 'lucide-svelte';
 	import Logo from '$lib/assets/freelogo2.png';
+
 </script>
 
 <script lang="ts">
@@ -116,6 +113,26 @@
 				title: 'User Management',
 				url: 'user',
 				icon: Book,
+				isActive: false,
+				items: [
+					{
+						title: 'Genesis',
+						url: '#'
+					},
+					{
+						title: 'Explorer',
+						url: '#'
+					},
+					{
+						title: 'Quantum',
+						url: '#'
+					}
+				]
+			},
+			{
+				title: 'Drivers Registration',
+				url: 'registration',
+				icon: Add,
 				isActive: false,
 				items: [
 					{
