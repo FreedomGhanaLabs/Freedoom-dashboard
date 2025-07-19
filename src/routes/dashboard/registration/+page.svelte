@@ -24,8 +24,8 @@
 	}));
 
 	let headings = [
-		{ title: 'Driver ID', className: 'rounded-s-2xl', key: 'driverId' },
-		{ title: 'Full Name', className: '', key: 'fullName' },
+		{ title: 'Full Name', className: 'rounded-s-2xl', key: 'fullName' },
+		{ title: 'Gender', className: '', key: 'gender' },
 		{ title: 'Phone', className: '', key: 'phone' },
 		{ title: 'Email', className: '', key: 'email' },
 		{ title: 'Address', className: '', key: 'address' },
