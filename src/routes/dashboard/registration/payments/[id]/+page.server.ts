@@ -22,6 +22,7 @@ export const load: PageServerLoad = async ({ params, cookies, fetch }) => {
     }
 
     const result = await response.json();
+    console.log('Payment details:', result);
 
     if (!result.success) {
         throw error(404, 'Delivery not found');
@@ -37,7 +38,7 @@ export const load: PageServerLoad = async ({ params, cookies, fetch }) => {
 
 
 export const actions: Actions = {
-    default: async ({ request, fetch, params, cookies }) => {
+    record: async ({ request, fetch, params, cookies }) => {
         const token = cookies.get('admin_token');
         if (!token) throw redirect(303, '/login');
 

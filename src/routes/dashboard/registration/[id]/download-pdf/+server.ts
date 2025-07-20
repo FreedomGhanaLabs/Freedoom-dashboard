@@ -7,12 +7,13 @@ export const GET: RequestHandler = async ({ params, cookies, fetch }) => {
 
 	const { id } = params;
 
-	const response = await fetch(`https://api-freedom.com/api/v2/riders-program/drivers/${id}/profile-pdf`, {
+	const response = await fetch(`https://api-freedom.com/api/v2/riders-program/drivers/${id}/profile/download`, {
 		method: 'GET',
 		headers: {
 			Authorization: `Bearer ${token}`
 		}
 	});
+	
 
 	if (!response.ok) {
 		console.error('Failed to fetch PDF:', await response.text());

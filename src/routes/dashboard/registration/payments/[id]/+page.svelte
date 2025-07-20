@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Filter } from 'lucide-svelte';
+	import { Download, Filter } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 
 	// Data from page.server.ts
@@ -112,8 +112,6 @@
 	<title>Driver Payment History - {id}</title>
 </svelte:head>
 
-
-
 <div class="mx-auto min-h-screen w-[80w] bg-gradient-to-br from-slate-50 to-slate-100 p-4 lg:p-8">
 	<div class="mx-auto max-w-7xl space-y-6">
 		<!-- Header -->
@@ -140,6 +138,15 @@
 					</h1>
 					<p class="mt-1 text-slate-600">ID: {id}</p>
 				</div>
+			</div>
+			<div class="flex items-center space-x-4">
+				<a
+					href={`/dashboard/registration/payments/${id}/download-pdf`}
+					class="inline-flex items-center space-x-2 rounded-lg bg-blue-600 px-6 py-2 text-white transition-colors hover:bg-blue-700"
+				>
+					<Download class="h-4 w-4" />
+					<span>Export</span>
+				</a>
 			</div>
 		</div>
 
@@ -277,6 +284,7 @@
 
 		<form
 			method="POST"
+			action="?/record"
 			class="space-y-6 rounded-2xl border border-slate-200/50 bg-white p-6 shadow-sm"
 		>
 			<h2 class="text-xl font-semibold text-slate-900">Record New Payment</h2>
@@ -289,18 +297,20 @@
 						name="amount"
 						id="amount"
 						required
-						class="w-full rounded-lg border border-slate-300 px-4 py-3 bg-gray-50 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none"
+						class="w-full rounded-lg border border-slate-300 bg-gray-50 px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none"
 						placeholder="Amount"
 					/>
 				</div>
 
 				<div class="flex flex-col space-y-1">
-					<label for="paymentMethod" class="text-sm font-medium text-slate-700">Payment Method</label>
+					<label for="paymentMethod" class="text-sm font-medium text-slate-700"
+						>Payment Method</label
+					>
 					<select
 						name="paymentMethod"
 						id="paymentMethod"
 						required
-						class="w-full rounded-lg border border-slate-300 px-4 py-3 bg-gray-50 text-slate-900 focus:border-blue-500 focus:outline-none"
+						class="w-full rounded-lg border border-slate-300 bg-gray-50 px-4 py-3 text-slate-900 focus:border-blue-500 focus:outline-none"
 					>
 						<option value="">Select Payment Method</option>
 						<option value="mobile_money">Mobile Money</option>
@@ -310,13 +320,16 @@
 				</div>
 
 				<div class="flex flex-col space-y-1">
-					<label for="monthOf" class="text-sm font-medium text-slate-700">Payment Month (In Numbers)</label>
+					<label for="monthOf" class="text-sm font-medium text-slate-700"
+						>Payment Month (In Numbers)</label
+					>
 					<input
 						type="month"
+						placeholder="YYYY-MM"
 						name="monthOf"
 						id="monthOf"
 						required
-						class="w-full rounded-lg border border-slate-300 px-4 py-3 bg-gray-50 text-slate-900 focus:border-blue-500 focus:outline-none"
+						class="w-full rounded-lg border border-slate-300 bg-gray-50 px-4 py-3 text-slate-900 focus:border-blue-500 focus:outline-none"
 					/>
 				</div>
 
@@ -328,7 +341,7 @@
 						id="paymentFor"
 						value="monthly_payment"
 						readonly
-						class="w-full rounded-lg border border-slate-300 px-4 py-3 bg-gray-100 text-slate-900"
+						class="w-full rounded-lg border border-slate-300 bg-gray-100 px-4 py-3 text-slate-900"
 					/>
 				</div>
 			</div>
@@ -339,12 +352,13 @@
 					name="notes"
 					id="notes"
 					placeholder="Notes..."
-					class="w-full h-24 rounded-lg border border-slate-300 px-4 py-3 bg-gray-50 text-slate-900 placeholder-slate-400 resize-none focus:border-blue-500 focus:outline-none"
+					class="h-24 w-full resize-none rounded-lg border border-slate-300 bg-gray-50 px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none"
 				></textarea>
 			</div>
 
 			<button
 				type="submit"
+				name="record"
 				class="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700"
 			>
 				Record Payment
@@ -359,85 +373,102 @@
 			</div>
 
 			<div class="divide-y divide-slate-200">
-				{#each filteredPayments as payment}
-					<div class="p-6 transition-colors hover:bg-slate-50/50">
-						<div class="flex items-center justify-between">
-							<div class="flex items-center gap-4">
-								<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100">
-									<span class="text-xl">{getPaymentMethodIcon(payment.paymentMethod)}</span>
-								</div>
-								<div>
-									<div class="mb-1 flex items-center gap-3">
+				
+					{#each filteredPayments as payment (payment._id)}
+						<!-- Update Payment Form -->
+						<form
+							method="POST"
+							action="?/update"
+							class="flex flex-col gap-4 border-t border-slate-100 p-6 hover:bg-slate-50/50"
+						>
+							<input type="hidden" name="paymentId" value={payment._id} />
+
+							<div class="flex flex-wrap items-start justify-between gap-4">
+								<div class="flex items-center gap-4">
+									<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100">
+										<span class="text-xl">{getPaymentMethodIcon(payment.paymentMethod)}</span>
+									</div>
+									<div class="space-y-1">
 										<h3 class="font-semibold text-slate-900 capitalize">
 											{payment.paymentFor.replace('_', ' ')}
 										</h3>
-										<!-- Status Badge -->
-										{#if payment.latePayment.isLate}
-											<div
-												class="flex items-center gap-1 rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-700"
-											>
-												<svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-													<path
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														stroke-width="2"
-														d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.664-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"
-													/>
-												</svg>
-												Late ({payment.latePayment.daysLate} days)
-											</div>
-										{:else if payment.paymentStatus === 'confirmed'}
-											<div
-												class="flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700"
-											>
-												<svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-													<path
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														stroke-width="2"
-														d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-													/>
-												</svg>
-												Confirmed
-											</div>
-										{:else}
-											<div
-												class="flex items-center gap-1 rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-700"
-											>
-												<svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-													<path
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														stroke-width="2"
-														d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-													/>
-												</svg>
-												Pending
-											</div>
-										{/if}
+										<p class="text-sm text-slate-600">
+											<input
+												type="text"
+												name="notes"
+												value={payment.notes}
+												class="w-full rounded border px-2 py-1 text-sm text-slate-700"
+											/>
+										</p>
+										<div class="flex flex-wrap gap-4 text-xs text-slate-500">
+											<span>Receipt: {payment.receiptNumber}</span>
+											<span>Month: {payment.monthOf}</span>
+											<span>By: {payment.recordedBy.firstName}</span>
+										</div>
 									</div>
-									<p class="text-sm text-slate-600">{payment.notes}</p>
-									<div class="mt-2 flex items-center gap-4 text-xs text-slate-500">
-										<span>Receipt: {payment.receiptNumber}</span>
-										<span>Month: {payment.monthOf}</span>
-										<span>By: {payment.recordedBy.firstName}</span>
+								</div>
+
+								<div class="space-y-1 text-right">
+									<input
+										type="number"
+										name="amount"
+										value={payment.amount}
+										class="w-28 rounded border px-2 py-1 text-right font-semibold text-slate-900"
+									/>
+									<div>
+										<select
+											name="paymentMethod"
+											class="w-full rounded border text-sm text-slate-700"
+											required
+										>
+											<option
+												value="mobile_money"
+												selected={payment.paymentMethod === 'mobile_money'}
+											>
+												Mobile Money
+											</option>
+											<option
+												value="bank_transfer"
+												selected={payment.paymentMethod === 'bank_transfer'}
+											>
+												Bank Transfer
+											</option>
+											<option value="cash" selected={payment.paymentMethod === 'cash'}>
+												Cash
+											</option>
+										</select>
 									</div>
+									<p class="text-xs text-slate-500">
+										Balance: {formatCurrency(payment.balanceAfterPayment)}
+									</p>
+									<p class="text-xs text-slate-500">
+										{formatDate(payment.paymentDate)}
+									</p>
 								</div>
 							</div>
 
-							<div class="text-right">
-								<p class="text-2xl font-bold text-slate-900">
-									{formatCurrency(payment.amount)}
-								</p>
-								<p class="mt-1 text-sm text-slate-600">
-									{formatDate(payment.paymentDate)}
-								</p>
-								<p class="mt-1 text-xs text-slate-500">
-									Balance: {formatCurrency(payment.balanceAfterPayment)}
-								</p>
+							<div class="mt-2 flex justify-end">
+								<button
+									type="submit"
+									class="rounded-lg bg-green-600 px-4 py-2 relative text-sm font-medium text-white hover:bg-green-700"
+								>
+									Update
+								</button>
 							</div>
-						</div>
-					</div>
+						</form>
+
+						<!-- Delete Payment Form -->
+						<form method="POST" action="?/delete" class="mt-2 flex justify-end px-6">
+							<input type="hidden" name="paymentId" value={payment._id} />
+							<button
+								type="submit"
+								class="rounded-lg bg-red-600 relative bottom-[4.3rem] right-[6rem] px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+								onclick={() => confirm('Are you sure you want to delete this payment?')}
+							>
+								Delete
+							</button>
+						</form>
+					
 				{:else}
 					<div class="p-8 text-center text-slate-500">
 						<svg
@@ -517,4 +548,3 @@
 		{/if}
 	</div>
 </div>
-
