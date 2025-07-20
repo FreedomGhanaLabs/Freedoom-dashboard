@@ -235,7 +235,7 @@
 				</form>
 				<button
 					onclick={handleDownload}
-					class="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:shadow-md"
+					class="flex items-center gap-2 ml-5 rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:shadow-md"
 				>
 					<Download class="h-5 w-5" />
 					<span>Download CSV</span>
