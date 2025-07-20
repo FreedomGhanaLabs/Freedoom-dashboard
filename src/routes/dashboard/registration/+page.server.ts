@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	const page = Number(url.searchParams.get('page') ?? '1');
 
 	// Fetch paginated drivers
-	const res = await fetch(`https://api-freedom.com/api/v2/riders-program/drivers?page=${page}`, {
+	const driverRes = await fetch(`https://api-freedom.com/api/v2/riders-program/drivers?page=${page}`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -18,14 +18,27 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 		}
 	});
 
-	if (!res.ok) throw error(res.status, 'Failed to load driver data');
+	if (!driverRes.ok) throw error(driverRes.status, 'Failed to load driver data');
+	const driverPayload = await driverRes.json();
+	
 
-	const payload = await res.json();
-    console.log('Driver data:', payload);
+	// Fetch driver statistics
+	const statsRes = await fetch(`https://api-freedom.com/api/v2/riders-program/drivers/stats`, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${token}`
+		}
+	});
+
+	if (!statsRes.ok) throw error(statsRes.status, 'Failed to load driver statistics');
+	const stats = await statsRes.json();
+	console.log('Driver stats:', stats.data);
 
 	return {
-		drivers: payload.data,
-		pagination: payload.pagination,
-		currentPage: payload.pagination.current
+		drivers: driverPayload.data,
+		pagination: driverPayload.pagination,
+		currentPage: driverPayload.pagination.current,
+		stats
 	};
 };

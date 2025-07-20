@@ -1,12 +1,28 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
+	import { enhance } from '$app/forms';
+	import { page } from '$app/state';
+	import CheckCircle from 'lucide-svelte/icons/check-circle';
+	import Download from 'lucide-svelte/icons/download';
+	import User from 'lucide-svelte/icons/user';
+	import FileText from 'lucide-svelte/icons/file-text';
+	import Shield from 'lucide-svelte/icons/shield';
+	import Bike from 'lucide-svelte/icons/bike';
+	import Mail from 'lucide-svelte/icons/mail';
+	import Phone from 'lucide-svelte/icons/phone';
+	import Calendar from 'lucide-svelte/icons/calendar';
+	import MapPin from 'lucide-svelte/icons/map-pin';
+	import Clock from 'lucide-svelte/icons/clock';
+	import AlertTriangle from 'lucide-svelte/icons/alert-triangle';
+	import Eye from 'lucide-svelte/icons/eye';
+	import CreditCard from 'lucide-svelte/icons/credit-card';
+	import Hourglass from 'lucide-svelte/icons/hourglass';
+	import Timer from 'lucide-svelte/icons/timer';
 
 	// Props from page.server.ts
 	export let data;
-	
+
 	let activeTab = 'overview';
-	
+
 	// Extract driver data from the load function
 	$: driverData = data.ride;
 	$: driverId = data.id;
@@ -19,28 +35,34 @@
 		});
 	};
 
-	const formatCurrency = (amount: { toLocaleString: (arg0: string, arg1: { minimumFractionDigits: number; }) => any; }) => {
-		return `₵${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+	const formatCurrency = (amount: {
+		toLocaleString: (arg0: string, arg1: { minimumFractionDigits: number }) => any;
+	}) => {
+		return `GHS ${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
 	};
 
 	const getStatusColor = (status: any) => {
 		switch (status) {
-			case 'approved': return 'bg-green-100 text-green-800 border-green-200';
-			case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-			case 'active': return 'bg-blue-100 text-blue-800 border-blue-200';
-			default: return 'bg-gray-100 text-gray-800 border-gray-200';
+			case 'approved':
+				return 'bg-green-100 text-green-800 border-green-200';
+			case 'pending':
+				return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+			case 'active':
+				return 'bg-blue-100 text-blue-800 border-blue-200';
+			default:
+				return 'bg-gray-100 text-gray-800 border-gray-200';
 		}
 	};
 
 	const tabs = [
-		{ id: 'overview', label: 'Overview', icon: '👤' },
-		{ id: 'documents', label: 'Documents', icon: '📄' },
-		{ id: 'guarantor', label: 'Guarantor', icon: '🛡️' },
-		{ id: 'bike-program', label: 'Bike Program', icon: '🏍️' }
+		{ id: 'overview', label: 'Overview', icon: User },
+		{ id: 'documents', label: 'Documents', icon: FileText },
+		{ id: 'guarantor', label: 'Guarantor', icon: Shield },
+		{ id: 'bike-program', label: 'Bike Program', icon: Bike }
 	];
 
 	// Calculate payment progress percentage
-	$: paymentProgress = driverData?.bikeProgram 
+	$: paymentProgress = driverData?.bikeProgram
 		? ((driverData.bikeProgram.totalPaid / driverData.bikeProgram.bikePrice) * 100).toFixed(1)
 		: 0;
 </script>
@@ -49,50 +71,75 @@
 	<title>Driver ID: {driverData?.driverId || 'Loading...'}</title>
 </svelte:head>
 
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-gray-50 w-[75vw] mx-auto">
+	<div class="flex items-center justify-end my-4 mr-[6rem] gap-4">
+		<form method="POST" action="?/approveDriver" use:enhance>
+			<input type="hidden" name="notes" value="Approved by admin" />
+			<button
+				name="approveDriver"
+				type="submit"
+				class="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+			>
+				<CheckCircle class="mr-2 inline-block h-4 w-4" /> Approve Driver
+			</button>
+		</form>
+	</div>
+
 	<!-- Header -->
-	<div class="bg-white border-b border-gray-200 sticky top-0 z-10">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+	<div class="sticky top-0 z-10 border-b border-gray-200 bg-white">
+		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 			<div class="py-6">
 				<div class="flex items-center justify-between">
 					<div class="flex items-center space-x-4">
-						<div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xl">
+						<div
+							class="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 text-xl font-bold text-white"
+						>
 							{driverData?.firstName?.[0] || 'D'}{driverData?.lastName?.[0] || 'R'}
 						</div>
 						<div>
 							<h1 class="text-3xl font-bold text-gray-900">
-								{driverData?.firstName || ''} {driverData?.lastName || ''} {driverData?.otherName || ''}
+								{driverData?.firstName || ''}
+								{driverData?.lastName || ''}
+								{driverData?.otherName || ''}
 							</h1>
-							<p class="text-gray-500 text-lg">Driver ID: {driverData?.driverId || driverId}</p>
+							<p class="text-lg text-gray-500">Driver ID: {driverData?.driverId || driverId}</p>
 						</div>
 					</div>
 					<div class="flex items-center space-x-4">
-						<div class="px-4 py-2 rounded-full text-sm font-semibold border {getStatusColor(driverData?.registrationStatus)}">
-							<span class="inline-block w-4 h-4 mr-2">✅</span>
+						<div
+							class="rounded-full border px-4 py-2 text-sm font-semibold {getStatusColor(
+								driverData?.registrationStatus
+							)}"
+						>
+							<CheckCircle class="mr-2 inline-block h-4 w-4" />
 							{driverData?.registrationStatus?.toUpperCase() || 'UNKNOWN'}
 						</div>
-						<button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
-							<span class="w-4 h-4">📥</span>
+						<a
+							href={`/dashboard/registration/${driverId}/download-pdf`}
+							class="inline-flex items-center space-x-2 rounded-lg bg-blue-600 px-6 py-2 text-white transition-colors hover:bg-blue-700"
+						>
+							<Download class="h-4 w-4" />
 							<span>Export</span>
-						</button>
+						</a>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+	<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 		<!-- Navigation Tabs -->
 		<div class="mb-8">
-			<nav class="flex space-x-8 bg-white rounded-lg p-2 shadow-sm border border-gray-200">
+			<nav class="flex space-x-8 rounded-lg border border-gray-200 bg-white p-2 shadow-sm">
 				{#each tabs as tab}
 					<button
-						on:click={() => activeTab = tab.id}
-						class="flex items-center space-x-2 px-4 py-3 rounded-md text-sm font-medium transition-all {activeTab === tab.id
+						on:click={() => (activeTab = tab.id)}
+						class="flex items-center space-x-2 rounded-md px-4 py-3 text-sm font-medium transition-all {activeTab ===
+						tab.id
 							? 'bg-blue-100 text-blue-700 shadow-sm'
-							: 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}"
+							: 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'}"
 					>
-						<span class="w-4 h-4">{tab.icon}</span>
+						<svelte:component this={tab.icon} class="h-4 w-4" />
 						<span>{tab.label}</span>
 					</button>
 				{/each}
@@ -103,50 +150,58 @@
 		{#if activeTab === 'overview'}
 			<div class="space-y-6">
 				<!-- Personal Information -->
-				<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-					<div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-						<h3 class="text-lg font-semibold text-gray-900 flex items-center">
-							<span class="w-5 h-5 mr-2 text-blue-600">👤</span>
+				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-gray-900">
+							<User class="mr-2 h-5 w-5 text-blue-600" />
 							Personal Information
 						</h3>
 					</div>
 					<div class="p-6">
-						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Full Name</label>
-								<p class="text-gray-900 font-medium">
-									{driverData?.firstName || ''} {driverData?.lastName || ''} {driverData?.otherName || ''}
+								<label class="mb-1 block text-sm font-medium text-gray-500">Full Name</label>
+								<p class="font-medium text-gray-900">
+									{driverData?.firstName || ''}
+									{driverData?.lastName || ''}
+									{driverData?.otherName || ''}
 								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Email</label>
-								<p class="text-gray-900 flex items-center">
-									<span class="w-4 h-4 mr-2 text-gray-400">✉️</span>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Email</label>
+								<p class="flex items-center text-gray-900">
+									<Mail class="mr-2 h-4 w-4 text-gray-400" />
 									{driverData?.email || 'N/A'}
 								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Phone</label>
-								<p class="text-gray-900 flex items-center">
-									<span class="w-4 h-4 mr-2 text-gray-400">📞</span>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Phone</label>
+								<p class="flex items-center text-gray-900">
+									<Phone class="mr-2 h-4 w-4 text-gray-400" />
 									{driverData?.phone || 'N/A'}
 								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Date of Birth</label>
-								<p class="text-gray-900 flex items-center">
-									<span class="w-4 h-4 mr-2 text-gray-400">📅</span>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Date of Birth</label>
+								<p class="flex items-center text-gray-900">
+									<Calendar class="mr-2 h-4 w-4 text-gray-400" />
 									{driverData?.dateOfBirth ? formatDate(driverData.dateOfBirth) : 'N/A'}
 								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Gender</label>
-								<p class="text-gray-900">{driverData?.gender === 'M' ? 'Male' : driverData?.gender === 'F' ? 'Female' : 'N/A'}</p>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Gender</label>
+								<p class="text-gray-900">
+									{driverData?.gender === 'M'
+										? 'Male'
+										: driverData?.gender === 'F'
+											? 'Female'
+											: 'N/A'}
+								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Address</label>
-								<p class="text-gray-900 flex items-start">
-									<span class="w-4 h-4 mr-2 text-gray-400 mt-0.5">📍</span>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Address</label>
+								<p class="flex items-start text-gray-900">
+									<MapPin class="mt-0.5 mr-2 h-4 w-4 text-gray-400" />
 									{driverData?.address || ''}, {driverData?.city || ''}, {driverData?.region || ''}
 								</p>
 							</div>
@@ -155,27 +210,35 @@
 				</div>
 
 				<!-- Registration Information -->
-				<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-					<div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-						<h3 class="text-lg font-semibold text-gray-900 flex items-center">
-							<span class="w-5 h-5 mr-2 text-blue-600">🕐</span>
+				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-gray-900">
+							<Clock class="mr-2 h-5 w-5 text-blue-600" />
 							Registration Details
 						</h3>
 					</div>
 					<div class="p-6">
-						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Registered Date</label>
-								<p class="text-gray-900">{driverData?.registeredAt ? formatDate(driverData.registeredAt) : 'N/A'}</p>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Registered Date</label>
+								<p class="text-gray-900">
+									{driverData?.registeredAt ? formatDate(driverData.registeredAt) : 'N/A'}
+								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Approved Date</label>
-								<p class="text-gray-900">{driverData?.approvedAt ? formatDate(driverData.approvedAt) : 'N/A'}</p>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Approved Date</label>
+								<p class="text-gray-900">
+									{driverData?.approvedAt ? formatDate(driverData.approvedAt) : 'N/A'}
+								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Status</label>
-								<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border {getStatusColor(driverData?.registrationStatus)}">
-									<span class="w-4 h-4 mr-1">✅</span>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Status</label>
+								<span
+									class="inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium {getStatusColor(
+										driverData?.registrationStatus
+									)}"
+								>
+									<span class="mr-1 h-4 w-4">✅</span>
 									{driverData?.registrationStatus?.toUpperCase() || 'UNKNOWN'}
 								</span>
 							</div>
@@ -188,54 +251,67 @@
 		{#if activeTab === 'documents'}
 			<div class="space-y-6">
 				<!-- Driver License -->
-				<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-					<div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-						<h3 class="text-lg font-semibold text-gray-900 flex items-center">
-							<span class="w-5 h-5 mr-2 text-blue-600">📄</span>
+				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-gray-900">
+							<FileText class="mr-2 h-5 w-5 text-blue-600" />
 							Driver License
 						</h3>
 					</div>
 					<div class="p-6">
-						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">License Number</label>
-								<p class="text-gray-900 font-mono">{driverData?.driverLicense?.licenseNumber || 'N/A'}</p>
+								<label class="mb-1 block text-sm font-medium text-gray-500">License Number</label>
+								<p class="font-mono text-gray-900">
+									{driverData?.driverLicense?.licenseNumber || 'N/A'}
+								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Full Name</label>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Full Name</label>
 								<p class="text-gray-900">
-									{driverData?.driverLicense?.firstName || ''} 
-									{driverData?.driverLicense?.lastName || ''} 
+									{driverData?.driverLicense?.firstName || ''}
+									{driverData?.driverLicense?.lastName || ''}
 									{driverData?.driverLicense?.otherName || ''}
 								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Class</label>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Class</label>
 								<p class="text-gray-900">{driverData?.driverLicense?.classOfLicense || 'N/A'}</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Nationality</label>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Nationality</label>
 								<p class="text-gray-900">{driverData?.driverLicense?.nationality || 'N/A'}</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Issue Date</label>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Issue Date</label>
 								<p class="text-gray-900">
-									{driverData?.driverLicense?.issueDate ? formatDate(driverData.driverLicense.issueDate) : 'N/A'}
+									{driverData?.driverLicense?.issueDate
+										? formatDate(driverData.driverLicense.issueDate)
+										: 'N/A'}
 								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Expiry Date</label>
-								<p class="font-medium {driverData?.driverLicense?.expiryDate && new Date(driverData.driverLicense.expiryDate) < new Date() ? 'text-red-600' : 'text-gray-900'}">
-									{driverData?.driverLicense?.expiryDate ? formatDate(driverData.driverLicense.expiryDate) : 'N/A'}
+								<label class="mb-1 block text-sm font-medium text-gray-500">Expiry Date</label>
+								<p
+									class="font-medium {driverData?.driverLicense?.expiryDate &&
+									new Date(driverData.driverLicense.expiryDate) < new Date()
+										? 'text-red-600'
+										: 'text-gray-900'}"
+								>
+									{driverData?.driverLicense?.expiryDate
+										? formatDate(driverData.driverLicense.expiryDate)
+										: 'N/A'}
 									{#if driverData?.driverLicense?.expiryDate && new Date(driverData.driverLicense.expiryDate) < new Date()}
-										<span class="w-4 h-4 inline ml-2 text-red-500">⚠️</span>
+										<AlertTriangle class="ml-2 inline h-4 w-4 text-red-500" />
 									{/if}
 								</p>
 							</div>
 						</div>
 						<div class="mt-6">
-							<button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
-								<span class="w-4 h-4">👁️</span>
+							<button
+								class="flex items-center space-x-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+							>
+								<span class="h-4 w-4">👁️</span>
 								<span>View Document</span>
 							</button>
 						</div>
@@ -243,51 +319,65 @@
 				</div>
 
 				<!-- Ghana Card -->
-				<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-					<div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-						<h3 class="text-lg font-semibold text-gray-900 flex items-center">
-							<span class="w-5 h-5 mr-2 text-green-600">📄</span>
+				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-gray-900">
+							<FileText class="mr-2 h-5 w-5 text-green-600" />
 							Ghana Card
 						</h3>
 					</div>
 					<div class="p-6">
-						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">ID Number</label>
-								<p class="text-gray-900 font-mono">{driverData?.ghanaCard?.personalIdNumber || 'N/A'}</p>
+								<label class="mb-1 block text-sm font-medium text-gray-500">ID Number</label>
+								<p class="font-mono text-gray-900">
+									{driverData?.ghanaCard?.personalIdNumber || 'N/A'}
+								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Full Name</label>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Full Name</label>
 								<p class="text-gray-900">
-									{driverData?.ghanaCard?.firstName || ''} 
-									{driverData?.ghanaCard?.lastName || ''} 
+									{driverData?.ghanaCard?.firstName || ''}
+									{driverData?.ghanaCard?.lastName || ''}
 									{driverData?.ghanaCard?.otherName || ''}
 								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Sex</label>
-								<p class="text-gray-900">{driverData?.ghanaCard?.sex === 'M' ? 'Male' : driverData?.ghanaCard?.sex === 'F' ? 'Female' : 'N/A'}</p>
-							</div>
-							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Height</label>
-								<p class="text-gray-900">{driverData?.ghanaCard?.height || 'N/A'}</p>
-							</div>
-							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Date of Birth</label>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Sex</label>
 								<p class="text-gray-900">
-									{driverData?.ghanaCard?.dateOfBirth ? formatDate(driverData.ghanaCard.dateOfBirth) : 'N/A'}
+									{driverData?.ghanaCard?.sex === 'M'
+										? 'Male'
+										: driverData?.ghanaCard?.sex === 'F'
+											? 'Female'
+											: 'N/A'}
 								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Expiry Date</label>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Height</label>
+								<p class="text-gray-900">{driverData?.ghanaCard?.height || 'N/A'}</p>
+							</div>
+							<div>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Date of Birth</label>
 								<p class="text-gray-900">
-									{driverData?.ghanaCard?.expiryDate ? formatDate(driverData.ghanaCard.expiryDate) : 'N/A'}
+									{driverData?.ghanaCard?.dateOfBirth
+										? formatDate(driverData.ghanaCard.dateOfBirth)
+										: 'N/A'}
+								</p>
+							</div>
+							<div>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Expiry Date</label>
+								<p class="text-gray-900">
+									{driverData?.ghanaCard?.expiryDate
+										? formatDate(driverData.ghanaCard.expiryDate)
+										: 'N/A'}
 								</p>
 							</div>
 						</div>
 						<div class="mt-6">
-							<button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2">
-								<span class="w-4 h-4">👁️</span>
+							<button
+								class="flex items-center space-x-2 rounded-lg bg-green-600 px-4 py-2 text-white transition-colors hover:bg-green-700"
+							>
+								<span class="h-4 w-4">👁️</span>
 								<span>View Document</span>
 							</button>
 						</div>
@@ -295,17 +385,19 @@
 				</div>
 
 				<!-- Proof of Address -->
-				<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-					<div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-						<h3 class="text-lg font-semibold text-gray-900 flex items-center">
-							<span class="w-5 h-5 mr-2 text-purple-600">📍</span>
+				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-gray-900">
+							<MapPin class="mr-2 h-5 w-5 text-purple-600" />
 							Proof of Address
 						</h3>
 					</div>
 					<div class="p-6">
-						<p class="text-gray-600 mb-4">Address verification document uploaded and verified.</p>
-						<button class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center space-x-2">
-							<span class="w-4 h-4">👁️</span>
+						<p class="mb-4 text-gray-600">Address verification document uploaded and verified.</p>
+						<button
+							class="flex items-center space-x-2 rounded-lg bg-purple-600 px-4 py-2 text-white transition-colors hover:bg-purple-700"
+						>
+							<span class="h-4 w-4">👁️</span>
 							<span>View Document</span>
 						</button>
 					</div>
@@ -316,54 +408,54 @@
 		{#if activeTab === 'guarantor'}
 			<div class="space-y-6">
 				<!-- Guarantor Personal Info -->
-				<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-					<div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-						<h3 class="text-lg font-semibold text-gray-900 flex items-center">
-							<span class="w-5 h-5 mr-2 text-blue-600">🛡️</span>
+				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-gray-900">
+							<Shield class="mr-2 h-5 w-5 text-blue-600" />
 							Guarantor Information
 						</h3>
 					</div>
 					<div class="p-6">
-						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Full Name</label>
-								<p class="text-gray-900 font-medium">
-									{driverData?.guarantor?.firstName || ''} 
-									{driverData?.guarantor?.lastName || ''} 
+								<label class="mb-1 block text-sm font-medium text-gray-500">Full Name</label>
+								<p class="font-medium text-gray-900">
+									{driverData?.guarantor?.firstName || ''}
+									{driverData?.guarantor?.lastName || ''}
 									{driverData?.guarantor?.otherName || ''}
 								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Relationship</label>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Relationship</label>
 								<p class="text-gray-900">{driverData?.guarantor?.relationship || 'N/A'}</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Occupation</label>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Occupation</label>
 								<p class="text-gray-900">{driverData?.guarantor?.occupation || 'N/A'}</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Phone</label>
-								<p class="text-gray-900 flex items-center">
-									<span class="w-4 h-4 mr-2 text-gray-400">📞</span>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Phone</label>
+								<p class="flex items-center text-gray-900">
+									<Phone class="mr-2 h-4 w-4 text-gray-400" />
 									{driverData?.guarantor?.phone || 'N/A'}
 								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Email</label>
-								<p class="text-gray-900 flex items-center">
-									<span class="w-4 h-4 mr-2 text-gray-400">✉️</span>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Email</label>
+								<p class="flex items-center text-gray-900">
+									<Mail class="mr-2 h-4 w-4 text-gray-400" />
 									{driverData?.guarantor?.email || 'N/A'}
 								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Address</label>
-								<p class="text-gray-900 flex items-start">
-									<span class="w-4 h-4 mr-2 text-gray-400 mt-0.5">📍</span>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Address</label>
+								<p class="flex items-start text-gray-900">
+									<MapPin class="mt-0.5 mr-2 h-4 w-4 text-gray-400" />
 									<span>
 										{driverData?.guarantor?.address || 'N/A'}
 										{#if driverData?.guarantor?.landmark}
 											<br />
-											<span class="text-gray-500 text-sm">{driverData.guarantor.landmark}</span>
+											<span class="text-sm text-gray-500">{driverData.guarantor.landmark}</span>
 										{/if}
 									</span>
 								</p>
@@ -373,49 +465,63 @@
 				</div>
 
 				<!-- Guarantor Ghana Card -->
-				<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-					<div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-						<h3 class="text-lg font-semibold text-gray-900 flex items-center">
-							<span class="w-5 h-5 mr-2 text-green-600">📄</span>
+				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-gray-900">
+							<FileText class="mr-2 h-5 w-5 text-green-600" />
 							Guarantor Ghana Card
 						</h3>
 					</div>
 					<div class="p-6">
-						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">ID Number</label>
-								<p class="text-gray-900 font-mono">{driverData?.guarantor?.ghanaCard?.personalIdNumber || 'N/A'}</p>
-							</div>
-							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Sex</label>
-								<p class="text-gray-900">
-									{driverData?.guarantor?.ghanaCard?.sex === 'F' ? 'Female' : driverData?.guarantor?.ghanaCard?.sex === 'M' ? 'Male' : 'N/A'}
+								<label class="mb-1 block text-sm font-medium text-gray-500">ID Number</label>
+								<p class="font-mono text-gray-900">
+									{driverData?.guarantor?.ghanaCard?.personalIdNumber || 'N/A'}
 								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Height</label>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Sex</label>
+								<p class="text-gray-900">
+									{driverData?.guarantor?.ghanaCard?.sex === 'F'
+										? 'Female'
+										: driverData?.guarantor?.ghanaCard?.sex === 'M'
+											? 'Male'
+											: 'N/A'}
+								</p>
+							</div>
+							<div>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Height</label>
 								<p class="text-gray-900">{driverData?.guarantor?.ghanaCard?.height || 'N/A'}</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Date of Birth</label>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Date of Birth</label>
 								<p class="text-gray-900">
-									{driverData?.guarantor?.ghanaCard?.dateOfBirth ? formatDate(driverData.guarantor.ghanaCard.dateOfBirth) : 'N/A'}
+									{driverData?.guarantor?.ghanaCard?.dateOfBirth
+										? formatDate(driverData.guarantor.ghanaCard.dateOfBirth)
+										: 'N/A'}
 								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Expiry Date</label>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Expiry Date</label>
 								<p class="text-gray-900">
-									{driverData?.guarantor?.ghanaCard?.expiryDate ? formatDate(driverData.guarantor.ghanaCard.expiryDate) : 'N/A'}
+									{driverData?.guarantor?.ghanaCard?.expiryDate
+										? formatDate(driverData.guarantor.ghanaCard.expiryDate)
+										: 'N/A'}
 								</p>
 							</div>
 						</div>
 						<div class="mt-6 flex space-x-4">
-							<button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2">
-								<span class="w-4 h-4">👁️</span>
+							<button
+								class="flex items-center space-x-2 rounded-lg bg-green-600 px-4 py-2 text-white transition-colors hover:bg-green-700"
+							>
+								<span class="h-4 w-4">👁️</span>
 								<span>View Ghana Card</span>
 							</button>
-							<button class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center space-x-2">
-								<span class="w-4 h-4">👁️</span>
+							<button
+								class="flex items-center space-x-2 rounded-lg bg-purple-600 px-4 py-2 text-white transition-colors hover:bg-purple-700"
+							>
+								<span class="h-4 w-4">👁️</span>
 								<span>View Address Proof</span>
 							</button>
 						</div>
@@ -427,29 +533,37 @@
 		{#if activeTab === 'bike-program'}
 			<div class="space-y-6">
 				<!-- Bike Details -->
-				<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-					<div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-						<h3 class="text-lg font-semibold text-gray-900 flex items-center">
-							<span class="w-5 h-5 mr-2 text-blue-600">🏍️</span>
+				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-gray-900">
+							<Bike class="mr-2 h-5 w-5 text-blue-600" />
 							Bike Program Details
 						</h3>
 					</div>
 					<div class="p-6">
-						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Bike Model</label>
-								<p class="text-gray-900 font-medium">{driverData?.bikeProgram?.bikeModel || 'N/A'}</p>
-							</div>
-							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Total Price</label>
-								<p class="text-gray-900 font-bold text-lg">
-									{driverData?.bikeProgram?.bikePrice ? formatCurrency(driverData.bikeProgram.bikePrice) : 'N/A'}
+								<label class="mb-1 block text-sm font-medium text-gray-500">Bike Model</label>
+								<p class="font-medium text-gray-900">
+									{driverData?.bikeProgram?.bikeModel || 'N/A'}
 								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Status</label>
-								<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border {getStatusColor(driverData?.bikeProgram?.status)}">
-									<span class="w-4 h-4 mr-1">✅</span>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Total Price</label>
+								<p class="text-lg font-bold text-gray-900">
+									{driverData?.bikeProgram?.bikePrice
+										? formatCurrency(driverData.bikeProgram.bikePrice)
+										: 'N/A'}
+								</p>
+							</div>
+							<div>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Status</label>
+								<span
+									class="inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium {getStatusColor(
+										driverData?.bikeProgram?.status
+									)}"
+								>
+									<span class="mr-1 h-4 w-4">✅</span>
 									{driverData?.bikeProgram?.status?.toUpperCase() || 'UNKNOWN'}
 								</span>
 							</div>
@@ -458,79 +572,143 @@
 				</div>
 
 				<!-- Payment Information -->
-				<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-					<div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-						<h3 class="text-lg font-semibold text-gray-900 flex items-center">
-							<span class="w-5 h-5 mr-2 text-green-600">💳</span>
+				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-gray-900">
+							<CreditCard class="mr-2 h-5 w-5 text-green-600" />
 							Payment Information
 						</h3>
 					</div>
 					<div class="p-6">
-						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+						<div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Monthly Payment</label>
-								<p class="text-gray-900 font-bold text-xl">
-									{driverData?.bikeProgram?.monthlyPayment ? formatCurrency(driverData.bikeProgram.monthlyPayment) : 'N/A'}
+								<label class="mb-1 block text-sm font-medium text-gray-500">Monthly Payment</label>
+								<p class="text-xl font-bold text-gray-900">
+									{driverData?.bikeProgram?.monthlyPayment
+										? formatCurrency(driverData.bikeProgram.monthlyPayment)
+										: 'N/A'}
 								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Payment Duration</label>
-								<p class="text-gray-900">{driverData?.bikeProgram?.paymentDuration || 'N/A'} months</p>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Payment Duration</label>
+								<p class="text-gray-900">
+									{driverData?.bikeProgram?.paymentDuration || 'N/A'} months
+								</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Extension Months</label>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Extension Months</label>
 								<p class="text-gray-900">{driverData?.bikeProgram?.extensionMonths || 0} months</p>
 							</div>
 							<div>
-								<label class="block text-sm font-medium text-gray-500 mb-1">Start Date</label>
+								<label class="mb-1 block text-sm font-medium text-gray-500">Start Date</label>
 								<p class="text-gray-900">
-									{driverData?.bikeProgram?.startDate ? formatDate(driverData.bikeProgram.startDate) : 'N/A'}
+									{driverData?.bikeProgram?.startDate
+										? formatDate(driverData.bikeProgram.startDate)
+										: 'N/A'}
 								</p>
 							</div>
 						</div>
 
 						<!-- Payment Progress -->
 						<div class="mb-6">
-							<div class="flex justify-between items-center mb-2">
+							<div class="mb-2 flex items-center justify-between">
 								<label class="text-sm font-medium text-gray-500">Payment Progress</label>
 								<span class="text-sm text-gray-500">{paymentProgress}%</span>
 							</div>
-							<div class="w-full bg-gray-200 rounded-full h-3">
-								<div 
-									class="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-300"
+							<div class="h-3 w-full rounded-full bg-gray-200">
+								<div
+									class="h-3 rounded-full bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-300"
 									style="width: {paymentProgress}%"
 								></div>
 							</div>
 						</div>
 
 						<!-- Payment Summary -->
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<div class="bg-green-50 rounded-lg p-4 border border-green-200">
-								<label class="block text-sm font-medium text-green-600 mb-1">Total Paid</label>
-								<p class="text-green-900 font-bold text-2xl">
-									{driverData?.bikeProgram?.totalPaid ? formatCurrency(driverData.bikeProgram.totalPaid) : 'N/A'}
+						<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+							<div class="rounded-lg border border-green-200 bg-green-50 p-4">
+								<label class="mb-1 block text-sm font-medium text-green-600">Total Paid</label>
+								<p class="text-2xl font-bold text-green-900">
+									{driverData?.bikeProgram?.totalPaid
+										? formatCurrency(driverData.bikeProgram.totalPaid)
+										: 'N/A'}
 								</p>
 							</div>
-							<div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
-								<label class="block text-sm font-medium text-blue-600 mb-1">Remaining Balance</label>
-								<p class="text-blue-900 font-bold text-2xl">
-									{driverData?.bikeProgram?.remainingBalance ? formatCurrency(driverData.bikeProgram.remainingBalance) : 'N/A'}
+							<div class="rounded-lg border border-blue-200 bg-blue-50 p-4">
+								<label class="mb-1 block text-sm font-medium text-blue-600">Remaining Balance</label
+								>
+								<p class="text-2xl font-bold text-blue-900">
+									{driverData?.bikeProgram?.remainingBalance
+										? formatCurrency(driverData.bikeProgram.remainingBalance)
+										: 'N/A'}
 								</p>
 							</div>
 						</div>
+						<form method="POST" action="?/extendPayment" use:enhance class="mt-6 space-y-4">
+							<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+								<div>
+									<label for="extensionMonths" class="block text-sm font-medium text-gray-700"
+										>Extension Months</label
+									>
+									<input
+										type="number"
+										name="extensionMonths"
+										id="extensionMonths"
+										min="1"
+										required
+										class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+									/>
+								</div>
 
-						<!-- Expected End Date -->
-						{#if driverData?.bikeProgram?.expectedEndDate}
-							<div class="mt-6">
-								<label class="block text-sm font-medium text-gray-500 mb-1">Expected End Date</label>
-														<p class="text-gray-900">
-															{formatDate(driverData.bikeProgram.expectedEndDate)}
-														</p>
-													</div>
-												{/if}
-											</div>
-										</div>
-									</div>
-								{/if}
+								<div>
+									<label for="reason" class="block text-sm font-medium text-gray-700">Reason</label>
+									<input
+										type="text"
+										name="reason"
+										id="reason"
+										required
+										placeholder="E.g. Financial hardship"
+										class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+									/>
+								</div>
 							</div>
+
+							<button
+								type="submit"
+								name="extendPayment"
+								class="rounded-md bg-orange-600 px-4 py-2 text-white hover:bg-orange-700"
+							>
+								<Timer class="h-4 w-4" /> Extend Payment Duration
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<!-- Expected Timeline -->
+			<div class="mt-6 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+				<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+					<h3 class="flex items-center text-lg font-semibold text-gray-900">
+						<Hourglass class="mr-2 h-5 w-5 text-orange-600" />
+						Payment Timeline
+					</h3>
+				</div>
+				<div class="p-6">
+					<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+						<div>
+							<label class="mb-1 block text-sm font-medium text-gray-500">Expected End Date</label>
+							<p class="text-gray-900">
+								{driverData?.bikeProgram?.expectedEndDate
+									? formatDate(driverData.bikeProgram.expectedEndDate)
+									: 'N/A'}
+							</p>
 						</div>
+						<div>
+							<label class="mb-1 block text-sm font-medium text-gray-500">Extension Period</label>
+							<p class="text-gray-900">{driverData?.bikeProgram?.extensionMonths || 0} months</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		{/if}
+	</div>
+</div>

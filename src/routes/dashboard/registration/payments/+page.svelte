@@ -1,338 +1,144 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  
-  // Data from page.server.ts
-  export let data;
-  
-  let searchTerm = '';
-  let filterStatus = 'all';
-  /**
-	 * @type {string | any[]}
-	 */
-  let filteredPayments: string | any[] = [];
-  
-  // Destructure data from server
-  $: ({ id, ride: payments, summary, pagination } = data);
-  
-  // Filter payments based on search and status
-  $: {
-  if (payments) {
-    filteredPayments = payments.filter((payment: { receiptNumber: string; notes: string; paymentStatus: string; latePayment: { isLate: boolean; daysLate: number; }; }) => {
-      const matchesSearch = searchTerm === '' || 
-        payment.receiptNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (payment.notes && payment.notes.toLowerCase().includes(searchTerm.toLowerCase()));
-      
-      const matchesStatus = filterStatus === 'all' ||
-        (filterStatus === 'confirmed' && payment.paymentStatus === 'confirmed') ||
-        (filterStatus === 'pending' && payment.paymentStatus === 'pending') ||
-        (filterStatus === 'late' && payment.latePayment && 
-         (payment.latePayment.isLate === true || 
-          (payment.latePayment.daysLate && payment.latePayment.daysLate > 0)));
-      
-      return matchesSearch && matchesStatus;
-    });
-  }
-}
-  
-  function formatCurrency(amount: string | number | bigint) {
-    const numericAmount = typeof amount === 'string' ? Number(amount) : amount;
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'GHS'
-    }).format(numericAmount);
-  }
+	import { Download, Search } from 'lucide-svelte';
+	import TableGroup from './TableGroup.svelte';
+	import { downloadCSV } from '$lib/csv';
+	import type { PageData } from './$types';
 
-  function formatDate(dateString: string | number | Date) {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  }
-  
-  function getPaymentMethodIcon(method: any) {
-    switch (method) {
-      case 'bank_transfer':
-        return '🏦';
-      case 'mobile_money':
-        return '📱';
-      case 'cash':
-        return '💵';
-      default:
-        return '💳';
-    }
-  }
-  
-// Replace your existing calculateSummary function with this improved version:
+	export let data;
 
-function calculateSummary(payments: { balanceAfterPayment: any; latePayment?: { isLate: boolean; daysLate: number }; amount?: number | string }[]) {
-  if (!payments || payments.length === 0) {
-    return { totalAmount: 0, totalPayments: 0, latePayments: 0, currentBalance: 0 };
-  }
-  
-  // Count payments where latePayment object exists and has isLate true
-  const lateCount = payments.filter(p => p.latePayment && p.latePayment.isLate).length;
-  
-  return {
-    totalAmount: payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0),
-    totalPayments: payments.length,
-    latePayments: lateCount,
-    currentBalance: payments[0]?.balanceAfterPayment || 0
-  };
-}
-  
-  $: computedSummary = summary || calculateSummary(payments);
+	function formatTimestamp(isoString: string): string {
+		return new Date(isoString).toLocaleString('en-US', {
+			dateStyle: 'medium',
+			timeStyle: 'short'
+		});
+	}
+
+	let { payments, pagination, currentPage } = data;
+
+	function goToPage(page: number) {
+		const url = new URL(window.location.href);
+		url.searchParams.set('page', page.toString());
+		window.location.href = `?page=${page}`;
+	}
+
+	let processedPayments = payments.map((entry: any) => ({
+		...entry,
+		fullName: `${entry.driverId.firstName} ${entry.driverId.lastName}`,
+		email: entry.driverId.email,
+		phone: entry.driverId.phone,
+		formattedMonth: new Date(entry.monthOf).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+		recordedByName: entry.recordedBy.firstName
+	}));
+
+	let headings = [
+		{ title: 'Full Name', className: 'rounded-s-2xl', key: 'fullName' },
+		{ title: 'Email', className: '', key: 'email' },
+		{ title: 'Phone', className: '', key: 'phone' },
+		{ title: 'Amount', className: '', key: 'amount' },
+		{ title: 'Payment Method', className: '', key: 'paymentMethod' },
+		{ title: 'Payment For', className: '', key: 'paymentFor' },
+		{ title: 'Month Of', className: '', key: 'formattedMonth' },
+		{ title: 'Status', className: '', key: 'paymentStatus' },
+		{ title: 'Recorded By', className: 'rounded-e-2xl', key: 'recordedByName' }
+	];
+
+	let searchTerm = '';
+
+	let filteredActivity = searchTerm
+		? processedPayments.filter((d: any) => {
+				const q = searchTerm.toLowerCase();
+				return (
+					d.fullName.toLowerCase().includes(q) ||
+					d.email.toLowerCase().includes(q) ||
+					d.phone.toLowerCase().includes(q) ||
+					d.paymentMethod.toLowerCase().includes(q)
+				);
+			})
+		: processedPayments;
+
+	function handleDownload() {
+		downloadCSV(headings, processedPayments, 'Activity.csv');
+	}
 </script>
 
 <svelte:head>
-  <title>Driver Payment History - {id}</title>
+	<title>Activity - Admin Panel</title>
 </svelte:head>
 
-<div class="min-h-screen bg-gradient-to-br w-[80w] mx-auto from-slate-50 to-slate-100 p-4 lg:p-8">
-  <div class="max-w-7xl mx-auto space-y-6">
-    <!-- Header -->
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <button 
-          class="p-2 hover:bg-white/50 rounded-xl transition-colors"
-          on:click={() => history.back()}
-        >
-          <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-          </svg>
-        </button>
-        <div>
-          <h1 class="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
-            Driver Payment History
-          </h1>
-          <p class="text-slate-600 mt-1">ID: {id}</p>
-        </div>
-      </div>
-     
-    </div>
+<div class="mx-auto">
+	<div class="my-12 w-388 rounded-lg bg-white">
+		<div class="mt-4 flex items-center justify-between px-20 py-6">
+			<h3 class="text-2xl">Activity Logs</h3>
+			<div class="flex items-center space-x-5">
+				<form class="mx-auto max-w-md">
+					<label for="default-search" class="sr-only">Search</label>
+					<div class="relative">
+						<div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
+							<Search class="h-4 w-4 text-gray-500" />
+						</div>
+						<input
+							type="search"
+							id="default-search"
+							bind:value={searchTerm}
+							class="block w-fit max-w-52 rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-sm text-gray-900 placeholder-gray-400 focus:border-none focus:outline-none"
+							placeholder="Search"
+							required
+						/>
+					</div>
+				</form>
+				<button
+					onclick={handleDownload}
+					class="flex items-center gap-2 rounded-lg border ml-5 border-gray-500 px-4 py-3 text-gray-800"
+				>
+					<Download class="h-5 w-5" />
+					<span>Download CSV</span>
+				</button>
+			</div>
+		</div>
 
-    <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/50 hover:shadow-md transition-shadow">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm text-slate-600 font-medium">Current Balance</p>
-            <p class="text-2xl font-bold text-slate-900 mt-1">
-              {formatCurrency(computedSummary.currentBalance)}
-            </p>
-          </div>
-          <div class="p-3 bg-blue-100 rounded-xl">
-            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-            </svg>
-          </div>
-        </div>
-      </div> -->
+		<TableGroup {headings} invoices={filteredActivity} />
 
-      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/50 hover:shadow-md transition-shadow">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm text-slate-600 font-medium">Total Payments</p>
-            <p class="text-2xl font-bold text-slate-900 mt-1">
-              {computedSummary.totalPayments}
-            </p>
-          </div>
-          <div class="p-3 bg-green-100 rounded-xl">
-            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-          </div>
-        </div>
-      </div>
+		<div class="my-10 flex items-center justify-between px-[5rem]">
+			<p
+				class="rounded-md border border-gray-300 bg-white px-2 py-3 text-sm text-gray-600 shadow-sm"
+			>
+				Page {currentPage} of {pagination.page}
+			</p>
 
-      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/50 hover:shadow-md transition-shadow">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm text-slate-600 font-medium">Total Amount</p>
-            <p class="text-2xl font-bold text-slate-900 mt-1">
-              {formatCurrency(computedSummary.totalAmount)}
-            </p>
-          </div>
-          <div class="p-3 bg-purple-100 rounded-xl">
-            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-            </svg>
-          </div>
-        </div>
-      </div>
+			<nav
+				class="inline-flex items-center mb-10 space-x-1 rounded-md border border-gray-300 bg-white px-2 py-3 shadow-sm"
+			>
+				<button
+					onclick={() => goToPage(currentPage - 1)}
+					class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+					disabled={currentPage === 1}
+				>
+					← Prev
+				</button>
 
-      <!-- <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/50 hover:shadow-md transition-shadow">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm text-slate-600 font-medium">Late Payments</p>
-            <p class="text-2xl font-bold text-red-600 mt-1">
-              {computedSummary.latePayments}
-            </p>
-          </div>
-          <div class="p-3 bg-red-100 rounded-xl">
-            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.664-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/>
-            </svg>
-          </div>
-        </div>
-      </div> -->
-    </div>
+				{#each Array(pagination.pages)
+					.fill(0)
+					.slice(0, 6)
+					.map((_, i) => i + currentPage - 2)
+					.filter((p) => p >= 1 && p <= pagination.pages) as page}
+					<button
+						class="rounded-md px-3 py-1 text-sm font-medium hover:bg-gray-100 {page === currentPage
+							? 'bg-orange-500 text-white'
+							: 'text-gray-700'}"
+						onclick={() => goToPage(page)}
+					>
+						{page}
+					</button>
+				{/each}
 
-    <!-- Filters and Search -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/50">
-      <div class="flex flex-col lg:flex-row gap-4 justify-between">
-        <div class="relative flex-1 max-w-md">
-          <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-          </svg>
-          <input
-            type="text"
-            placeholder="Search payments..."
-            bind:value={searchTerm}
-            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
-          />
-        </div>
-        <div class="flex items-center gap-3">
-          <select
-            bind:value={filterStatus}
-            class="px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none"
-          >
-            <option value="all">All Payments</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="pending">Pending</option>
-            <option value="late">Late</option>
-          </select>
-          <button class="p-3 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
-            <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Payment History -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200/50 overflow-hidden">
-      <div class="p-6 border-b border-slate-200">
-        <h2 class="text-xl font-semibold text-slate-900">Payment History</h2>
-        <p class="text-slate-600 mt-1">Recent payment transactions</p>
-      </div>
-      
-      <div class="divide-y divide-slate-200">
-        {#each filteredPayments as payment}
-          <div class="p-6 hover:bg-slate-50/50 transition-colors">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-4">
-                <div class="flex items-center justify-center w-12 h-12 bg-slate-100 rounded-xl">
-                  <span class="text-xl">{getPaymentMethodIcon(payment.paymentMethod)}</span>
-                </div>
-                <div>
-                  <div class="flex items-center gap-3 mb-1">
-                    <h3 class="font-semibold text-slate-900 capitalize">
-                      {payment.paymentFor.replace('_', ' ')}
-                    </h3>
-                    <!-- Status Badge -->
-                    {#if payment.latePayment.isLate}
-                      <div class="flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.664-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/>
-                        </svg>
-                        Late ({payment.latePayment.daysLate} days)
-                      </div>
-                    {:else if payment.paymentStatus === 'confirmed'}
-                      <div class="flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        Confirmed
-                      </div>
-                    {:else}
-                      <div class="flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        Pending
-                      </div>
-                    {/if}
-                  </div>
-                  <p class="text-sm text-slate-600">{payment.notes}</p>
-                  <div class="flex items-center gap-4 mt-2 text-xs text-slate-500">
-                    <span>Receipt: {payment.receiptNumber}</span>
-                    <span>Month: {payment.monthOf}</span>
-                    <span>By: {payment.recordedBy.firstName}</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="text-right">
-                <p class="text-2xl font-bold text-slate-900">
-                  {formatCurrency(payment.amount)}
-                </p>
-                <p class="text-sm text-slate-600 mt-1">
-                  {formatDate(payment.paymentDate)}
-                </p>
-                <p class="text-xs text-slate-500 mt-1">
-                  Balance: {formatCurrency(payment.balanceAfterPayment)}
-                </p>
-              </div>
-            </div>
-          </div>
-        {:else}
-          <div class="p-8 text-center text-slate-500">
-            <svg class="w-12 h-12 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-            </svg>
-            <p class="text-lg font-medium">No payments found</p>
-            <p class="text-sm">Try adjusting your search or filter criteria</p>
-          </div>
-        {/each}
-      </div>
-    </div>
-
-    <!-- Pagination -->
-    {#if pagination}
-      <div class="flex items-center justify-between bg-white rounded-2xl p-6 shadow-sm border border-slate-200/50">
-        <p class="text-sm text-slate-600">
-          Showing {pagination.currentPage * pagination.limit - pagination.limit + 1}-{Math.min(pagination.currentPage * pagination.limit, pagination.total)} of {pagination.total} payments
-        </p>
-        <div class="flex items-center gap-2">
-          <button 
-            class="px-4 py-2 border border-slate-200 rounded-xl transition-colors {pagination.hasPrevious ? 'text-slate-700 hover:bg-slate-50' : 'text-slate-400 cursor-not-allowed'}"
-            disabled={!pagination.hasPrevious}
-          >
-            Previous
-          </button>
-          <button class="px-4 py-2 bg-blue-600 text-white rounded-xl font-medium">
-            {pagination.currentPage}
-          </button>
-          <button 
-            class="px-4 py-2 border border-slate-200 rounded-xl transition-colors {pagination.hasNext ? 'text-slate-700 hover:bg-slate-50' : 'text-slate-400 cursor-not-allowed'}"
-            disabled={!pagination.hasNext}
-          >
-            Next
-          </button>
-        </div>
-      </div>
-    {:else}
-      <div class="flex items-center justify-between bg-white rounded-2xl p-6 shadow-sm border border-slate-200/50">
-        <p class="text-sm text-slate-600">
-          Showing 1-{filteredPayments.length} of {filteredPayments.length} payments
-        </p>
-        <div class="flex items-center gap-2">
-          <button class="px-4 py-2 text-slate-400 border border-slate-200 rounded-xl cursor-not-allowed">
-            Previous
-          </button>
-          <button class="px-4 py-2 bg-blue-600 text-white rounded-xl font-medium">
-            1
-          </button>
-          <button class="px-4 py-2 text-slate-400 border border-slate-200 rounded-xl cursor-not-allowed">
-            Next
-          </button>
-        </div>
-      </div>
-    {/if}
-  </div>
+				<button
+					onclick={() => goToPage(currentPage + 1)}
+					class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+					disabled={currentPage === pagination.pages}
+				>
+					Next →
+				</button>
+			</nav>
+		</div>
+	</div>
 </div>
-

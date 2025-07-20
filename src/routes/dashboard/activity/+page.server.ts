@@ -30,7 +30,7 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	
 	return {
 		activity,
-			currentPage: payload.currentPage ?? 1,
+		currentPage: payload.currentPage ?? 1,
 		totalPages: payload.totalPages ?? 1,
 	};
 };

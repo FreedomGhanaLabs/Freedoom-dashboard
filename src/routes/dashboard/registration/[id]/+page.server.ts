@@ -1,5 +1,6 @@
 
-import { redirect, error } from '@sveltejs/kit';
+import { redirect, error, fail } from '@sveltejs/kit';
+import type { Actions } from './$types';
 
 export const load = async ({ params, cookies, fetch }) => {
     const token = cookies.get('admin_token');
@@ -36,13 +37,78 @@ export const load = async ({ params, cookies, fetch }) => {
     }
 
     console.log(`Driver payment data for ID: ${id}`, result.data);
-  
+
 
     return {
         id,
         ride: result.data,
-       
+
     };
 
 };
+export const actions: Actions = {
+    approveDriver: async ({ request, params, fetch, cookies }) => {
+        const token = cookies.get('admin_token');
+        if (!token) throw redirect(303, '/login');
+
+        const { id } = params;
+        const formData = await request.formData();
+        const notes = formData.get('notes')?.toString() || '';
+
+        const response = await fetch(`https://api-freedom.com/api/v2/riders-program/drivers/${id}/status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                registrationStatus: 'approved',
+                notes
+            })
+        });
+
+        if (!response.ok) {
+            const result = await response.json();
+            console.error(result);
+            return fail(response.status, {
+                message: 'Failed to approve driver'
+            });
+        }
+
+        return {
+            success: true
+        };
+    },
+
+    extendPayment: async ({ request, params, fetch, cookies }) => {
+        const token = cookies.get('admin_token');
+        if (!token) throw redirect(303, '/login');
+
+        const { id } = params;
+        const formData = await request.formData();
+
+        const extensionMonths = Number(formData.get('extensionMonths'));
+        const reason = formData.get('reason')?.toString() || '';
+
+        const response = await fetch(`https://api-freedom.com/api/v2/riders-program/drivers/${id}/extend`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ extensionMonths, reason })
+        });
+
+        if (!response.ok) {
+            const result = await response.json();
+            console.error(result);
+            return fail(response.status, {
+                message: 'Failed to extend payment duration'
+            });
+        }
+
+        return { success: true };
+    }
+};
+
 
