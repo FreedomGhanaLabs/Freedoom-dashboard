@@ -17,6 +17,7 @@
 	import CreditCard from 'lucide-svelte/icons/credit-card';
 	import Hourglass from 'lucide-svelte/icons/hourglass';
 	import Timer from 'lucide-svelte/icons/timer';
+	import Picture from '$lib/assets/Logo-01.png';
 
 	// Props from page.server.ts
 	export let data;
@@ -61,6 +62,26 @@
 		{ id: 'bike-program', label: 'Bike Program', icon: Bike }
 	];
 
+	let showImageModal = false;
+	let currentImageUrl = '';
+	let currentImageTitle = '';
+
+	// Function to open image in modal
+	const viewDocument = (documentUrl: string, title: string) => {
+		if (documentUrl) {
+			currentImageUrl = documentUrl;
+			currentImageTitle = title;
+			showImageModal = true;
+		}
+	};
+
+	// Function to close modal
+	const closeModal = () => {
+		showImageModal = false;
+		currentImageUrl = '';
+		currentImageTitle = '';
+	};
+
 	// Calculate payment progress percentage
 	$: paymentProgress = driverData?.bikeProgram
 		? ((driverData.bikeProgram.totalPaid / driverData.bikeProgram.bikePrice) * 100).toFixed(1)
@@ -71,8 +92,8 @@
 	<title>Driver ID: {driverData?.driverId || 'Loading...'}</title>
 </svelte:head>
 
-<div class="min-h-screen bg-gray-50 w-[75vw] mx-auto">
-	<div class="flex items-center justify-end my-4 mr-[6rem] gap-4">
+<div class="mx-auto min-h-screen w-[75vw] bg-gray-50">
+	<div class="my-4 mr-[6rem] flex items-center justify-end gap-4">
 		<form method="POST" action="?/approveDriver" use:enhance>
 			<input type="hidden" name="notes" value="Approved by admin" />
 			<button
@@ -136,7 +157,7 @@
 						on:click={() => (activeTab = tab.id)}
 						class="flex items-center space-x-2 rounded-md px-4 py-3 text-sm font-medium transition-all {activeTab ===
 						tab.id
-							? 'bg-blue-100 text-blue-700 shadow-sm'
+							? 'bg-amber-300/20 text-orange-700 shadow-sm'
 							: 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'}"
 					>
 						<svelte:component this={tab.icon} class="h-4 w-4" />
@@ -151,9 +172,9 @@
 			<div class="space-y-6">
 				<!-- Personal Information -->
 				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-						<h3 class="flex items-center text-lg font-semibold text-gray-900">
-							<User class="mr-2 h-5 w-5 text-blue-600" />
+					<div class="border-b border-gray-200  bg-amber-300/20 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-orange-600">
+							<User class="mr-2 h-5 w-5 text-orange-600" />
 							Personal Information
 						</h3>
 					</div>
@@ -211,9 +232,9 @@
 
 				<!-- Registration Information -->
 				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-						<h3 class="flex items-center text-lg font-semibold text-gray-900">
-							<Clock class="mr-2 h-5 w-5 text-blue-600" />
+					<div class="border-b border-gray-200 bg-amber-300/20 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-orange-600">
+							<Clock class="mr-2 h-5 w-5 text-orange-600" />
 							Registration Details
 						</h3>
 					</div>
@@ -238,7 +259,7 @@
 										driverData?.registrationStatus
 									)}"
 								>
-									<span class="mr-1 h-4 w-4">✅</span>
+									<CheckCircle class="mr-2 inline-block h-4 w-4" />
 									{driverData?.registrationStatus?.toUpperCase() || 'UNKNOWN'}
 								</span>
 							</div>
@@ -252,9 +273,9 @@
 			<div class="space-y-6">
 				<!-- Driver License -->
 				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-						<h3 class="flex items-center text-lg font-semibold text-gray-900">
-							<FileText class="mr-2 h-5 w-5 text-blue-600" />
+					<div class="border-b border-gray-200 bg-amber-300/20 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-orange-600">
+							<FileText class="mr-2 h-5 w-5 text-orange-600" />
 							Driver License
 						</h3>
 					</div>
@@ -308,21 +329,24 @@
 							</div>
 						</div>
 						<div class="mt-6">
-							<button
+							`<button
+								on:click={() =>
+									viewDocument(driverData?.driverLicense?.documentUrl, 'Driver License')}
 								class="flex items-center space-x-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+								disabled={!driverData?.driverLicense?.documentUrl}
 							>
-								<span class="h-4 w-4">👁️</span>
+								<Eye class="h-4 w-4" />
 								<span>View Document</span>
-							</button>
+							</button>`
 						</div>
 					</div>
 				</div>
 
 				<!-- Ghana Card -->
 				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-						<h3 class="flex items-center text-lg font-semibold text-gray-900">
-							<FileText class="mr-2 h-5 w-5 text-green-600" />
+					<div class="border-b border-gray-200 bg-amber-300/20 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-orange-600">
+							<FileText class="mr-2 h-5 w-5 text-orange-600" />
 							Ghana Card
 						</h3>
 					</div>
@@ -374,32 +398,37 @@
 							</div>
 						</div>
 						<div class="mt-6">
-							<button
+							`<button
+								on:click={() => viewDocument(driverData?.ghanaCard?.documentUrl, 'Ghana Card')}
 								class="flex items-center space-x-2 rounded-lg bg-green-600 px-4 py-2 text-white transition-colors hover:bg-green-700"
+								disabled={!driverData?.ghanaCard?.documentUrl}
 							>
-								<span class="h-4 w-4">👁️</span>
+								<Eye class="h-4 w-4" />
 								<span>View Document</span>
-							</button>
+							</button>`
 						</div>
 					</div>
 				</div>
 
 				<!-- Proof of Address -->
 				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-						<h3 class="flex items-center text-lg font-semibold text-gray-900">
-							<MapPin class="mr-2 h-5 w-5 text-purple-600" />
+					<div class="border-b border-gray-200 bg-amber-300/20 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-orange-600">
+							<MapPin class="mr-2 h-5 w-5 text-orange-600" />
 							Proof of Address
 						</h3>
 					</div>
 					<div class="p-6">
 						<p class="mb-4 text-gray-600">Address verification document uploaded and verified.</p>
-						<button
+						`<button
+							on:click={() =>
+								viewDocument(driverData?.proofOfAddress?.documentUrl, 'Proof of Address')}
 							class="flex items-center space-x-2 rounded-lg bg-purple-600 px-4 py-2 text-white transition-colors hover:bg-purple-700"
+							disabled={!driverData?.proofOfAddress?.documentUrl}
 						>
-							<span class="h-4 w-4">👁️</span>
+							<Eye class="h-4 w-4" />
 							<span>View Document</span>
-						</button>
+						</button>`
 					</div>
 				</div>
 			</div>
@@ -409,9 +438,9 @@
 			<div class="space-y-6">
 				<!-- Guarantor Personal Info -->
 				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-						<h3 class="flex items-center text-lg font-semibold text-gray-900">
-							<Shield class="mr-2 h-5 w-5 text-blue-600" />
+					<div class="border-b border-gray-200 bg-amber-300/20 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-orange-600">
+							<Shield class="mr-2 h-5 w-5 text-orange-600" />
 							Guarantor Information
 						</h3>
 					</div>
@@ -466,9 +495,9 @@
 
 				<!-- Guarantor Ghana Card -->
 				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-						<h3 class="flex items-center text-lg font-semibold text-gray-900">
-							<FileText class="mr-2 h-5 w-5 text-green-600" />
+					<div class="border-b border-gray-200 bg-amber-300/20 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-orange-600">
+							<FileText class="mr-2 h-5 w-5 text-orange-600" />
 							Guarantor Ghana Card
 						</h3>
 					</div>
@@ -513,17 +542,28 @@
 						</div>
 						<div class="mt-6 flex space-x-4">
 							<button
+								on:click={() =>
+									viewDocument(
+										driverData?.guarantor?.ghanaCard?.documentUrl,
+										'Guarantor Ghana Card'
+									)}
 								class="flex items-center space-x-2 rounded-lg bg-green-600 px-4 py-2 text-white transition-colors hover:bg-green-700"
+								disabled={!driverData?.guarantor?.ghanaCard?.documentUrl}
 							>
-								<span class="h-4 w-4">👁️</span>
+								<Eye class="h-4 w-4" />
 								<span>View Ghana Card</span>
-							</button>
-							<button
+							</button>` `<button
+								on:click={() =>
+									viewDocument(
+										driverData?.guarantor?.proofOfAddress?.documentUrl,
+										'Guarantor Proof of Address'
+									)}
 								class="flex items-center space-x-2 rounded-lg bg-purple-600 px-4 py-2 text-white transition-colors hover:bg-purple-700"
+								disabled={!driverData?.guarantor?.proofOfAddress?.documentUrl}
 							>
-								<span class="h-4 w-4">👁️</span>
+								<Eye class="h-4 w-4" />
 								<span>View Address Proof</span>
-							</button>
+							</button>`
 						</div>
 					</div>
 				</div>
@@ -534,9 +574,9 @@
 			<div class="space-y-6">
 				<!-- Bike Details -->
 				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-						<h3 class="flex items-center text-lg font-semibold text-gray-900">
-							<Bike class="mr-2 h-5 w-5 text-blue-600" />
+					<div class="border-b border-gray-200 bg-amber-300/20 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-orange-600">
+							<Bike class="mr-2 h-5 w-5 text-orange-600" />
 							Bike Program Details
 						</h3>
 					</div>
@@ -563,7 +603,7 @@
 										driverData?.bikeProgram?.status
 									)}"
 								>
-									<span class="mr-1 h-4 w-4">✅</span>
+									<CheckCircle class="mr-2 inline-block h-4 w-4" />
 									{driverData?.bikeProgram?.status?.toUpperCase() || 'UNKNOWN'}
 								</span>
 							</div>
@@ -573,9 +613,9 @@
 
 				<!-- Payment Information -->
 				<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-					<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-						<h3 class="flex items-center text-lg font-semibold text-gray-900">
-							<CreditCard class="mr-2 h-5 w-5 text-green-600" />
+					<div class="border-b border-gray-200 bg-amber-300/20 px-6 py-4">
+						<h3 class="flex items-center text-lg font-semibold text-orange-600">
+							<CreditCard class="mr-2 h-5 w-5 text-orange-600" />
 							Payment Information
 						</h3>
 					</div>
@@ -675,9 +715,9 @@
 							<button
 								type="submit"
 								name="extendPayment"
-								class="rounded-md bg-orange-600 px-4 py-2 text-white hover:bg-orange-700"
+								class="rounded-md inline-flex bg-orange-600 px-4 py-2 text-white hover:bg-orange-700"
 							>
-								<Timer class="h-4 w-4" /> Extend Payment Duration
+								<Timer class="h-4 w-4 mr-2" /> Extend Payment Duration
 							</button>
 						</form>
 					</div>
@@ -686,8 +726,8 @@
 
 			<!-- Expected Timeline -->
 			<div class="mt-6 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-				<div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-					<h3 class="flex items-center text-lg font-semibold text-gray-900">
+				<div class="border-b border-gray-200 bg-amber-300/20 px-6 py-4">
+					<h3 class="flex items-center text-lg font-semibold text-orange-600">
 						<Hourglass class="mr-2 h-5 w-5 text-orange-600" />
 						Payment Timeline
 					</h3>
@@ -711,4 +751,82 @@
 			</div>
 		{/if}
 	</div>
+	{#if showImageModal}
+		<div
+			class="bg-opacity-75 fixed inset-0 z-50 flex items-center justify-center bg-black"
+			on:click={closeModal}
+			on:keydown={(e) => e.key === 'Escape' && closeModal()}
+			role="dialog"
+			aria-labelledby="modal-title"
+			aria-modal="true"
+			tabindex="-1"
+		>
+			<div class="relative max-h-[90vh] max-w-[90vw] overflow-hidden rounded-lg bg-white shadow-xl">
+				<!-- Modal Header -->
+				<div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+					<h3 id="modal-title" class="text-lg font-semibold text-gray-900">{currentImageTitle}</h3>
+					<button
+						on:click={closeModal}
+						class="rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+						aria-label="Close modal"
+					>
+						<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M6 18L18 6M6 6l12 12"
+							/>
+						</svg>
+					</button>
+				</div>
+
+				<!-- Modal Body -->
+				<div class="p-6">
+					<div class="flex justify-center">
+						<img
+							src={currentImageUrl}
+							alt={currentImageTitle}
+							class="max-h-[70vh] max-w-full object-contain"
+							on:error={(e) => {
+								console.error('Failed to load image:', currentImageUrl);
+								if (e.target) {
+									(e.target as HTMLImageElement).src =
+										'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk3YTNiNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkZhaWxlZCB0byBsb2FkIGltYWdlPC90ZXh0Pjwvc3ZnPg==';
+								}
+							}}
+						/>
+					</div>
+				</div>
+
+				<!-- Modal Footer -->
+				<div class="border-t border-gray-200 px-6 py-4">
+					<div class="flex justify-end space-x-3">
+						<button
+							on:click={closeModal}
+							class="rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-50"
+						>
+							Close
+						</button>
+						<a
+							href={currentImageUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+						>
+							<svg class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+								/>
+							</svg>
+							Open in New Tab
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	{/if}
 </div>

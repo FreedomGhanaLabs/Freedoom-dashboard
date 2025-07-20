@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Download, Filter } from 'lucide-svelte';
+	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { onMount } from 'svelte';
 
 	// Data from page.server.ts
@@ -139,14 +140,49 @@
 					<p class="mt-1 text-slate-600">ID: {id}</p>
 				</div>
 			</div>
-			<div class="flex items-center space-x-4">
-				<a
-					href={`/dashboard/registration/payments/${id}/download-pdf`}
-					class="inline-flex items-center space-x-2 rounded-lg bg-blue-600 px-6 py-2 text-white transition-colors hover:bg-blue-700"
-				>
-					<Download class="h-4 w-4" />
-					<span>Export</span>
-				</a>
+			<div>
+				<Dialog.Root>
+					<Dialog.Trigger class="inline-flex items-center space-x-2 rounded-lg bg-orange-500 px-6 py-2 text-white hover:bg-orange-500"><Download class="h-4 w-4" />
+										<span>Export</span></Dialog.Trigger>
+					<Dialog.Content>
+						<Dialog.Header>
+							<Dialog.Title>Download PDF</Dialog.Title>
+							<Dialog.Description>
+								<form
+									method="GET"
+									action={`/dashboard/registration/payments/${id}/download-pdf`}
+									class="flex flex-col items-center gap-4"
+								>
+									<div>
+										<label class="text-sm font-medium mb-1 block">Start Date</label>
+										<input
+											type="date"
+											name="startDate"
+											required
+											class="w-full rounded-lg border border-slate-300 bg-gray-50 px-4 py-3 text-slate-900 focus:border-blue-500 focus:outline-none"
+										/>
+									</div>
+									<div>
+										<label class="text-sm font-medium mb-1 block">End Date</label>
+										<input
+											type="date"
+											name="endDate"
+											required
+											class="w-full rounded-lg border border-slate-300 bg-gray-50 px-4 py-3 text-slate-900 focus:border-blue-500 focus:outline-none"
+										/>
+									</div>
+									<button
+										type="submit"
+										class="inline-flex items-center space-x-2 rounded-lg bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
+									>
+										<Download class="h-4 w-4" />
+										<span>Export</span>
+									</button>
+								</form>
+							</Dialog.Description>
+						</Dialog.Header>
+					</Dialog.Content>
+				</Dialog.Root>
 			</div>
 		</div>
 
@@ -359,7 +395,7 @@
 			<button
 				type="submit"
 				name="record"
-				class="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700"
+				class="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white transition hover:bg-orange-500"
 			>
 				Record Payment
 			</button>
@@ -373,102 +409,98 @@
 			</div>
 
 			<div class="divide-y divide-slate-200">
-				
-					{#each filteredPayments as payment (payment._id)}
-						<!-- Update Payment Form -->
-						<form
-							method="POST"
-							action="?/update"
-							class="flex flex-col gap-4 border-t border-slate-100 p-6 hover:bg-slate-50/50"
-						>
-							<input type="hidden" name="paymentId" value={payment._id} />
+				{#each filteredPayments as payment (payment._id)}
+					<!-- Update Payment Form -->
+					<form
+						method="POST"
+						action="?/update"
+						class="flex flex-col gap-4 border-t border-slate-100 p-6 hover:bg-slate-50/50"
+					>
+						<input type="hidden" name="paymentId" value={payment._id} />
 
-							<div class="flex flex-wrap items-start justify-between gap-4">
-								<div class="flex items-center gap-4">
-									<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100">
-										<span class="text-xl">{getPaymentMethodIcon(payment.paymentMethod)}</span>
-									</div>
-									<div class="space-y-1">
-										<h3 class="font-semibold text-slate-900 capitalize">
-											{payment.paymentFor.replace('_', ' ')}
-										</h3>
-										<p class="text-sm text-slate-600">
-											<input
-												type="text"
-												name="notes"
-												value={payment.notes}
-												class="w-full rounded border px-2 py-1 text-sm text-slate-700"
-											/>
-										</p>
-										<div class="flex flex-wrap gap-4 text-xs text-slate-500">
-											<span>Receipt: {payment.receiptNumber}</span>
-											<span>Month: {payment.monthOf}</span>
-											<span>By: {payment.recordedBy.firstName}</span>
-										</div>
+						<div class="flex flex-wrap items-start justify-between gap-4">
+							<div class="flex items-center gap-4">
+								<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100">
+									<span class="text-xl">{getPaymentMethodIcon(payment.paymentMethod)}</span>
+								</div>
+								<div class="space-y-1">
+									<h3 class="font-semibold text-slate-900 capitalize">
+										{payment.paymentFor.replace('_', ' ')}
+									</h3>
+									<p class="text-sm text-slate-600">
+										<input
+											type="text"
+											name="notes"
+											value={payment.notes}
+											class="w-full rounded border px-2 py-1 text-sm text-slate-700"
+										/>
+									</p>
+									<div class="flex flex-wrap gap-4 text-xs text-slate-500">
+										<span>Receipt: {payment.receiptNumber}</span>
+										<span>Month: {payment.monthOf}</span>
+										<span>By: {payment.recordedBy.firstName}</span>
 									</div>
 								</div>
+							</div>
 
-								<div class="space-y-1 text-right">
-									<input
-										type="number"
-										name="amount"
-										value={payment.amount}
-										class="w-28 rounded border px-2 py-1 text-right font-semibold text-slate-900"
-									/>
-									<div>
-										<select
-											name="paymentMethod"
-											class="w-full rounded border text-sm text-slate-700"
-											required
+							<div class="space-y-1 text-right">
+								<input
+									type="number"
+									name="amount"
+									value={payment.amount}
+									class="w-28 rounded border px-2 py-1 text-right font-semibold text-slate-900"
+								/>
+								<div>
+									<select
+										name="paymentMethod"
+										class="w-full rounded border text-sm text-slate-700"
+										required
+									>
+										<option
+											value="mobile_money"
+											selected={payment.paymentMethod === 'mobile_money'}
 										>
-											<option
-												value="mobile_money"
-												selected={payment.paymentMethod === 'mobile_money'}
-											>
-												Mobile Money
-											</option>
-											<option
-												value="bank_transfer"
-												selected={payment.paymentMethod === 'bank_transfer'}
-											>
-												Bank Transfer
-											</option>
-											<option value="cash" selected={payment.paymentMethod === 'cash'}>
-												Cash
-											</option>
-										</select>
-									</div>
-									<p class="text-xs text-slate-500">
-										Balance: {formatCurrency(payment.balanceAfterPayment)}
-									</p>
-									<p class="text-xs text-slate-500">
-										{formatDate(payment.paymentDate)}
-									</p>
+											Mobile Money
+										</option>
+										<option
+											value="bank_transfer"
+											selected={payment.paymentMethod === 'bank_transfer'}
+										>
+											Bank Transfer
+										</option>
+										<option value="cash" selected={payment.paymentMethod === 'cash'}> Cash </option>
+									</select>
 								</div>
+								<p class="text-xs text-slate-500">
+									Balance: {formatCurrency(payment.balanceAfterPayment)}
+								</p>
+								<p class="text-xs text-slate-500">
+									{formatDate(payment.paymentDate)}
+								</p>
 							</div>
+						</div>
 
-							<div class="mt-2 flex justify-end">
-								<button
-									type="submit"
-									class="rounded-lg bg-green-600 px-4 py-2 relative text-sm font-medium text-white hover:bg-green-700"
-								>
-									Update
-								</button>
-							</div>
-						</form>
-
-						<!-- Delete Payment Form -->
-						<form method="POST" action="?/delete" class="mt-2 flex justify-end px-6">
-							<input type="hidden" name="paymentId" value={payment._id} />
+						<div class="mt-2 flex justify-end">
 							<button
 								type="submit"
-								class="rounded-lg bg-red-600 relative bottom-[4.3rem] right-[6rem] px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
-								onclick={() => confirm('Are you sure you want to delete this payment?')}
+								class="relative rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
 							>
-								Delete
+								Update
 							</button>
-						</form>
-					
+						</div>
+					</form>
+
+					<!-- Delete Payment Form -->
+					<form method="POST" action="?/delete" class="mt-2 flex justify-end px-6">
+						<input type="hidden" name="paymentId" value={payment._id} />
+						<button
+							type="submit"
+							class="relative right-[6rem] bottom-[4.3rem] rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+							onclick={() => confirm('Are you sure you want to delete this payment?')}
+						>
+							Delete
+						</button>
+					</form>
 				{:else}
 					<div class="p-8 text-center text-slate-500">
 						<svg

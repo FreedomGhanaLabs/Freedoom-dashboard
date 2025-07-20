@@ -85,7 +85,7 @@
 		: processedPayments;
 
 	function handleDownload() {
-		downloadCSV(headings, processedPayments, 'Activity.csv');
+		downloadCSV(headings, processedPayments, 'Payments.csv');
 	}
 </script>
 
