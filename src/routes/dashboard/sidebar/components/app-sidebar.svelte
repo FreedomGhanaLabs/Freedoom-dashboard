@@ -242,7 +242,7 @@
 				]
 			},
 			{
-				title: 'Commmissions',
+				title: 'Commissions',
 				url: 'commission',
 				icon: Coins,
 				isActive: false,

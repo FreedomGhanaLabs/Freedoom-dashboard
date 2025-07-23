@@ -137,7 +137,7 @@
 						</div>
 						<a
 							href={`/dashboard/registration/${driverId}/download-pdf`}
-							class="inline-flex items-center space-x-2 rounded-lg bg-blue-600 px-6 py-2 text-white transition-colors hover:bg-blue-700"
+							class="inline-flex items-center space-x-2 rounded-lg bg-orange-500 px-6 py-2 text-white transition-colors hover:bg-blue-700"
 						>
 							<Download class="h-4 w-4" />
 							<span>Export</span>
@@ -160,7 +160,7 @@
 							? 'bg-amber-300/20 text-orange-700 shadow-sm'
 							: 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'}"
 					>
-						<svelte:component this={tab.icon} class="h-4 w-4" />
+						<svelte:component this={tab.icon} class="hzjs.ifto.hka-4 w-4" />
 						<span>{tab.label}</span>
 					</button>
 				{/each}
