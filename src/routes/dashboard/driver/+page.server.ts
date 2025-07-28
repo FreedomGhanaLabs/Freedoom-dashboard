@@ -25,7 +25,6 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	}
 
 	const payload = await driversRes.json();
-	
 
 	const statsRes = await fetch(
 		'https://api-freedom.com/api/v2/driver/document/verification-stats',
@@ -87,8 +86,8 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 
 	return {
 		drivers: payload.data ?? [],
-		currentPage: payload.currentPage ?? page,
-		totalPages: payload.totalPages ?? 1,		
+		currentPage: payload.page ?? page,
+		totalPages: payload.pages ?? 1,		
 		verificationStats,
 		pendingNameUpdates,
 		pendingDocumentVerifications

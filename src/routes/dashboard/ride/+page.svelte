@@ -1,25 +1,24 @@
 <script lang="ts">
 	import { Download, Plus, Search } from 'lucide-svelte';
-	import { type InvoiceRide } from '$lib/rides';
+	import { goto } from '$app/navigation';
 	import TableGroup from './TableGroup.svelte';
 	import { downloadCSV } from '$lib/csv';
 	import type { PageData } from './$types';
+	import { debounce } from 'lodash-es'; // Assuming lodash is available
 
 	const { data } = $props<{ data: PageData }>();
-	let ride = data.ride;
-	let currentPage = data.currentPage;
-	let totalPages = data.totalPages;
 
-	function goToPage(page: number) {
-		const url = new URL(window.location.href);
-		url.searchParams.set('page', page.toString());
-		window.location.href = `?page=${page}`;
-	}
+	// Reactive state for pagination and search
+	let currentPage = $state(data.currentPage);
+	let totalPages = $state(data.totalPages);
+	let searchTerm = $state('');
 
+	// Format number to two decimal places
 	function formatToTwoDecimal(value: number): string {
 		return value.toFixed(2);
 	}
 
+	// Flatten ride data for table display
 	function flattenRideData(ride: any) {
 		return {
 			...ride,
@@ -39,41 +38,69 @@
 		};
 	}
 
-	let formattedRides = ride.map(flattenRideData);
+	// Map ride data to formatted data
+	let formattedRides = $derived(data.ride.map(flattenRideData));
 
-	let headings: {
-		title: string;
-		className: string;
-		key: string;
-	}[] = [
+	// Table headings
+	let headings = $state([
 		{ title: 'Recipient Phone', className: 'rounded-s-2xl', key: 'user.phone' },
 		{ title: 'Estimated Distance', className: '', key: 'estimatedDistance.text' },
 		{ title: 'Estimated Duration', className: '', key: 'estimatedDuration.text' },
 		{ title: 'Pickup Location', className: '', key: 'pickupLocation.address' },
-		{ title: 'Mulit Stop', className: '', key: 'isMultiStop' },
+		{ title: 'Multi Stop', className: '', key: 'isMultiStop' },
 		{ title: 'Stop Location', className: '', key: 'stopLocations[0].address' },
 		{ title: 'Time Fare', className: '', key: 'timeFare' },
 		{ title: 'Ride Fare', className: '', key: 'distanceFare' },
-		{ title: 'Freedom Commison', className: '', key: 'platformCommission' },
+		{ title: 'Freedom Commission', className: '', key: 'platformCommission' },
 		{ title: 'Driver Earnings', className: '', key: 'driverEarnings' },
 		{ title: 'Total Fare', className: '', key: 'totalFare' },
 		{ title: 'Payment Method', className: 'rounded-e-2xl', key: 'paymentMethod' }
-	];
+	]);
 
-	let searchTerm = '';
+	// Debounced search function
+	const debouncedFilter = debounce((term: string) => {
+		searchTerm = term;
+	}, 300);
 
-	let filteredRiders = searchTerm
-		? formattedRides.filter((d: any) => {
-				const q = searchTerm.toLowerCase();
-				return (
-					d.recipientName?.toLowerCase().includes(q) ||
-					d.recipientPhone?.toLowerCase().includes(q) ||
-					d.packageName?.toLowerCase().includes(q) ||
-					d.packageType?.toLowerCase().includes(q)
-				);
-			})
-		: formattedRides;
+	// Filtered data based on search term
+	let filteredRiders = $derived(
+		searchTerm
+			? formattedRides.filter((d: any) => {
+					const q = searchTerm.toLowerCase();
+					return (
+						d['user.phone']?.toLowerCase().includes(q) ||
+						d['pickupLocation.address']?.toLowerCase().includes(q) ||
+						d['stopLocations[0].address']?.toLowerCase().includes(q) ||
+						d.paymentMethod?.toLowerCase().includes(q)
+					);
+			  })
+			: formattedRides
+	);
 
+	// Dynamic pagination range
+	const getPageRange = (current: number, total: number, maxButtons: number = 5) => {
+		const half = Math.floor(maxButtons / 2);
+		let start = Math.max(1, current - half);
+		let end = Math.min(total, start + maxButtons - 1);
+
+		if (end - start + 1 < maxButtons) {
+			start = Math.max(1, end - maxButtons + 1);
+		}
+
+		return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+	};
+
+	// Navigate to a specific page using client-side routing
+	function goToPage(page: number) {
+		if (page >= 1 && page <= totalPages && page !== currentPage) {
+			currentPage = page;
+			const url = new URL(window.location.href);
+			url.searchParams.set('page', page.toString());
+			goto(`?page=${page}`, { invalidateAll: true });
+		}
+	}
+
+	// Handle CSV download
 	function handleDownload() {
 		downloadCSV(headings, formattedRides, 'Rides.csv');
 	}
@@ -97,7 +124,7 @@
 						<input
 							type="search"
 							id="default-search"
-							bind:value={searchTerm}
+							oninput={(e) => debouncedFilter(e.currentTarget.value)}
 							class="block w-fit max-w-52 rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-sm text-gray-900 placeholder-gray-400 focus:border-none focus:outline-none"
 							placeholder="Search"
 							required
@@ -116,48 +143,37 @@
 
 		<TableGroup {headings} invoices={filteredRiders} />
 
-
 		<div class="my-10 flex items-center justify-between px-[5rem]">
-		<p class="rounded-md border border-gray-300 bg-white px-2 py-3 text-sm text-gray-600 shadow-sm">
-			Page {currentPage} of {totalPages}
-		</p>
+			<p class="rounded-md border border-gray-300 bg-white px-2 py-3 text-sm text-gray-600 shadow-sm">
+				Page {currentPage} of {totalPages}
+			</p>
 
-		<nav
-			class="inline-flex items-center space-x-1 rounded-md border mb-10 border-gray-300 bg-white px-2 py-3 shadow-sm"
-		>
-			<button
-				onclick={() => goToPage(currentPage - 1)}
-				class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
-				disabled={currentPage === 1}
-			>
-				← Prev
-			</button>
-
-			{#each Array(totalPages)
-				.fill(0)
-				.slice(0, 6)
-				.map((_, i) => i + currentPage - 2)
-				.filter((p) => p >= 1 && p <= totalPages) as page}
+			<nav class="inline-flex items-center space-x-1 rounded-md border mb-10 border-gray-300 bg-white px-2 py-3 shadow-sm">
 				<button
-					class="rounded-md px-3 py-1 text-sm font-medium hover:bg-gray-100 {page === currentPage
-						? 'bg-orange-500 text-white'
-						: 'text-gray-700'}"
-					onclick={() => goToPage(page)}
+					onclick={() => goToPage(currentPage - 1)}
+					class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+					disabled={currentPage === 1}
 				>
-					{page}
+					← Prev
 				</button>
-			{/each}
 
-			<button
-				onclick={() => goToPage(currentPage + 1)}
-				class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
-				disabled={currentPage === totalPages}
-			>
-				Next →
-			</button>
-		</nav>
-	</div>
-	</div>
+				{#each getPageRange(currentPage, totalPages) as page}
+					<button
+						class="rounded-md px-3 py-1 text-sm font-medium hover:bg-gray-100 {page === currentPage ? 'bg-orange-500 text-white' : 'text-gray-700'}"
+						onclick={() => goToPage(page)}
+					>
+						{page}
+					</button>
+				{/each}
 
-	
+				<button
+					onclick={() => goToPage(currentPage + 1)}
+					class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+					disabled={currentPage === totalPages}
+				>
+					Next →
+				</button>
+			</nav>
+		</div>
+	</div>
 </div>

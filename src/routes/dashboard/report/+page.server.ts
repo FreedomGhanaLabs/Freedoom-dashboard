@@ -25,6 +25,7 @@ export const load: PageServerLoad = async ({ cookies, fetch }) => {
   const analytics: any[] = payload.data ?? [];
 
   console.log('Analytics data:', analytics);
+  console.log('Analytics payload:', payload.timeSeriesData ?? []);
   return { analytics };
 };
 

@@ -14,7 +14,7 @@
 
 	let visibleCategories: string[] = [
 		'All Tickets',
-		...new Set(supportTickets.map((ticket) => ticket.category))
+		...new Set(supportTickets.map((ticket) => String(ticket.category)))
 	];
 
 	let activeCategory = $state('All Tickets');

@@ -8,6 +8,7 @@
         "@sveltejs/adapter-vercel": "^5.7.2",
         "@types/d3-array": "^3.2.1",
         "@types/leaflet": "^1.9.18",
+        "@types/lodash-es": "^4.17.12",
         "chart.js": "^4.4.9",
         "d3-array": "^3.2.4",
         "d3-scale": "^4.0.2",
@@ -325,6 +326,10 @@
     "@types/json-schema": ["@types/json-schema@7.0.15", "", {}, "sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA=="],
 
     "@types/leaflet": ["@types/leaflet@1.9.19", "", { "dependencies": { "@types/geojson": "*" } }, "sha512-pB+n2daHcZPF2FDaWa+6B0a0mSDf4dPU35y5iTXsx7x/PzzshiX5atYiS1jlBn43X7XvM8AP+AB26lnSk0J4GA=="],
+
+    "@types/lodash": ["@types/lodash@4.17.20", "", {}, "sha512-H3MHACvFUEiujabxhaI/ImO6gUrd8oOurg7LQtS7mbwIXA/cUqWrvBsaeJ23aZEPk1TAYkurjfMbSELfoCXlGA=="],
+
+    "@types/lodash-es": ["@types/lodash-es@4.17.12", "", { "dependencies": { "@types/lodash": "*" } }, "sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ=="],
 
     "@types/validator": ["@types/validator@13.15.2", "", {}, "sha512-y7pa/oEJJ4iGYBxOpfAKn5b9+xuihvzDVnC/OSvlVnGxVg0pOqmjiMafiJ1KVNQEaPZf9HsEp5icEwGg8uIe5Q=="],
 

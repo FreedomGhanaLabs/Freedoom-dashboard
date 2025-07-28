@@ -26,7 +26,6 @@ export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 
 	const payload = await res.json();
 	const activity = payload.data ?? [];
-
 	
 	return {
 		activity,

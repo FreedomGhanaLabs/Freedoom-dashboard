@@ -1,58 +1,85 @@
 <script lang="ts">
-	import { Download, Plus, Search } from 'lucide-svelte';
-	import { type Debt } from '$lib/debt';
+	import { Download, Search } from 'lucide-svelte';
+	import { goto } from '$app/navigation';
 	import TableGroup from './TableGroup.svelte';
 	import { downloadCSV } from '$lib/csv';
 	import type { PageData } from './$types';
+	import { debounce } from 'lodash-es'; 
 
 	const { data } = $props<{ data: PageData }>();
 
+	
+	let currentPage = $state(data.currentPage);
+	let totalPages = $state(data.totalPages);
+	let searchTerm = $state('');
+
+	
 	function formatTimestamp(isoString: string): string {
 		return new Date(isoString).toLocaleString('en-US', {
 			dateStyle: 'medium',
 			timeStyle: 'short'
 		});
 	}
-	let currentPage = data.currentPage;
-	let totalPages = data.totalPages;
 
-	function goToPage(page: number) {
-		const url = new URL(window.location.href);
-		url.searchParams.set('page', page.toString());
-		window.location.href = `?page=${page}`;
-	}
+	let activity = $derived(
+		data.activity.map((entry: any) => ({
+			...entry,
+			formattedTimestamp: formatTimestamp(entry.timestamp)
+		}))
+	);
 
-	let activity = data.activity.map((entry: any) => ({
-		...entry,
-		formattedTimestamp: formatTimestamp(entry.timestamp)
-	}));
 
-	let headings: {
-		title: string;
-		className: string;
-		key: string;
-	}[] = [
+	let headings = $state([
 		{ title: 'Id', className: 'rounded-s-2xl', key: '_id' },
 		{ title: 'Admin ID', className: '', key: 'adminId' },
 		{ title: 'Action', className: '', key: 'action' },
 		{ title: 'Time Stamp', className: '', key: 'formattedTimestamp' },
 		{ title: 'Ip Address', className: 'rounded-e-2xl', key: 'ipAddress' }
-	];
+	]);
 
-	let searchTerm = '';
+	// Debounced search function
+	const debouncedFilter = debounce((term: string) => {
+		searchTerm = term;
+	}, 300);
 
-	let filteredActivity = searchTerm
-		? activity.filter((d: any) => {
-				const q = searchTerm.toLowerCase();
-				return (
-					d.recipientName?.toLowerCase().includes(q) ||
-					d.recipientPhone?.toLowerCase().includes(q) ||
-					d.packageName?.toLowerCase().includes(q) ||
-					d.packageType?.toLowerCase().includes(q)
-				);
-			})
-		: activity;
+	// Filtered activity based on search term
+	let filteredActivity = $derived(
+		searchTerm
+			? activity.filter((d: any) => {
+					const q = searchTerm.toLowerCase();
+					return (
+						d.adminName?.toLowerCase().includes(q) ||
+						d.action?.toLowerCase().includes(q) ||
+						d.ipAddress?.toLowerCase().includes(q)
+					);
+			  })
+			: activity
+	);
 
+	// Dynamic pagination range
+	const getPageRange = (current: number, total: number, maxButtons: number = 5) => {
+		const half = Math.floor(maxButtons / 2);
+		let start = Math.max(1, current - half);
+		let end = Math.min(total, start + maxButtons - 1);
+
+		if (end - start + 1 < maxButtons) {
+			start = Math.max(1, end - maxButtons + 1);
+		}
+
+		return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+	};
+
+	// Navigate to a specific page using client-side routing
+	function goToPage(page: number) {
+		if (page >= 1 && page <= totalPages && page !== currentPage) {
+			currentPage = page;
+			const url = new URL(window.location.href);
+			url.searchParams.set('page', page.toString());
+			goto(`?page=${page}`, { invalidateAll: true }); // Trigger SvelteKit navigation
+		}
+	}
+
+	// Handle CSV download
 	function handleDownload() {
 		downloadCSV(headings, activity, 'Activity.csv');
 	}
@@ -76,7 +103,7 @@
 						<input
 							type="search"
 							id="default-search"
-							bind:value={searchTerm}
+							oninput={(e) => debouncedFilter(e.currentTarget.value)}
 							class="block w-fit max-w-52 rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-sm text-gray-900 placeholder-gray-400 focus:border-none focus:outline-none"
 							placeholder="Search"
 							required
@@ -113,11 +140,7 @@
 					← Prev
 				</button>
 
-				{#each Array(totalPages)
-					.fill(0)
-					.slice(0, 6)
-					.map((_, i) => i + currentPage - 2)
-					.filter((p) => p >= 1 && p <= totalPages) as page}
+				{#each getPageRange(currentPage, totalPages) as page}
 					<button
 						class="rounded-md px-3 py-1 text-sm font-medium hover:bg-gray-100 {page === currentPage
 							? 'bg-orange-500 text-white'

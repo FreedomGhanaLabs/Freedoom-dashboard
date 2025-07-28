@@ -78,7 +78,7 @@
 </script>
 
 <Table.Root class="relative mx-auto mt-3 w-368 rounded-3xl">
-	<Table.Caption>
+	<!-- <Table.Caption>
 		<div class="my-5 flex flex-row items-center justify-between">
 			<div class="w-fit rounded-md border border-gray-400 bg-white/70 p-4 text-center">
 				Page 1 of 30
@@ -125,7 +125,7 @@
 				</ol>
 			</div>
 		</div>
-	</Table.Caption>
+	</Table.Caption> -->
 	<Table.Header class="bg-slate-200/70 py-12">
 		<Table.Row>
 			{#each headings as { className, title }}

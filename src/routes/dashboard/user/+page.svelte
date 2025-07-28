@@ -1,45 +1,79 @@
 <script lang="ts">
 	import { ListFilter, Plus, Search } from 'lucide-svelte';
-	import TableGroup from './TableGroup.svelte';
-
 	import { goto } from '$app/navigation';
+	import TableGroup from './TableGroup.svelte';
+	import { debounce } from 'lodash-es'; // Assuming lodash is available
 
-	export let data: {
-		currentPage: number;
-		totalPages: number;
-		users: any[];
-	};
-
-	let users = data.users;
-	let currentPage = data.currentPage;
-	let totalPages = data.totalPages;
-
-	function goToPage(page: number) {
-		const url = new URL(window.location.href);
-		url.searchParams.set('page', page.toString());
-		window.location.href = `?page=${page}`;
+	interface PageData {
+		data: {
+			currentPage: number;
+			totalPages: number;
+			users: any[];
+		};
 	}
 
-	const headings = [
+	const { data } = $props<{ data: PageData }>();
+
+	// Reactive state for pagination and search
+	let currentPage = $state(data.currentPage);
+	let totalPages = $state(data.totalPages);
+	let searchQuery = $state('');
+
+	// Table headings
+	let headings = $state([
 		{ title: 'ID', className: 'rounded-s-2xl', key: '_id' },
 		{ title: 'First Name', key: 'firstName' },
 		{ title: 'Last Name', key: 'surname' },
 		{ title: 'Email', key: 'email' },
 		{ title: 'Phone', key: 'phone' },
 		{ title: 'Payment Method', className: 'rounded-e-2xl', key: 'paymentMethod' }
-	];
+	]);
 
-	let searchQuery = '';
-	$: filteredUsers = searchQuery
-		? users.filter(
-				(u) =>
-					(u.firstName || u.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-					(u.surname || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-					(u.email || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-					(u._id || '').toLowerCase().includes(searchQuery.toLowerCase())
-			)
-		: users;
+	// Debounced search function
+	const debouncedFilter = debounce((term: string) => {
+		searchQuery = term;
+	}, 300);
 
+	// Filtered users based on search query
+	let filteredUsers = $derived(
+		searchQuery
+			? data.users.filter((u: { firstName: any; name: any; surname: any; email: any; _id: any; phone: any; }) => {
+					const q = searchQuery.toLowerCase();
+					return (
+						(u.firstName || u.name || '').toLowerCase().includes(q) ||
+						(u.surname || '').toLowerCase().includes(q) ||
+						(u.email || '').toLowerCase().includes(q) ||
+						(u._id || '').toLowerCase().includes(q) ||
+						(u.phone || '').toLowerCase().includes(q)
+					);
+			  })
+			: data.users
+	);
+
+	// Dynamic pagination range
+	const getPageRange = (current: number, total: number, maxButtons: number = 5) => {
+		const half = Math.floor(maxButtons / 2);
+		let start = Math.max(1, current - half);
+		let end = Math.min(total, start + maxButtons - 1);
+
+		if (end - start + 1 < maxButtons) {
+			start = Math.max(1, end - maxButtons + 1);
+		}
+
+		return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+	};
+
+	// Navigate to a specific page using client-side routing
+	function goToPage(page: number) {
+		if (page >= 1 && page <= totalPages && page !== currentPage) {
+			currentPage = page;
+			const url = new URL(window.location.href);
+			url.searchParams.set('page', page.toString());
+			goto(`?page=${page}`, { invalidateAll: true });
+		}
+	}
+
+	// Handle row click to navigate to user details
 	function handleRowClick(user: any) {
 		goto(`/dashboard/user/${user._id}`);
 	}
@@ -55,10 +89,7 @@
 			<h3 class="text-2xl">User Management</h3>
 			<div class="flex flex-row items-center justify-between space-x-5">
 				<form class="mx-auto max-w-md">
-					<label
-						for="default-search"
-						class="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-white">Search</label
-					>
+					<label for="default-search" class="sr-only">Search</label>
 					<div class="relative">
 						<div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
 							<Search class="h-4 w-4 text-gray-500" />
@@ -66,7 +97,7 @@
 						<input
 							type="search"
 							id="default-search"
-							bind:value={searchQuery}
+							oninput={(e) => debouncedFilter(e.currentTarget.value)}
 							class="block w-fit max-w-52 rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-sm text-gray-900 placeholder-gray-400 focus:outline-none"
 							placeholder="Search"
 						/>
@@ -84,15 +115,11 @@
 		<TableGroup {headings} invoices={filteredUsers} />
 
 		<div class="my-10 flex items-center justify-between px-[5rem]">
-			<p
-				class="rounded-md border border-gray-300 bg-white px-2 py-3 text-sm text-gray-600 shadow-sm"
-			>
+			<p class="rounded-md border border-gray-300 bg-white px-2 py-3 text-sm text-gray-600 shadow-sm">
 				Page {currentPage} of {totalPages}
 			</p>
 
-			<nav
-				class="inline-flex items-center space-x-1 rounded-md border border-gray-300 bg-white px-2 py-3 shadow-sm"
-			>
+			<nav class="inline-flex items-center space-x-1 mb-5 rounded-md border border-gray-300 bg-white px-2 py-3 shadow-sm">
 				<button
 					onclick={() => goToPage(currentPage - 1)}
 					class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
@@ -101,15 +128,9 @@
 					← Prev
 				</button>
 
-				{#each Array(totalPages)
-					.fill(0)
-					.slice(0, 6)
-					.map((_, i) => i + currentPage - 2)
-					.filter((p) => p >= 1 && p <= totalPages) as page}
+				{#each getPageRange(currentPage, totalPages) as page}
 					<button
-						class="rounded-md px-3 py-1 text-sm font-medium hover:bg-gray-100 {page === currentPage
-							? 'bg-orange-500 text-white'
-							: 'text-gray-700'}"
+						class="rounded-md px-3 py-1 text-sm font-medium hover:bg-gray-100 {page === currentPage ? 'bg-orange-500 text-white' : 'text-gray-700'}"
 						onclick={() => goToPage(page)}
 					>
 						{page}

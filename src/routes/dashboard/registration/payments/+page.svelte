@@ -3,9 +3,29 @@
 	import TableGroup from './TableGroup.svelte';
 	import { downloadCSV } from '$lib/csv';
 	import type { PageData } from './$types';
+	import { goto } from '$app/navigation';
+	import { debounce } from 'lodash-es'; // Assuming lodash is available
 
-	export let data;
+	const { data } = $props<{ data: PageData }>();
 
+	// Reactive state for pagination and search
+	let currentPage = $state(data.currentPage);
+	let totalPages = $state(data.pagination.pages);
+	let searchTerm = $state('');
+
+	// Stats with fallback
+	let stats = $state(
+		data.stats || {
+			totalPayments: 0,
+			totalAmount: 0,
+			recentPayments: 0,
+			latePayments: 0,
+			paymentMethodStats: [],
+			monthlyStats: []
+		}
+	);
+
+	// Format timestamp
 	function formatTimestamp(isoString: string): string {
 		return new Date(isoString).toLocaleString('en-US', {
 			dateStyle: 'medium',
@@ -13,6 +33,7 @@
 		});
 	}
 
+	// Format currency
 	function formatCurrency(amount: number): string {
 		return new Intl.NumberFormat('en-US', {
 			style: 'currency',
@@ -21,6 +42,7 @@
 		}).format(amount);
 	}
 
+	// Format month
 	function formatMonth(monthObj: any): string {
 		if (monthObj && monthObj.month && monthObj.year) {
 			const date = new Date(monthObj.year, monthObj.month - 1);
@@ -29,36 +51,20 @@
 		return 'Current Month';
 	}
 
-	let { payments, pagination, currentPage, stats } = data;
+	// Process payments
+	let processedPayments = $derived(
+		data.payments.map((entry: any) => ({
+			...entry,
+			fullName: `${entry.driverId?.firstName || ''} ${entry.driverId?.lastName || ''}`.trim(),
+			email: entry.driverId?.email || 'N/A',
+			phone: entry.driverId?.phone || 'N/A',
+			formattedMonth: new Date(entry.monthOf).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+			recordedByName: entry.recordedBy?.firstName || 'N/A'
+		}))
+	);
 
-	// Add fallback for stats in case it's undefined
-	if (!stats) {
-		stats = {
-			totalPayments: 0,
-			totalAmount: 0,
-			recentPayments: 0,
-			latePayments: 0,
-			paymentMethodStats: [],
-			monthlyStats: []
-		};
-	}
-
-	function goToPage(page: number) {
-		const url = new URL(window.location.href);
-		url.searchParams.set('page', page.toString());
-		window.location.href = `?page=${page}`;
-	}
-
-	let processedPayments = payments.map((entry: any) => ({
-		...entry,
-		fullName: `${entry.driverId.firstName} ${entry.driverId.lastName}`,
-		email: entry.driverId.email,
-		phone: entry.driverId.phone,
-		formattedMonth: new Date(entry.monthOf).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
-		recordedByName: entry.recordedBy.firstName
-	}));
-
-	let headings = [
+	// Table headings
+	let headings = $state([
 		{ title: 'Full Name', className: 'rounded-s-2xl', key: 'fullName' },
 		{ title: 'Email', className: '', key: 'email' },
 		{ title: 'Phone', className: '', key: 'phone' },
@@ -68,22 +74,54 @@
 		{ title: 'Month Of', className: '', key: 'formattedMonth' },
 		{ title: 'Status', className: '', key: 'paymentStatus' },
 		{ title: 'Recorded By', className: 'rounded-e-2xl', key: 'recordedByName' }
-	];
+	]);
 
-	let searchTerm = '';
+	// Debounced search function
+	const debouncedFilter = debounce((term: string) => {
+		searchTerm = term;
+	}, 300);
 
-	let filteredActivity = searchTerm
-		? processedPayments.filter((d: any) => {
-				const q = searchTerm.toLowerCase();
-				return (
-					d.fullName.toLowerCase().includes(q) ||
-					d.email.toLowerCase().includes(q) ||
-					d.phone.toLowerCase().includes(q) ||
-					d.paymentMethod.toLowerCase().includes(q)
-				);
-			})
-		: processedPayments;
+	// Filtered payments based on search term
+	let filteredPayments = $derived(
+		searchTerm
+			? processedPayments.filter((d: any) => {
+					const q = searchTerm.toLowerCase();
+					return (
+						d.fullName?.toLowerCase().includes(q) ||
+						d.email?.toLowerCase().includes(q) ||
+						d.phone?.toLowerCase().includes(q) ||
+						d.paymentMethod?.toLowerCase().includes(q) ||
+						d.paymentFor?.toLowerCase().includes(q) ||
+						d.paymentStatus?.toLowerCase().includes(q)
+					);
+			  })
+			: processedPayments
+	);
 
+	// Dynamic pagination range
+	const getPageRange = (current: number, total: number, maxButtons: number = 5) => {
+		const half = Math.floor(maxButtons / 2);
+		let start = Math.max(1, current - half);
+		let end = Math.min(total, start + maxButtons - 1);
+
+		if (end - start + 1 < maxButtons) {
+			start = Math.max(1, end - maxButtons + 1);
+		}
+
+		return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+	};
+
+	// Navigate to a specific page using client-side routing
+	function goToPage(page: number) {
+		if (page >= 1 && page <= totalPages && page !== currentPage) {
+			currentPage = page;
+			const url = new URL(window.location.href);
+			url.searchParams.set('page', page.toString());
+			goto(`?page=${page}`, { invalidateAll: true });
+		}
+	}
+
+	// Handle CSV download
 	function handleDownload() {
 		downloadCSV(headings, processedPayments, 'Payments.csv');
 	}
@@ -226,7 +264,7 @@
 						<input
 							type="search"
 							id="default-search"
-							bind:value={searchTerm}
+							oninput={(e) => debouncedFilter(e.currentTarget.value)}
 							class="block w-fit max-w-52 rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
 							placeholder="Search payments..."
 							required
@@ -243,11 +281,11 @@
 			</div>
 		</div>
 
-		<TableGroup {headings} invoices={filteredActivity} />
+		<TableGroup {headings} invoices={filteredPayments} />
 
 		<div class="flex items-center justify-between px-8 py-6">
 			<p class="rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-600">
-				Page {currentPage} of {pagination.pages}
+				Page {currentPage} of {totalPages}
 			</p>
 
 			<nav class="inline-flex items-center space-x-1 rounded-md border border-gray-200 bg-white px-2 py-2 shadow-sm">
@@ -259,14 +297,10 @@
 					← Prev
 				</button>
 
-				{#each Array(pagination.pages)
-					.fill(0)
-					.slice(0, 6)
-					.map((_, i) => i + currentPage - 2)
-					.filter((p) => p >= 1 && p <= pagination.pages) as page}
+				{#each getPageRange(currentPage, totalPages) as page}
 					<button
 						class="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 {page === currentPage
-							? 'bg-blue-500 text-white hover:bg-blue-600'
+							? 'bg-orange-500 text-white hover:bg-orange-500'
 							: 'text-gray-700'}"
 						onclick={() => goToPage(page)}
 					>
@@ -277,7 +311,7 @@
 				<button
 					onclick={() => goToPage(currentPage + 1)}
 					class="rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
-					disabled={currentPage === pagination.pages}
+					disabled={currentPage === totalPages}
 				>
 					Next →
 				</button>

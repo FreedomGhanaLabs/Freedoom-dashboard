@@ -3,9 +3,17 @@
 	import TableGroup from './TableGroup.svelte';
 	import { downloadCSV } from '$lib/csv';
 	import type { PageData } from './$types';
+	import { goto } from '$app/navigation';
+	import { debounce } from 'lodash-es'; // Assuming lodash is available
 
 	const { data } = $props<{ data: PageData }>();
 
+	// Reactive state for pagination and search
+	let currentPage = $state(data.currentPage);
+	let totalPages = $state(data.pagination.pages);
+	let searchTerm = $state('');
+
+	// Format timestamp
 	function formatTimestamp(isoString: string): string {
 		return new Date(isoString).toLocaleString('en-US', {
 			dateStyle: 'medium',
@@ -13,17 +21,17 @@
 		});
 	}
 
-	let currentPage = data.currentPage;
-	let totalPages = data.pagination.pages;
-	let searchTerm = '';
+	// Map drivers to formatted data
+	let drivers = $derived(
+		data.drivers.map((driver: any) => ({
+			...driver,
+			fullName: `${driver.firstName || ''} ${driver.otherName || ''} ${driver.lastName || ''}`.trim(),
+			formattedRegisteredAt: formatTimestamp(driver.registeredAt)
+		}))
+	);
 
-	let drivers = data.drivers.map((driver: any) => ({
-		...driver,
-		fullName: `${driver.firstName} ${driver.otherName} ${driver.lastName}`,
-		formattedRegisteredAt: formatTimestamp(driver.registeredAt)
-	}));
-
-	let headings = [
+	// Table headings
+	let headings = $state([
 		{ title: 'Full Name', className: 'rounded-s-2xl', key: 'fullName' },
 		{ title: 'Gender', className: '', key: 'gender' },
 		{ title: 'Phone', className: '', key: 'phone' },
@@ -33,30 +41,59 @@
 		{ title: 'Region', className: '', key: 'region' },
 		{ title: 'Status', className: '', key: 'registrationStatus' },
 		{ title: 'Registered At', className: 'rounded-e-2xl', key: 'formattedRegisteredAt' }
-	];
+	]);
 
-	let filteredDrivers = searchTerm
-		? drivers.filter((d: any) => {
-				const q = searchTerm.toLowerCase();
-				return (
-					d.fullName?.toLowerCase().includes(q) ||
-					d.email?.toLowerCase().includes(q) ||
-					d.phone?.toLowerCase().includes(q)
-				);
-			})
-		: drivers;
+	// Debounced search function
+	const debouncedFilter = debounce((term: string) => {
+		searchTerm = term;
+	}, 300);
 
+	// Filtered drivers based on search term
+	let filteredDrivers = $derived(
+		searchTerm
+			? drivers.filter((d: any) => {
+					const q = searchTerm.toLowerCase();
+					return (
+						d.fullName?.toLowerCase().includes(q) ||
+						d.email?.toLowerCase().includes(q) ||
+						d.phone?.toLowerCase().includes(q) ||
+						d.city?.toLowerCase().includes(q) ||
+						d.region?.toLowerCase().includes(q)
+					);
+			  })
+			: drivers
+	);
+
+	// Dynamic pagination range
+	const getPageRange = (current: number, total: number, maxButtons: number = 5) => {
+		const half = Math.floor(maxButtons / 2);
+		let start = Math.max(1, current - half);
+		let end = Math.min(total, start + maxButtons - 1);
+
+		if (end - start + 1 < maxButtons) {
+			start = Math.max(1, end - maxButtons + 1);
+		}
+
+		return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+	};
+
+	// Navigate to a specific page using client-side routing
+	function goToPage(page: number) {
+		if (page >= 1 && page <= totalPages && page !== currentPage) {
+			currentPage = page;
+			const url = new URL(window.location.href);
+			url.searchParams.set('page', page.toString());
+			goto(`?page=${page}`, { invalidateAll: true });
+		}
+	}
+
+	// Handle CSV download
 	function handleDownload() {
 		downloadCSV(headings, drivers, 'Drivers.csv');
 	}
 
-	function goToPage(page: number) {
-		const url = new URL(window.location.href);
-		url.searchParams.set('page', page.toString());
-		window.location.href = `?page=${page}`;
-	}
-
 	// Extract stats data for the dashboard
+	let stats = $state(data.stats?.data || {});
 	const {
 		totalDrivers = 0,
 		activeDrivers = 0,
@@ -64,23 +101,31 @@
 		pendingApproval = 0,
 		paymentDurationStats = [],
 		topCities = []
-	} = data.stats?.data || {};
+	} = stats;
 
 	// Calculate percentages and derived metrics
-	const activePercentage = totalDrivers > 0 ? Math.round((activeDrivers / totalDrivers) * 100) : 0;
-	const pendingPercentage = totalDrivers > 0 ? Math.round((pendingApproval / totalDrivers) * 100) : 0;
-	const paymentCompletionRate = totalDrivers > 0 ? Math.round((completedPayments / totalDrivers) * 100) : 0;
+	const activePercentage = $derived(
+		totalDrivers > 0 ? Math.round((activeDrivers / totalDrivers) * 100) : 0
+	);
+	const pendingPercentage = $derived(
+		totalDrivers > 0 ? Math.round((pendingApproval / totalDrivers) * 100) : 0
+	);
+	const paymentCompletionRate = $derived(
+		totalDrivers > 0 ? Math.round((completedPayments / totalDrivers) * 100) : 0
+	);
 
 	// Process payment duration data
-	const paymentDurations = paymentDurationStats.map((item: any) => ({
-		duration: `${item.id} months`,
-		count: item.count,
-		percentage: totalDrivers > 0 ? Math.round((item.count / totalDrivers) * 100) : 0
-	}));
+	const paymentDurations = $derived(
+		paymentDurationStats.map((item: any) => ({
+			duration: `${item.id} months`,
+			count: item.count,
+			percentage: totalDrivers > 0 ? Math.round((item.count / totalDrivers) * 100) : 0
+		}))
+	);
 
 	// Get top 3 cities
-	const topThreeCities = topCities.slice(0, 3);
-	const totalCityDrivers = topCities.reduce((sum: number, city: any) => sum + city.count, 0);
+	const topThreeCities = $derived(topCities.slice(0, 3));
+	const totalCityDrivers = $derived(topCities.reduce((sum: number, city: any) => sum + city.count, 0));
 </script>
 
 <svelte:head>
@@ -264,13 +309,13 @@
 				<form class="mx-auto max-w-md">
 					<label for="default-search" class="sr-only">Search</label>
 					<div class="relative mr-10">
-						<div class="pointer-events-none  absolute inset-y-0 start-0 flex items-center ps-3">
+						<div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
 							<Search class="h-4 w-4 text-gray-500" />
 						</div>
 						<input
 							type="search"
 							id="default-search"
-							bind:value={searchTerm}
+							oninput={(e) => debouncedFilter(e.currentTarget.value)}
 							class="block w-64 rounded-lg border border-gray-300 bg-gray-50 p-3 ps-10 text-sm text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-orange-500"
 							placeholder="Search..."
 						/>
@@ -298,15 +343,11 @@
 		</div>
 
 		<div class="my-10 flex items-center justify-between px-[5rem]">
-			<p
-				class="rounded-md border border-gray-300 bg-white px-2 py-3 text-sm text-gray-600 shadow-sm"
-			>
+			<p class="rounded-md border mb-10 border-gray-300 bg-white px-2 py-3 text-sm text-gray-600 shadow-sm">
 				Page {currentPage} of {totalPages}
 			</p>
 
-			<nav
-				class="inline-flex items-center space-x-1 rounded-md mb-9 border border-gray-300 bg-white px-2 py-3 shadow-sm"
-			>
+			<nav class="inline-flex items-center mb-10 space-x-1 rounded-md border border-gray-300 bg-white px-2 py-3 shadow-sm">
 				<button
 					onclick={() => goToPage(currentPage - 1)}
 					class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
@@ -315,15 +356,9 @@
 					← Prev
 				</button>
 
-				{#each Array(totalPages)
-					.fill(0)
-					.slice(0, 6)
-					.map((_, i) => i + currentPage - 2)
-					.filter((p) => p >= 1 && p <= totalPages) as page}
+				{#each getPageRange(currentPage, totalPages) as page}
 					<button
-						class="rounded-md px-3 py-1 text-sm font-medium hover:bg-gray-100 {page === currentPage
-							? 'bg-orange-500 text-white'
-							: 'text-gray-700'}"
+						class="rounded-md px-3 py-1 text-sm font-medium hover:bg-gray-100 {page === currentPage ? 'bg-orange-500 text-white' : 'text-gray-700'}"
 						onclick={() => goToPage(page)}
 					>
 						{page}

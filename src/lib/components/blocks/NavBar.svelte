@@ -5,12 +5,22 @@
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { page } from '$app/state';
-	import { toast } from 'svelte-french-toast'; // Import toast library
+	import { replaceState } from '$app/navigation';
+	import { toast } from 'svelte-french-toast';
+	import { onMount, onDestroy } from 'svelte';
 
 	// State to prevent multiple logout attempts
 	let isLoggingOut = false;
+	/**
+	 * @type {number | undefined}
+	 */
+	let logoutTimeout;
+	/**
+	 * @type {number | undefined}
+	 */
+	let inactivityTimeout;
 
-	// Navigation items with updated action for Logout
+	// Navigation items
 	const navItems = [
 		{ text: 'Notification', href: '#', icon: Bell },
 		{ text: 'Settings', href: 'navSettings', icon: Settings },
@@ -38,6 +48,53 @@
 		{ text: 'Profile', href: 'profile' }
 	];
 
+	// Initialize session and inactivity tracking
+	onMount(() => {
+		// Absolute session timeout (24 hours)
+		let sessionStartTime = localStorage.getItem('session_start_time');
+		if (!sessionStartTime) {
+			sessionStartTime = Date.now().toString();
+			localStorage.setItem('session_start_time', sessionStartTime);
+		}
+
+		const timeElapsed = Date.now() - parseInt(sessionStartTime, 10);
+		const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+		if (timeElapsed >= twentyFourHours) {
+			handleSecureLogout();
+			return;
+		}
+
+		logoutTimeout = setTimeout(() => {
+			handleSecureLogout();
+		}, twentyFourHours - timeElapsed);
+
+		// Inactivity timeout (1 hour)
+		const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
+		const resetInactivityTimer = () => {
+			if (inactivityTimeout) clearTimeout(inactivityTimeout);
+			inactivityTimeout = setTimeout(() => {
+				toast.error('Session timed out due to inactivity');
+				handleSecureLogout();
+			}, oneHour);
+		};
+
+		// Reset timer on user activity
+		['click', 'mousemove', 'keypress'].forEach((event) => {
+			window.addEventListener(event, resetInactivityTimer);
+		});
+
+		// Start the initial inactivity timer
+		resetInactivityTimer();
+
+		return () => {
+			if (logoutTimeout) clearTimeout(logoutTimeout);
+			if (inactivityTimeout) clearTimeout(inactivityTimeout);
+			['click', 'mousemove', 'keypress'].forEach((event) => {
+				window.removeEventListener(event, resetInactivityTimer);
+			});
+		};
+	});
+
 	// Secure logout function
 	async function handleSecureLogout() {
 		if (isLoggingOut) return;
@@ -45,20 +102,26 @@
 		isLoggingOut = true;
 
 		try {
-			const response = await fetch('https://api-freedom.com/api/v2/admin/auth/logout', {
+			const response = await fetch('/dashboard/logout', {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${getCookie('admin_token') || ''}`
-				},
-				credentials: 'include'
+					'Content-Type': 'application/json'
+				}
 			});
 
-			if (!response.ok) {
-				console.warn('⚠️ Server-side logout failed, proceeding with client-side cleanup');
+			const data = await response.json();
+
+			if (!response.ok || !data.success) {
+				console.warn('⚠️ Server-side logout failed:', response.status, response.statusText, data.error);
 			}
 
-			console.log('Logging out', response)
+			console.log('Logging out', {
+				status: response.status,
+				statusText: response.statusText,
+				success: data.success,
+				error: data.error
+			});
+
 			await clearClientStorage();
 			removeCookie('admin_token');
 			clearBrowserHistory();
@@ -69,11 +132,11 @@
 			await clearClientStorage();
 			removeCookie('admin_token');
 			clearBrowserHistory();
-
 			toast.error('Logout completed (with errors)');
 			window.location.replace('/');
 		} finally {
 			isLoggingOut = false;
+			localStorage.removeItem('session_start_time');
 		}
 	}
 
@@ -120,15 +183,7 @@
 
 	// Clear browser history to prevent back navigation
 	function clearBrowserHistory() {
-		if (window.history.replaceState) {
-			window.history.replaceState(null, '', '/');
-		}
-		if (window.history.pushState) {
-			window.history.pushState(null, '', '/');
-		}
-		window.addEventListener('popstate', () => {
-			window.history.pushState(null, '', '/');
-		});
+		replaceState('/', {});
 	}
 
 	let show = $state(false);

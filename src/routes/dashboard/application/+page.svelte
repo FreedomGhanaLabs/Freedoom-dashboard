@@ -1,52 +1,50 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { type Application } from '$lib/application';
-	import { Download, Search, Users, FileText, CheckCircle, MapPin, Building, Home } from 'lucide-svelte';
+	import { Download, Search, Users, FileText, CheckCircle, MapPin, Building, Home, MailPlus } from 'lucide-svelte';
 	import TableGroup from './TableGroup.svelte';
 	import { downloadCSV } from '$lib/csv';
-	import { MailPlus } from '@lucide/svelte';
+	import { goto } from '$app/navigation';
+	import { debounce } from 'lodash-es'; 
 
 	const { data } = $props<{ data: PageData }>();
-	
-	
-	let currentPage = data.currentPage;
-	let totalPages = data.totalPages;
 
-	function goToPage(page: number) {
-		const url = new URL(window.location.href);
-		url.searchParams.set('page', page.toString());
-		window.location.href = `?page=${page}`;
-	}
-	
+	// Reactive state for pagination and search
+	let currentPage = $state(data.currentPage);
+	let totalPages = $state(data.totalPages);
+	let searchQuery = $state('');
+
+	// Stats
+	let stats = $state(data.stats);
+
+	// Format number to two decimal places
 	function formatToTwoDecimal(value: number): string {
 		return value.toFixed(2);
 	}
-	
-	const stats = data.stats;
-	
+
+	// Helper functions for stats
 	function getCountById(array: any[], id: string): number {
 		const item = array.find(item => item._id === id);
 		return item ? item.count : 0;
 	}
-	
+
 	function getPercentage(value: number, total: number): number {
 		return total > 0 ? (value / total) * 100 : 0;
 	}
-	let application = Array.isArray(data.application) ? data.application : [];
 
-let formattedApplication = application.map((d: Application) => ({
-	...d,
-	dateOfBirth: d.dateOfBirth ? new Date(d.dateOfBirth).toLocaleDateString() : '-',
-	submittedAt: d.submittedAt ? new Date(d.submittedAt).toLocaleDateString() : '-',
-	status: d.status || 'N/A',
-	hasMotorbike: d.hasMotorbike ? 'Yes' : 'No',
-}));
-	
-	let headings: {
-		title: string;
-		className: string;
-		key: keyof Application;
-	}[] = [
+	// Format application data
+	let formattedApplication = $derived(
+		(Array.isArray(data.application) ? data.application : []).map((d: Application) => ({
+			...d,
+			dateOfBirth: d.dateOfBirth ? new Date(d.dateOfBirth).toLocaleDateString() : '-',
+			submittedAt: d.submittedAt ? new Date(d.submittedAt).toLocaleDateString() : '-',
+			status: d.status || 'N/A',
+			hasMotorbike: d.hasMotorbike ? 'Yes' : 'No'
+		}))
+	);
+
+	// Table headings
+	let headings = $state([
 		{ title: 'First Name', className: 'rounded-s-2xl', key: 'firstName' },
 		{ title: 'Last Name', className: '', key: 'lastName' },
 		{ title: 'Email', className: '', key: 'email' },
@@ -58,32 +56,63 @@ let formattedApplication = application.map((d: Application) => ({
 		{ title: 'Work Model', className: '', key: 'workingModel' },
 		{ title: 'Work Hours', className: '', key: 'preferredWorkingHours' },
 		{ title: 'Has Bike', className: '', key: 'hasMotorbike' },
-        { title: 'License No.', className: '', key: 'licenseNumber' },
-         { title: 'Status', className: '', key: 'status' },
-		{ title: 'Subimission Date', className: 'rounded-e-2xl', key: 'submittedAt' }
-	];
+		{ title: 'License No.', className: '', key: 'licenseNumber' },
+		{ title: 'Status', className: '', key: 'status' },
+		{ title: 'Submission Date', className: 'rounded-e-2xl', key: 'submittedAt' }
+	] as { title: string; className: string; key: keyof Application }[]);
 
-	
-	let searchQuery = '';
+	// Debounced search function
+	const debouncedFilter = debounce((term: string) => {
+		searchQuery = term;
+	}, 300);
 
-	let filteredDeliveryReport = searchQuery
-		? formattedApplication.filter((d: any) => {
-				const q = searchQuery.toLowerCase();
-				return (
-					d.firstName?.toLowerCase().includes(q) ||
-					d.lastName?.toLowerCase().includes(q) ||
-					d.email?.toLowerCase().includes(q) 
-				);
-			})
-		: formattedApplication;
+	// Filtered applications based on search query
+	let filteredApplications = $derived(
+		searchQuery
+			? formattedApplication.filter((d: any) => {
+					const q = searchQuery.toLowerCase();
+					return (
+						d.firstName?.toLowerCase().includes(q) ||
+						d.lastName?.toLowerCase().includes(q) ||
+						d.email?.toLowerCase().includes(q) ||
+						d.phone?.toLowerCase().includes(q) ||
+						d.city?.toLowerCase().includes(q)
+					);
+			  })
+			: formattedApplication
+	);
 
+	// Dynamic pagination range
+	const getPageRange = (current: number, total: number, maxButtons: number = 5) => {
+		const half = Math.floor(maxButtons / 2);
+		let start = Math.max(1, current - half);
+		let end = Math.min(total, start + maxButtons - 1);
+
+		if (end - start + 1 < maxButtons) {
+			start = Math.max(1, end - maxButtons + 1);
+		}
+
+		return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+	};
+
+	// Navigate to a specific page using client-side routing
+	function goToPage(page: number) {
+		if (page >= 1 && page <= totalPages && page !== currentPage) {
+			currentPage = page;
+			const url = new URL(window.location.href);
+			url.searchParams.set('page', page.toString());
+			goto(`?page=${page}`, { invalidateAll: true });
+		}
+	}
+
+	// Handle CSV download
 	function handleDownload() {
 		downloadCSV(headings, formattedApplication, 'Application.csv');
 	}
 </script>
 
 <svelte:head>
-	<title>Deliveries - Admin Panel</title>
+	<title>Applications - Admin Panel</title>
 </svelte:head>
 
 <section class="mx-auto my-8 w-388">
@@ -215,13 +244,13 @@ let formattedApplication = application.map((d: Application) => ({
 </section>
 
 <section class="mx-auto my-12 w-388 rounded-lg bg-white">
-	<div class="space mb-4 flex items-center px-12">
+	<div class="mb-4 flex items-center px-12">
 		<h3 class="p-10 text-[2rem]">Application Report</h3>
 
 		<div class="relative ml-auto">
 			<input
 				type="text"
-				bind:value={searchQuery}
+				oninput={(e) => debouncedFilter(e.currentTarget.value)}
 				placeholder="Search by reference"
 				class="w-64 rounded border p-3 pl-8"
 			/>
@@ -243,38 +272,38 @@ let formattedApplication = application.map((d: Application) => ({
 		</button>
 	</div>
 	<div class="px-8">
-		<TableGroup {headings} invoices={filteredDeliveryReport} />
+		<TableGroup {headings} invoices={filteredApplications} />
 	</div>
 	<div class="my-10 flex items-center justify-between px-[5rem]">
-	<p class="text-sm text-gray-600 rounded-md border border-gray-300 bg-white px-2 py-3 shadow-sm">
-		Page {currentPage} of {totalPages}
-	</p>
+		<p class="text-sm text-gray-600 rounded-md border border-gray-300 bg-white px-2 py-3 shadow-sm">
+			Page {currentPage} of {totalPages}
+		</p>
 
-	<nav class="inline-flex items-center space-x-1 rounded-md border border-gray-300 bg-white px-2 py-3 shadow-sm">
-		<button
-			onclick={() => goToPage(currentPage - 1)}
-			class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
-			disabled={currentPage === 1}
-		>
-			← Prev
-		</button>
-
-		{#each Array(totalPages).fill(0).slice(0, 6).map((_, i) => i + currentPage - 2).filter(p => p >= 1 && p <= totalPages) as page}
+		<nav class="inline-flex items-center space-x-1 rounded-md border border-gray-300 bg-white px-2 py-3 shadow-sm">
 			<button
-				class="px-3 py-1 text-sm font-medium hover:bg-gray-100 rounded-md {page === currentPage ? 'bg-orange-500 text-white' : 'text-gray-700'}"
-				onclick={() => goToPage(page)}
+				onclick={() => goToPage(currentPage - 1)}
+				class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+				disabled={currentPage === 1}
 			>
-				{page}
+				← Prev
 			</button>
-		{/each}
 
-		<button
-			onclick={() => goToPage(currentPage + 1)}
-			class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
-			disabled={currentPage === totalPages}
-		>
-			Next →
-		</button>
-	</nav>
-</div>
+			{#each getPageRange(currentPage, totalPages) as page}
+				<button
+					class="rounded-md px-3 py-1 text-sm font-medium hover:bg-gray-100 {page === currentPage ? 'bg-orange-500 text-white' : 'text-gray-700'}"
+					onclick={() => goToPage(page)}
+				>
+					{page}
+				</button>
+			{/each}
+
+			<button
+				onclick={() => goToPage(currentPage + 1)}
+				class="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+				disabled={currentPage === totalPages}
+			>
+				Next →
+			</button>
+		</nav>
+	</div>
 </section>
